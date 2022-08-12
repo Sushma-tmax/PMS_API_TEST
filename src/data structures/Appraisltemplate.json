@@ -1,0 +1,110 @@
+{
+  "name": "Developer",
+
+  "weightage": [
+    {
+      "objective_group": [
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        },
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        }
+      ],
+      "objective_type": [
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        },
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        }
+      ]
+    },
+    {
+      "objective_description": [
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        },
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        }
+      ],
+      "objective_type": [
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        },
+        {
+          "id": "54b5465te5465t46",
+          "name": "Objective 1",
+          "value": "10"
+        }
+      ]
+    }
+
+  ],
+  "training_recommendation": [
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    },
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    },
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    }
+  ],
+  "other_recommendation": [
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    },
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    },
+    {
+      "_id": "61fb626ccc6a39b643a3d948",
+      "title": "PIP",
+      "definition": "Check Performance ",
+      "__v": 0
+    }
+  ],
+  "objective_type": [
+  ],
+  "objective_description": [
+    {
+      "id": "54b5465te5465t46",
+      "name": "Objective 1",
+      "value": "10"
+    }
+  ],
+  "objective_weight": [
+  ]
+}

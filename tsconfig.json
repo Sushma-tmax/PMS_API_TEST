@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    
+  },
+  "lib": ["es2015"],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "client-pms",
+    "./node_modules/mongoose/",
+    "node_modules/mongoose/node_modules/mongodb/mongodb.d.ts"
+
+
+  ]
+}
