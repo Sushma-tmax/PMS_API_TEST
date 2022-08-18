@@ -118,6 +118,12 @@ const EmployeeSchema = new Schema({
     },
 
     employee: {
+        employee_agree: {
+            type: Boolean,
+        },
+        comments: {
+            type: String,
+        },
         objective_description: [{
             name: {
                 type: Schema.Types.ObjectId,
@@ -290,6 +296,9 @@ const EmployeeSchema = new Schema({
         rejection_count: Number,
         confirmed: Boolean,
 
+        attachments: {
+            type:String,
+        },
         appraiser_status: {
             type: String,
             default: 'pending'
@@ -348,6 +357,9 @@ const EmployeeSchema = new Schema({
                 type: Number,
             },
             comments: {
+                type: String,
+            },
+            rating_comments: {
                 type: String,
             },
             level_1_isChecked: {
@@ -553,6 +565,9 @@ const EmployeeSchema = new Schema({
             comments: {
                 type: String,
             },
+            rating_comments: {
+                type: String,
+            },
             level_1_isChecked: {
                 type: Boolean,
                 default: false
@@ -709,6 +724,9 @@ const EmployeeSchema = new Schema({
                 default: false
             },
             comments: {
+                type: String,
+            },
+            rating_comments: {
                 type: String,
             },
             level_1_isChecked: {
