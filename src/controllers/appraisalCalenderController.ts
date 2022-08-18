@@ -383,7 +383,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 calendar: new mongoose.Types.ObjectId(calendar),
                 appraisal: {
                     appraiser_status: 'pending',
-                    status: 'in-progress',
+                    status: 'not-started',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,
@@ -397,7 +397,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
 
                 },
                 reviewer: {
-                    status: 'in-progress',
+                    status: 'not-started',
                     reviewer_status: 'pending',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
@@ -413,7 +413,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
 
                 },
                 normalizer: {
-                    status: 'in-progress',
+                    status: 'not-started',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,

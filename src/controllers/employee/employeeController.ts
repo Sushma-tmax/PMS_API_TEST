@@ -512,6 +512,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         ratings,
         rating_comments,
         rating_rejected,
+        reason_for_rejection,
         rating_value,
         objective_description_name,
         objective_description,
@@ -534,6 +535,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].rating_comments": rating_comments,
                 "reviewer.objective_description.$[description].rating_value": rating_value,
                 "reviewer.objective_description.$[description].rating_rejected": rating_rejected,
+                "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
 
             }
         },
@@ -558,6 +560,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
     const {
         ratings,
         comments,
+        rating_comments,
         rating_value,
         objective_description_name,
         objective_description,
@@ -577,7 +580,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
         {
             $set: {
                 "normalizer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
-                "normalizer.objective_description.$[description].comments": comments,
+                "normalizer.objective_description.$[description].rating_comments": rating_comments,
                 "normalizer.objective_description.$[description].rating_value": rating_value,
                 "normalizer.objective_description.$[description].rating_rejected": true,
             }
@@ -617,7 +620,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
             "_id": new mongoose.Types.ObjectId(id),
 
             // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "employee_draft.objective_description": {
+            "employee.objective_description": {
                 $elemMatch: {
                     name: new mongoose.Types.ObjectId(objective_description_name)
                 }
@@ -625,9 +628,9 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
         },
         {
             $set: {
-                "employee_draft.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
-                "employee_draft.objective_description.$[description].comments": comments,
-                "employee_draft.objective_description.$[description].rating_rejected": true,
+                "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
+                "employee.objective_description.$[description].comments": comments,
+                "employee.objective_description.$[description].rating_rejected": true,
 
             }
         },
@@ -1391,6 +1394,82 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 
     res.status(StatusCodes.OK).json({"message": updatedEmployee});
 
+})
+
+const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee, normalizer, appraisal} = await Employee.findById(id)
+
+    if(employee.employee_rating - normalizer.normalizer_rating <= 0.5) {
+        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+            $set: {
+                "appraisal.appraiser_status": 'appraiser-accepted-1',
+                "appraisal.status": 'completed',
+                "normalizer.normalizer_rating": appraisal.appraiser_rating,
+                // "normalizer.normalizer_status": 'completed',
+                "normalizer.objective_description": appraisal.objective_description,
+
+            }
+        })
+        console.log('comppp')
+        res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    }
+
+    if(employee.employee_rating - normalizer.normalizer_rating  >= 0.5) {
+        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+            $set: {
+                "appraisal.appraiser_status": 'appraiser-accepted-employee',
+                "appraisal.appraiser_rating": employee.employee_rating,
+                "appraisal.objective_description": employee.objective_description,
+                "appraisal.status": 'in-progress',
+                "normalizerIsChecked": false,
+                "normalizerIsDisabled": false,
+            }
+        })
+
+        console.log('2nd case')
+
+    }
+
+    res.status(StatusCodes.OK).json({"message": "success"})
+
+})
+
+
+
+
+const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee, normalizer} = await Employee.findById(id)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            "appraisal.appraiser_status": 'appraiser-rejected-employee',
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+})
+
+const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee, normalizer} = await Employee.findById(id)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            "appraisal.status": 'completed',
+            "normalizerIsChecked": true,
+            "normalizerIsDisabled": true,
+            "employee.objective_description": normalizer.objective_description,
+            "employee.employee_rating": normalizer.normalizer_rating,
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedEmployee});
 
 })
 
@@ -1423,7 +1502,8 @@ export {
     normalizerAcceptsEmployee,
     normalizerRejectsEmployee,
     employeeRejectionSave,
-    employeeUpdateMany
-
-
+    employeeUpdateMany,
+    appraiserAcceptsEmployee,
+    appraiserRejectsEmployee,
+    normalizerSubmitEmployeeRejection
 }

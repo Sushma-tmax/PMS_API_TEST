@@ -27,7 +27,10 @@ import {
     normalizerAcceptsEmployee,
     normalizerRejectsEmployee,
     employeeRejectionSave,
-    employeeUpdateMany
+    employeeUpdateMany,
+    appraiserAcceptsEmployee,
+    appraiserRejectsEmployee,
+    normalizerSubmitEmployeeRejection
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -49,9 +52,7 @@ router.patch('/appraiser-accept-normalizer/:id', acceptNormalizerRejectedApprais
 router.patch('/normalizer-accept-employee/:id', normalizerAcceptsEmployee)
 router.patch('/normalizer-reject-employee/:id', normalizerRejectsEmployee)
 router.patch('/employee-reject-save/:id', employeeRejectionSave)
-
 router.get('/filter/:status', getAllEmployees)
-
 router.get('/:id', getEmployeeById)
 // router.get('/filter/:status', appraisalStatusFilter)
 router.post('/', createEmployee)
@@ -64,12 +65,10 @@ router.patch('/employee-rejection/:id', employeeRejection)
 router.patch('/:id', updateEmployee)
 router.get('/filter/potential/:status', filterByPotential)
 router.get('/filter/:gt/:lt', filterByRatings)
-
-
-
-
-
 router.patch('/accept-appraisal/:id', acceptAppraisalEmployee)
+router.patch('/appraiser-accept-employee/:id', appraiserAcceptsEmployee)
+router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
+router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)
 
 
 

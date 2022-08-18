@@ -104,7 +104,7 @@ const deleteCalender = asyncHandler(async (req: Request, res: Response) => {
 
 
 
-    const ifExist = await AppraisalCalender.exists({calender: req.params.id})
+    const ifExist = await AppraisalCalender.exists({calendar: req.params.id})
 
     // if (!calender) {
     //     return res.status(StatusCodes.NOT_FOUND).json({

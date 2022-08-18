@@ -1,7 +1,7 @@
-import {Schema, model} from 'mongoose'
+import { Schema, model } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import Template, {TemplateSchema} from "./Template";
-import {string} from 'joi';
+import Template, { TemplateSchema } from "./Template";
+import { string } from 'joi';
 
 
 export interface Employee {
@@ -107,19 +107,23 @@ const EmployeeSchema = new Schema({
     },
     appraisal_status: {
         type: String,
-        enum: ["appraiser", "normalizer", "reviewer", "self-rating"],
+        // enum: ["appraiser", "normalizer", "reviewer", "self-rating"],
     },
-    calendar : {
+    calendar: {
         type: Schema.Types.ObjectId,
         ref: "Calender",
     },
     isSupervisor: {
-      type: Boolean
+        type: Boolean
     },
 
     employee: {
         employee_agree: {
             type: Boolean,
+        },
+        employee_rating: {
+            type: Number,
+            default: 0,
         },
         comments: {
             type: String,
@@ -137,7 +141,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            rating_rejected :{
+            rating_rejected: {
                 type: Boolean,
                 default: false
             },
@@ -166,6 +170,10 @@ const EmployeeSchema = new Schema({
         }],
     },
 
+    roles: [
+
+    ],
+
 
     employee_draft: {
         objective_description: [{
@@ -181,7 +189,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            rating_rejected :{
+            rating_rejected: {
                 type: Boolean,
                 default: false
             },
@@ -297,7 +305,7 @@ const EmployeeSchema = new Schema({
         confirmed: Boolean,
 
         attachments: {
-            type:String,
+            type: String,
         },
         appraiser_status: {
             type: String,
@@ -309,7 +317,7 @@ const EmployeeSchema = new Schema({
 
         status: {
             type: String,
-            enum: ["not-started", "in-progress", "completed", "self-rating"],
+            enum: ["not-started", "in-progress", "completed", "self-rating", "rejected"],
             default: "not started"
         },
         appraiser_rating: {
@@ -349,7 +357,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            rating_rejected :{
+            rating_rejected: {
                 type: Boolean,
                 default: false
             },
@@ -434,7 +442,7 @@ const EmployeeSchema = new Schema({
         },
 
         potential: {
-          type: String
+            type: String
         },
         feedback_questions: [{
             name: {
@@ -498,6 +506,9 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
+        reason_for_rejection: {
+            type: String
+        },
         reviewer_acceptance: {
             type: Boolean,
         },
@@ -558,9 +569,12 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            rating_rejected :{
+            rating_rejected: {
                 type: Boolean,
                 default: false
+            },
+            reason_for_rejection: {
+                type: String
             },
             comments: {
                 type: String,
@@ -719,7 +733,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            rating_rejected :{
+            rating_rejected: {
                 type: Boolean,
                 default: false
             },
