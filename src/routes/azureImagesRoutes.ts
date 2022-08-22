@@ -3,7 +3,7 @@ import { getImage,postImage } from "../controllers/azureImageStorage";
 const router = Router();
 
 
-router.get('/images', getImage)
+router.get('/images/:name', getImage)
 router.post('/imageblob', postImage)
 
 

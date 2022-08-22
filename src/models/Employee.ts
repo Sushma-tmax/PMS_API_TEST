@@ -128,6 +128,37 @@ const EmployeeSchema = new Schema({
         comments: {
             type: String,
         },
+        training_recommendation: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'TrainingRecommendation'
+            },
+            training_name: {
+                type: String,
+            },
+            justification: {
+                type: String,
+            },
+            comments: {
+                type: String,
+                default: ''
+            },
+        }],
+        area_of_improvement: [{
+            value: {
+                type: String,
+                default: ""
+            },
+            specific_actions: [{
+                value: {
+                    type: String,
+                    default: ""
+                },
+                employee_comments :{
+                    type:String
+                }
+            }],
+        }],
         objective_description: [{
             name: {
                 type: Schema.Types.ObjectId,
@@ -304,9 +335,11 @@ const EmployeeSchema = new Schema({
         rejection_count: Number,
         confirmed: Boolean,
 
-        attachments: {
-            type: String,
-        },
+        attachments: [{
+           url: { type: String},
+            objective_description : {type: String},
+            name: {type: String}
+        }],
         appraiser_status: {
             type: String,
             default: 'pending'
@@ -317,7 +350,7 @@ const EmployeeSchema = new Schema({
 
         status: {
             type: String,
-            enum: ["not-started", "in-progress", "completed", "self-rating", "rejected"],
+            enum: ["not-started", "in-progress", "completed", "self-rating", "rejected","normalized"],
             default: "not started"
         },
         appraiser_rating: {
@@ -352,6 +385,9 @@ const EmployeeSchema = new Schema({
             },
             value: {
                 type: Number,
+            },
+            attachments: {
+                type: String,
             },
             ratings: {
                 type: Schema.Types.ObjectId,
@@ -465,6 +501,9 @@ const EmployeeSchema = new Schema({
                     type: String,
                     default: ""
                 },
+                employee_comments :{
+                    type:String
+                }
             }],
         }],
     },
