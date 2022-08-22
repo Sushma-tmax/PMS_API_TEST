@@ -334,7 +334,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.reviewer.attachments = employee.appraisal.attachments.map((j: any) => {
+    employee.reviewer.attachments = employee.reviewer.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -348,7 +348,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.normalizer.attachments = employee.appraisal.attachments.map((j: any) => {
+    employee.normalizer.attachments = employee.normalizer.attachments.map((j: any) => {
         // const at : {
         //
         // }
