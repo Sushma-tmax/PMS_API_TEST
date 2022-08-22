@@ -31,7 +31,9 @@ import {
     appraiserAcceptsEmployee,
     appraiserRejectsEmployee,
     normalizerSubmitEmployeeRejection, attachmentsAppraiser,
-    calculateRatings
+    calculateRatings,
+    attachmentsReviewer,
+    attachmentsNormalizer
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -71,7 +73,9 @@ router.patch('/appraiser-accept-employee/:id', appraiserAcceptsEmployee)
 router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
 router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)
 router.patch('/appraiser-attachments/:id', attachmentsAppraiser)
-router.patch('/calculate/ratings', calculateRatings)
+router.patch('/reviewer-attachments/:id', attachmentsReviewer)
+router.patch('/normalizer-attachments/:id', attachmentsNormalizer)
+router.patch(   '/calculate/ratings', calculateRatings)
 
 
 

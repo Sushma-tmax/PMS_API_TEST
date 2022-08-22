@@ -334,6 +334,34 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
+    employee.reviewer.attachments = employee.appraisal.attachments.map((j: any) => {
+        // const at : {
+        //
+        // }
+        console.log(getImage(j.url),'gggg')
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+
+    employee.normalizer.attachments = employee.appraisal.attachments.map((j: any) => {
+        // const at : {
+        //
+        // }
+        console.log(getImage(j.url),'gggg')
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+
     // const att = {
     //     ...employee,
     //     //@ts-ignore
@@ -686,6 +714,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
     const {
         ratings,
         comments,
+        rating_rejected,
         objective_description_name,
         objective_description,
     } = req.body
@@ -709,7 +738,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
             $set: {
                 "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "employee.objective_description.$[description].comments": comments,
-                "employee.objective_description.$[description].rating_rejected": true,
+                "employee.objective_description.$[description].rating_rejected": rating_rejected,
 
             }
         },
@@ -1539,6 +1568,7 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
             "normalizerIsDisabled": true,
             "employee.objective_description": normalizer.objective_description,
             "employee.employee_rating": normalizer.normalizer_rating,
+            "normalizer.normalizer_status":"re-normalized"
         }
     })
     res.status(StatusCodes.OK).json({"message": updatedEmployee});
@@ -1558,6 +1588,40 @@ const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) =>
     })
     res.status(StatusCodes.OK).json({"message": updatedEmployee});
 })
+
+
+const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {attachments} = req.body
+    console.log(attachments)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $push: {
+            "reviewer.attachments": attachments,
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+})
+
+
+const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {attachments} = req.body
+    console.log(attachments)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $push: {
+            "normalizer.attachments": attachments,
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+})
+
+
 
 const  calculateRatings = asyncHandler(async (req: Request, res: Response) => {
 
@@ -1629,5 +1693,7 @@ export {
     appraiserRejectsEmployee,
     normalizerSubmitEmployeeRejection,
     attachmentsAppraiser,
-    calculateRatings
+    calculateRatings,
+    attachmentsReviewer,
+    attachmentsNormalizer
 }

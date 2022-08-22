@@ -541,6 +541,12 @@ const EmployeeSchema = new Schema({
         rejection_count: Number,
         confirmed: Boolean,
 
+        attachments: [{
+            url: { type: String},
+            objective_description : {type: String},
+            name: {type: String}
+        }],
+
         isChecked: {
             type: Boolean,
             default: false
@@ -714,6 +720,12 @@ const EmployeeSchema = new Schema({
     normalizer: {
         rejection_count: Number,
         confirmed: Boolean,
+
+        attachments: [{
+            url: { type: String},
+            objective_description : {type: String},
+            name: {type: String}
+        }],
 
         isChecked: {
             type: Boolean,
