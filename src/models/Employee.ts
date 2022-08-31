@@ -120,7 +120,14 @@ const EmployeeSchema = new Schema({
     employee: {
         employee_agree: {
             type: Boolean,
+            default: false,
         },
+        attachments: [{
+            url: { type: String},
+            objective_description : {type: String},
+            name: {type: String}
+        }],
+
         employee_rating: {
             type: Number,
             default: 0,
@@ -201,10 +208,15 @@ const EmployeeSchema = new Schema({
         }],
     },
 
-    roles: [
+    roles: {
+        appraiser: Boolean,
+        reviewer: Boolean,
+        normalizer: Boolean,
+    },
 
-    ],
-
+    default_role: {
+        type:String
+    },
 
     employee_draft: {
         objective_description: [{
@@ -350,7 +362,6 @@ const EmployeeSchema = new Schema({
 
         status: {
             type: String,
-            enum: ["not-started", "in-progress", "completed", "self-rating", "rejected","normalized"],
             default: "not started"
         },
         appraiser_rating: {
@@ -444,6 +455,10 @@ const EmployeeSchema = new Schema({
                 type: String,
                 default: ''
             },
+            employee_comments: {
+                type: String,
+                default: ''
+            },
         }],
         other_recommendation: [{
             name: {
@@ -459,6 +474,11 @@ const EmployeeSchema = new Schema({
                 default: ''
             },
         }],
+       
+        appraiser_overall_feedback: {
+            type: String,
+            default: ''
+        },
 
         other_recommendation_comments: {
             type: String,
@@ -505,6 +525,11 @@ const EmployeeSchema = new Schema({
                     type:String
                 }
             }],
+            employee_comments: {
+                type: String,
+                default: ""
+            },
+           
         }],
     },
 

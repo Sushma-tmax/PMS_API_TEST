@@ -14,7 +14,7 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
             $set: {
-                "isSupervisor": true
+                "roles.reviewer": true
             }
         }
     )
@@ -362,6 +362,20 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
+    employee.normalizer.attachments = employee.normalizer.attachments.map((j: any) => {
+        // const at : {
+        //
+        // }
+        console.log(getImage(j.url),'gggg')
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+
     // const att = {
     //     ...employee,
     //     //@ts-ignore
@@ -525,7 +539,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
 
     const {
         ratings,
-        rating_comments,
+        comments,
         rating_value,
         rating_rejected,
         objective_group,
@@ -548,7 +562,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         {
             $set: {
                 "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
-                "appraisal.objective_description.$[description].rating_comments": rating_comments,
+                "appraisal.objective_description.$[description].comments": comments,
                 "appraisal.objective_description.$[description].rating_value": rating_value,
                 // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
@@ -1433,7 +1447,6 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
 
     const emp = await Employee.findById(id)
 
-    console.log(emp.employee.employee_agree)
 
     const agreeValue = emp.employee.employee_agree
 
@@ -1443,6 +1456,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
             $set: {
                 "employee.comments": comments,
                 "appraisal.appraiser_status": 'employee-rejected',
+                "appraisal.status":"rejected",
             }
         })
 
@@ -1453,6 +1467,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
                 "normalizer.normalizer_status": 'employee-rejected',
+                "appraisal.status":"rejected",
             }
         })
     }
