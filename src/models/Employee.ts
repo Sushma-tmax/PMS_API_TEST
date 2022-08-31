@@ -340,7 +340,15 @@ const EmployeeSchema = new Schema({
                 ref: 'RatingScaleDescription'
             },
         }],
-
+        feedback_questionnaire: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'FeedBackQuestionaire'
+            },
+            value: {
+                type:String
+            }
+        }],
     },
 
     appraisal: {
@@ -438,7 +446,11 @@ const EmployeeSchema = new Schema({
             name: {
                 type: Schema.Types.ObjectId,
                 ref: 'FeedBackQuestionaire'
+            },
+            value: {
+                type:String
             }
+
         }],
         training_recommendation: [{
             name: {
