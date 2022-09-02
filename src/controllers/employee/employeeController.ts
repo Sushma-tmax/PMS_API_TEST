@@ -362,7 +362,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.normalizer.attachments = employee.normalizer.attachments.map((j: any) => {
+    employee.employee.attachments = employee.employee.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -1636,6 +1636,20 @@ const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) =
     res.status(StatusCodes.OK).json({"message": updatedEmployee});
 })
 
+const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {attachments} = req.body
+    console.log(attachments)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $push: {
+            "employee.attachments": attachments,
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+})
 
 
 const  calculateRatings = asyncHandler(async (req: Request, res: Response) => {
@@ -1710,5 +1724,6 @@ export {
     attachmentsAppraiser,
     calculateRatings,
     attachmentsReviewer,
-    attachmentsNormalizer
+    attachmentsNormalizer,
+    attachmentsEmployee
 }

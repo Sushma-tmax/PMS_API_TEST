@@ -313,7 +313,6 @@ const EmployeeSchema = new Schema({
                 default: false
             },
 
-
         }],
         training_recommendation: [{
             name: {
