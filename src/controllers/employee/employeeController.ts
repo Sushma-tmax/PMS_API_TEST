@@ -14,7 +14,7 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
             $set: {
-                "roles.reviewer": true
+                "manager_code": "1080"
             }
         }
     )
@@ -22,6 +22,37 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
         employee
     });
 })
+
+
+const employeeAppraisalClose = asyncHandler(async (req: Request, res: Response) => {
+    const {id} = req.body
+    console.log(id, '`````````````````````````````````````````````````')
+    // const {reviewer: appraisal} = await Employee.findById(id);
+
+    const employee = await Employee.updateMany({_id: {$in: id}}, {
+            $set: {
+                // reviewerIsChecked: false,
+                // reviewerIsDisabled: true,
+                // normalizerIsChecked: false,
+                // normalizerIsDisabled: true,
+                // appraiserIsDisabled: true,
+                // appraiserIsChecked: false,
+                // employee: {},
+                // appraisal_template : {},
+                // appraisal : {},
+                // reviewer : {},
+                // normalizer : {},
+                "appraisal.status" : "not-started"
+            }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+
+
 
 const createEmployee = asyncHandler(async (req: Request, res: Response) => {
 
@@ -46,7 +77,7 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
     } else {
         employees = await Employee.find({"appraisal.status": status})
     }
-
+       //employees.populate('calendar')
     // employees.populate({
     //             path: 'appraisal',
     //             populate: {
@@ -1687,6 +1718,21 @@ console.log(findObjectiveType("62b4458f0e7b97416df32950"),'`````````````````````
 })
 
 
+const filterEmployeeByManagerCode = asyncHandler(async (req: Request, res: Response) => {
+    const {code} = req.params
+
+    const toSte = code.toString()
+
+    console.log(typeof  toSte)
+
+    const data = await Employee.find({manager_code: `"${code}"`})
+
+
+    res.status(StatusCodes.OK).json(data);
+
+
+})
+
 
 
 export {
@@ -1725,5 +1771,7 @@ export {
     calculateRatings,
     attachmentsReviewer,
     attachmentsNormalizer,
-    attachmentsEmployee
+    attachmentsEmployee,
+    filterEmployeeByManagerCode,
+    employeeAppraisalClose
 }

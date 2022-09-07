@@ -116,6 +116,8 @@ const EmployeeSchema = new Schema({
     isSupervisor: {
         type: Boolean
     },
+    manager_code: String,
+    manager_name: String,
 
     employee: {
         employee_agree: {
@@ -212,6 +214,7 @@ const EmployeeSchema = new Schema({
         appraiser: Boolean,
         reviewer: Boolean,
         normalizer: Boolean,
+        employee: Boolean
     },
 
     default_role: {
