@@ -35,7 +35,8 @@ import {
     attachmentsReviewer,
     attachmentsNormalizer,
     attachmentsEmployee,
-    filterEmployeeByManagerCode, employeeAppraisalClose
+    filterEmployeeByManagerCode, employeeAppraisalClose,
+    statusBasedCount
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -43,6 +44,8 @@ import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
+
+router.get('/status-count', statusBasedCount)
 router.route('/employee-filter').get(advancedResults(Employee,"calendar"), testFilter)
 router.get('/zzzzzz', employeeUpdateMany)
 router.get('/close', employeeAppraisalClose)
@@ -82,6 +85,7 @@ router.patch('/normalizer-attachments/:id', attachmentsNormalizer)
 router.patch('/employee-attachments/:id', attachmentsEmployee)
 router.patch(   '/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
+
 
 
 

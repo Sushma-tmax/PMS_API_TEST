@@ -185,6 +185,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
                 path: 'objective_group.name',
             }
         })
+
         // .populate({
         //     path: 'appraisal',
         //     populate: {
@@ -344,6 +345,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         })
         .populate('normalizer.other_recommendation.name')
         .populate('normalizer.feedback_questions.name')
+        .populate('appraisal_template.feedback_questionnaire.name')
         .populate('calendar')
 
     const fun =  (test:any) => {
@@ -1474,6 +1476,8 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
     const {id} = req.params
     const {comments} = req.body
 
+    console.log('```````````` running ',id,comments)
+
     // const  id = "62ac2037c1c19127416aaff1"
 
     const emp = await Employee.findById(id)
@@ -1735,6 +1739,32 @@ const filterEmployeeByManagerCode = asyncHandler(async (req: Request, res: Respo
 
 
 
+const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
+
+    const {manager_code} = req.body
+    console.log(manager_code, '````````````````')
+
+    const filter = {manager_code:  `${manager_code}`}
+
+const resp = await Employee.aggregate([
+    {$match: filter},
+    // {$group: {
+    //         "appraisal.status": "not-started",
+    //         // count: ""
+    //
+    //     }}
+])
+
+
+    res.status(StatusCodes.OK).json(resp);
+
+
+})
+
+
+
+
+
 export {
     createEmployee,
     getAllEmployees,
@@ -1773,5 +1803,6 @@ export {
     attachmentsNormalizer,
     attachmentsEmployee,
     filterEmployeeByManagerCode,
-    employeeAppraisalClose
+    employeeAppraisalClose,
+    statusBasedCount
 }

@@ -185,6 +185,9 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            Reason_for_rating_rejected: {
+                type: String,
+            },
             rating_value: {
                 type: Number,
             },
@@ -238,6 +241,9 @@ const EmployeeSchema = new Schema({
             rating_rejected: {
                 type: Boolean,
                 default: false
+            },
+            Reason_for_rating_rejected: {
+                type: String,
             },
             rating_value: {
                 type: Number,
