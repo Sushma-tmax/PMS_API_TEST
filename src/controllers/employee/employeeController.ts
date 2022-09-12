@@ -9,7 +9,7 @@ import {getImage} from "../azureImageStorage";
 
 const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
     const {id} = req.body
-    console.log(id, '`````````````````````````````````````````````````')
+    // console.log(id, '`````````````````````````````````````````````````')
     // const {reviewer: appraisal} = await Employee.findById(id);
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
@@ -26,7 +26,7 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
 
 const employeeAppraisalClose = asyncHandler(async (req: Request, res: Response) => {
     const {id} = req.body
-    console.log(id, '`````````````````````````````````````````````````')
+    // console.log(id, '`````````````````````````````````````````````````')
     // const {reviewer: appraisal} = await Employee.findById(id);
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
@@ -357,7 +357,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         // const at : {
         //
         // }
-        console.log(getImage(j.url),'gggg')
+        // console.log(getImage(j.url),'gggg')
         return {
             // attachments: j.name,
             // //@ts-ignore
@@ -371,7 +371,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         // const at : {
         //
         // }
-        console.log(getImage(j.url),'gggg')
+        // console.log(getImage(j.url),'gggg')
         return {
             // attachments: j.name,
             // //@ts-ignore
@@ -385,7 +385,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         // const at : {
         //
         // }
-        console.log(getImage(j.url),'gggg')
+        // console.log(getImage(j.url),'gggg')
         return {
             // attachments: j.name,
             // //@ts-ignore
@@ -399,7 +399,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         // const at : {
         //
         // }
-        console.log(getImage(j.url),'gggg')
+        // console.log(getImage(j.url),'gggg')
         return {
             // attachments: j.name,
             // //@ts-ignore
@@ -956,7 +956,36 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
     )
 
 
-    if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true) {
+    // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true) {
+        const {appraisal,reviewer} = await Employee.findById(id)
+        console.log(reviewer.rejection_count,'111111111111``````')
+
+        // const employeeRating = await Employee.updateMany({_id: {$in: id}},
+        //     {
+        //         $set: {
+        //
+        //             // "reviewer.objective_group": appraisal.objective_group,
+        //             // "reviewer.objective_type": appraisal.objective_type,
+        //             "reviewer.objective_description": appraisal.objective_description,
+        //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+        //             // "reviewer.training_recommendation": appraisal.training_recommendation,
+        //             // "reviewer.other_recommendation": appraisal.other_recommendation,
+        //             // "reviewer.area_of_improvement": appraisal.area_of_improvement,
+        //             // "reviewer.feedback_questions": appraisal.feedback_questions,
+        //             // "reviewer.reviewer_acceptance": true,
+        //             // "reviewerIsChecked": true,
+        //             // "reviewerIsDisabled": true,
+        //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+        //         }
+        //     }
+        // )
+
+
+        // console.log(employee, 'employee')
+    // }
+
+    if ( reviewer.rejection_count === 0 ||  reviewer.rejection_count === undefined) {
+    // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
         const {appraisal} = await Employee.findById(id)
 
         const employee = await Employee.updateMany({_id: {$in: id}},
@@ -966,89 +995,12 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
                     "reviewer.objective_description": appraisal.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    // "reviewer.training_recommendation": appraisal.training_recommendation,
-                    // "reviewer.other_recommendation": appraisal.other_recommendation,
-                    // "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                    // "reviewer.feedback_questions": appraisal.feedback_questions,
-                    // "reviewer.reviewer_acceptance": true,
-                    // "reviewerIsChecked": true,
-                    // "reviewerIsDisabled": true,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                }
-            }
-        )
-
-
-        console.log(employee, 'employee')
-    }
-
-    if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
-
-        const employee = await Employee.updateMany({_id: {$in: id}},
-            {
-                $set: {
-
-                    // "reviewer.objective_group": appraisal.objective_group,
-                    // "reviewer.objective_type": appraisal.objective_type,
-                    "reviewer.objective_description": appraisal.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    // "reviewer.training_recommendation": appraisal.training_recommendation,
-                    // "reviewer.other_recommendation": appraisal.other_recommendation,
-                    // "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                    // "reviewer.feedback_questions": appraisal.feedback_questions,
-                    // "reviewer.reviewer_acceptance": true,
-                    // "reviewerIsChecked": true,
-                    // "reviewerIsDisabled": true,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                }
-            }
-        )
-
-
-        console.log(employee, 'employee')
-    }
-
-
-    if (value.filter((i: any) => i.value === 'other_recommendation')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
-
-        const employee = await Employee.updateMany({_id: {$in: id}},
-            {
-                $set: {
-
-                    // "reviewer.objective_group": appraisal.objective_group,
-                    // "reviewer.objective_type": appraisal.objective_type,
-                    // "normalizer.objective_description": reviewer.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    // "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
-                    // "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                    // "reviewer.feedback_questions": appraisal.feedback_questions,
-                    // "reviewer.reviewer_acceptance": true,
-                    // "reviewerIsChecked": true,
-                    // "reviewerIsDisabled": true,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                }
-            }
-        )
-
-
-        console.log(employee, 'employee')
-    }
-    if (value.filter((i: any) => i.value === 'training_recommendation')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
-
-        const employee = await Employee.updateMany({_id: {$in: id}},
-            {
-                $set: {
-
-                    // "reviewer.objective_group": appraisal.objective_group,
-                    // "reviewer.objective_type": appraisal.objective_type,
-                    // "normalizer.objective_description": reviewer.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
+                    "reviewer.feedback_questions": appraisal.feedback_questions,
+                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    // "reviewer.training_recommendation": appraisal.training_recommendation,
                     // "reviewer.other_recommendation": appraisal.other_recommendation,
                     // "reviewer.area_of_improvement": appraisal.area_of_improvement,
                     // "reviewer.feedback_questions": appraisal.feedback_questions,
@@ -1061,62 +1013,116 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
         )
 
 
-        console.log(employee, 'employee')
+
     }
 
-    if (value.filter((i: any) => i.value === 'Feedback_questionnaire')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
-            {
-                $set: {
-
-                    // "reviewer.objective_group": appraisal.objective_group,
-                    // "reviewer.objective_type": appraisal.objective_type,
-                    // "normalizer.objective_description": reviewer.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    // "reviewer.training_recommendation": appraisal.training_recommendation,
-                    // "reviewer.other_recommendation": appraisal.other_recommendation,
-                    // "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                    "reviewer.feedback_questions": appraisal.feedback_questions,
-                    // "reviewer.reviewer_acceptance": true,
-                    // "reviewerIsChecked": true,
-                    // "reviewerIsDisabled": true,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                }
-            }
-        )
-
-
-        console.log(employee, 'employee')
-    }
-
-    if (value.filter((i: any) => i.value === 'area_of_improvement')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
-
-        const employee = await Employee.updateMany({_id: {$in: id}},
-            {
-                $set: {
-
-                    // "reviewer.objective_group": appraisal.objective_group,
-                    // "reviewer.objective_type": appraisal.objective_type,
-                    // "normalizer.objective_description": reviewer.objective_description,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    // "reviewer.training_recommendation": appraisal.training_recommendation,
-                    // "reviewer.other_recommendation": appraisal.other_recommendation,
-                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                    // "normalizer.feedback_questions": reviewer.feedback_questions,
-                    // "reviewer.reviewer_acceptance": true,
-                    // "reviewerIsChecked": true,
-                    // "reviewerIsDisabled": true,
-                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                }
-            }
-        )
-
-
-        console.log(employee, 'employee')
-    }
+    // if (value.filter((i: any) => i.value === 'other_recommendation')[0].isChecked === false) {
+    //     const {appraisal} = await Employee.findById(id)
+    //
+    //     const employee = await Employee.updateMany({_id: {$in: id}},
+    //         {
+    //             $set: {
+    //
+    //                 // "reviewer.objective_group": appraisal.objective_group,
+    //                 // "reviewer.objective_type": appraisal.objective_type,
+    //                 // "normalizer.objective_description": reviewer.objective_description,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //                 // "reviewer.training_recommendation": appraisal.training_recommendation,
+    //                 "reviewer.other_recommendation": appraisal.other_recommendation,
+    //                 // "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //                 // "reviewer.feedback_questions": appraisal.feedback_questions,
+    //                 // "reviewer.reviewer_acceptance": true,
+    //                 // "reviewerIsChecked": true,
+    //                 // "reviewerIsDisabled": true,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             }
+    //         }
+    //     )
+    //
+    //
+    //     console.log(employee, 'employee')
+    // }
+    // if (value.filter((i: any) => i.value === 'training_recommendation')[0].isChecked === false) {
+    //     const {appraisal} = await Employee.findById(id)
+    //
+    //     const employee = await Employee.updateMany({_id: {$in: id}},
+    //         {
+    //             $set: {
+    //
+    //                 // "reviewer.objective_group": appraisal.objective_group,
+    //                 // "reviewer.objective_type": appraisal.objective_type,
+    //                 // "normalizer.objective_description": reviewer.objective_description,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //                 "reviewer.training_recommendation": appraisal.training_recommendation,
+    //                 // "reviewer.other_recommendation": appraisal.other_recommendation,
+    //                 // "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //                 // "reviewer.feedback_questions": appraisal.feedback_questions,
+    //                 // "reviewer.reviewer_acceptance": true,
+    //                 // "reviewerIsChecked": true,
+    //                 // "reviewerIsDisabled": true,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             }
+    //         }
+    //     )
+    //
+    //
+    //     console.log(employee, 'employee')
+    // }
+    //
+    // if (value.filter((i: any) => i.value === 'Feedback_questionnaire')[0].isChecked === false) {
+    //     const {appraisal} = await Employee.findById(id)
+    //
+    //     const employee = await Employee.updateMany({_id: {$in: id}},
+    //         {
+    //             $set: {
+    //
+    //                 // "reviewer.objective_group": appraisal.objective_group,
+    //                 // "reviewer.objective_type": appraisal.objective_type,
+    //                 // "normalizer.objective_description": reviewer.objective_description,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //                 // "reviewer.training_recommendation": appraisal.training_recommendation,
+    //                 // "reviewer.other_recommendation": appraisal.other_recommendation,
+    //                 // "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //                 "reviewer.feedback_questions": appraisal.feedback_questions,
+    //                 // "reviewer.reviewer_acceptance": true,
+    //                 // "reviewerIsChecked": true,
+    //                 // "reviewerIsDisabled": true,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             }
+    //         }
+    //     )
+    //
+    //
+    //     console.log(employee, 'employee')
+    // }
+    //
+    // if (value.filter((i: any) => i.value === 'area_of_improvement')[0].isChecked === false) {
+    //     const {appraisal} = await Employee.findById(id)
+    //
+    //     const employee = await Employee.updateMany({_id: {$in: id}},
+    //         {
+    //             $set: {
+    //
+    //                 // "reviewer.objective_group": appraisal.objective_group,
+    //                 // "reviewer.objective_type": appraisal.objective_type,
+    //                 // "normalizer.objective_description": reviewer.objective_description,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //                 // "reviewer.training_recommendation": appraisal.training_recommendation,
+    //                 // "reviewer.other_recommendation": appraisal.other_recommendation,
+    //                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //                 // "normalizer.feedback_questions": reviewer.feedback_questions,
+    //                 // "reviewer.reviewer_acceptance": true,
+    //                 // "reviewerIsChecked": true,
+    //                 // "reviewerIsDisabled": true,
+    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             }
+    //         }
+    //     )
+    //
+    //
+    //     console.log(employee, 'employee')
+    // }
 
 
     res.status(StatusCodes.OK).json({
@@ -1754,8 +1760,6 @@ const resp = await Employee.aggregate([
     //
     //     }}
 ])
-
-
     res.status(StatusCodes.OK).json(resp);
 
 

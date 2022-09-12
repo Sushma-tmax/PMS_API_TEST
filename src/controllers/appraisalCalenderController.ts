@@ -393,8 +393,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     other_recommendation_comments: '',
                     training_recommendation_comments: '',
                     feedback_questions: [],
-                    area_of_improvement: []
-
+                    area_of_improvement: [],
+                    attachments: []
                 },
                 reviewer: {
                     status: 'not-started',
@@ -409,8 +409,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     other_recommendation_comments: '',
                     training_recommendation_comments: '',
                     feedback_questions: [],
-                    area_of_improvement: []
-
+                    area_of_improvement: [],
+                    attachments: []
                 },
                 normalizer: {
                     status: 'not-started',
@@ -426,7 +426,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-
+                    attachments: []
                 }
             },
 

@@ -133,7 +133,7 @@ const TemplateSchema = new Schema({
         }],
         potential:{
             type: Boolean,
-            default: false
+           
         },
         
         status_template: {
