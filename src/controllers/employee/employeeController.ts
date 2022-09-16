@@ -7,6 +7,24 @@ import mongoose from "mongoose";
 import {getImage} from "../azureImageStorage";
 
 
+const getRatingsfromObjectiveDescription = (data:any) => {
+    return data?.map((k:any) => {
+        return {
+            // ratings: k.ratings,
+            // rating_rejected: false,
+            // rating_comments: "",
+            // comments: ""
+            name: k.name,
+            value: k.value,
+            ratings: k.ratings,
+            level_1_isChecked: k.level_1_isChecked,
+            level_2_isChecked: k.level_2_isChecked,
+            level_3_isChecked: k.level_3_isChecked,
+            level_4_isChecked: k.level_4_isChecked
+        }
+    })
+}
+
 const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
     const {id} = req.body
     // console.log(id, '`````````````````````````````````````````````````')
@@ -77,7 +95,7 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
     } else {
         employees = await Employee.find({"appraisal.status": status})
     }
-       //employees.populate('calendar')
+    //employees.populate('calendar')
     // employees.populate({
     //             path: 'appraisal',
     //             populate: {
@@ -353,7 +371,8 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
 
     }
 
-    employee.appraisal.attachments = employee.appraisal.attachments.map((j: any) => {
+    // @ts-ignore
+    employee?.appraisal?.attachments = employee.appraisal.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -367,7 +386,8 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.reviewer.attachments = employee.reviewer.attachments.map((j: any) => {
+// @ts-ignore
+    employee?.reviewer?.attachments = employee.reviewer.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -381,7 +401,9 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.normalizer.attachments = employee.normalizer.attachments.map((j: any) => {
+
+    // @ts-ignore
+    employee?.normalizer?.attachments = employee.normalizer.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -395,7 +417,8 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-    employee.employee.attachments = employee.employee.attachments.map((j: any) => {
+    // @ts-ignore
+    employee?.employee?.attachments = employee.employee.attachments.map((j: any) => {
         // const at : {
         //
         // }
@@ -579,6 +602,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         objective_type,
         objective_description_name,
         objective_description,
+        rating_comments,
         value
     } = req.body
 
@@ -597,6 +621,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "appraisal.objective_description.$[description].comments": comments,
                 "appraisal.objective_description.$[description].rating_value": rating_value,
+                "appraisal.objective_description.$[description].rating_comments": rating_comments,
                 // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
             }
@@ -670,7 +695,8 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         rating_value,
         objective_description_name,
         objective_description,
-        value
+        value,
+        comments
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -690,6 +716,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].rating_value": rating_value,
                 "reviewer.objective_description.$[description].rating_rejected": rating_rejected,
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
+                "reviewer.objective_description.$[description].comments": comments,
 
             }
         },
@@ -736,6 +763,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
                 "normalizer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "normalizer.objective_description.$[description].rating_comments": rating_comments,
                 "normalizer.objective_description.$[description].rating_value": rating_value,
+                "normalizer.objective_description.$[description].comments": comments,
                 "normalizer.objective_description.$[description].rating_rejected": true,
             }
         },
@@ -864,12 +892,13 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
         {
             $set: {
                 "normalizer.objective_type": appraisal.objective_type,
-                "normalizer.objective_description": appraisal.objective_description,
+                "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer.normalizer_rating": appraisal.reviewer_rating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
                 "normalizer.feedback_questions": appraisal.feedback_questions,
+                "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
                 "normalizer.normalizer_acceptance": true,
@@ -943,49 +972,52 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
     const {id} = req.params
     const {value} = req.body
 
+
+
+
     const employee = await Employee.updateMany({
             "_id": new mongoose.Types.ObjectId(id),
         },
         {
             $set: {
                 "reviewer.reviewer_acceptance": false,
-                "reviewer.reviewer_rejected_value": value,
+                // "reviewer.reviewer_rejected_value": value,
                 "reviewer.reviewer_status": 'draft',
             }
         }
     )
 
-
     // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true) {
-        const {appraisal,reviewer} = await Employee.findById(id)
-        console.log(reviewer.rejection_count,'111111111111``````')
+    const {appraisal,reviewer} = await Employee.findById(id)
+    // console.log(reviewer.rejection_count,'111111111111``````')
 
-        // const employeeRating = await Employee.updateMany({_id: {$in: id}},
-        //     {
-        //         $set: {
-        //
-        //             // "reviewer.objective_group": appraisal.objective_group,
-        //             // "reviewer.objective_type": appraisal.objective_type,
-        //             "reviewer.objective_description": appraisal.objective_description,
-        //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-        //             // "reviewer.training_recommendation": appraisal.training_recommendation,
-        //             // "reviewer.other_recommendation": appraisal.other_recommendation,
-        //             // "reviewer.area_of_improvement": appraisal.area_of_improvement,
-        //             // "reviewer.feedback_questions": appraisal.feedback_questions,
-        //             // "reviewer.reviewer_acceptance": true,
-        //             // "reviewerIsChecked": true,
-        //             // "reviewerIsDisabled": true,
-        //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-        //         }
-        //     }
-        // )
+    // const employeeRating = await Employee.updateMany({_id: {$in: id}},
+    //     {
+    //         $set: {
+    //
+    //             // "reviewer.objective_group": appraisal.objective_group,
+    //             // "reviewer.objective_type": appraisal.objective_type,
+    //             "reviewer.objective_description": appraisal.objective_description,
+    //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             // "reviewer.training_recommendation": appraisal.training_recommendation,
+    //             // "reviewer.other_recommendation": appraisal.other_recommendation,
+    //             // "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //             // "reviewer.feedback_questions": appraisal.feedback_questions,
+    //             // "reviewer.reviewer_acceptance": true,
+    //             // "reviewerIsChecked": true,
+    //             // "reviewerIsDisabled": true,
+    //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //         }
+    //     }
+    // )
 
 
-        // console.log(employee, 'employee')
+    // console.log(employee, 'employee')
     // }
 
-    if ( reviewer.rejection_count === 0 ||  reviewer.rejection_count === undefined) {
-    // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
+    console.log(reviewer,'```````````````````')
+    if (reviewer.rejection_count === 0 ||  reviewer.rejection_count === undefined) {
+        // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
         const {appraisal} = await Employee.findById(id)
 
         const employee = await Employee.updateMany({_id: {$in: id}},
@@ -1012,7 +1044,16 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
             }
         )
 
+        res.status(StatusCodes.OK).json({
+           message: "WOrks",
+            stat:   reviewer
+        });
 
+    } else if (reviewer.rejection_count > 0) {
+
+        res.status(StatusCodes.OK).json({
+            message: "2nd rejection "
+        });
 
     }
 
@@ -1125,9 +1166,9 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
     // }
 
 
-    res.status(StatusCodes.OK).json({
-        employee
-    });
+    // res.status(StatusCodes.OK).json({
+    //     employee
+    // });
 })
 
 
@@ -1702,7 +1743,7 @@ const  calculateRatings = asyncHandler(async (req: Request, res: Response) => {
     }
 
 
-console.log(findObjectiveType("62b4458f0e7b97416df32950"),'`````````````````````````````')
+    console.log(findObjectiveType("62b4458f0e7b97416df32950"),'`````````````````````````````')
     const objective_description = req.body.objective_description
 
     const employee_rating = objective_description.map((j:any) => {
@@ -1752,14 +1793,14 @@ const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
 
     const filter = {manager_code:  `${manager_code}`}
 
-const resp = await Employee.aggregate([
-    {$match: filter},
-    // {$group: {
-    //         "appraisal.status": "not-started",
-    //         // count: ""
-    //
-    //     }}
-])
+    const resp = await Employee.aggregate([
+        {$match: filter},
+        // {$group: {
+        //         "appraisal.status": "not-started",
+        //         // count: ""
+        //
+        //     }}
+    ])
     res.status(StatusCodes.OK).json(resp);
 
 

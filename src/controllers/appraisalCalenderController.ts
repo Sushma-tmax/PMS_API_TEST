@@ -395,6 +395,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: []
+
                 },
                 reviewer: {
                     status: 'not-started',

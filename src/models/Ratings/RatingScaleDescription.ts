@@ -12,8 +12,8 @@ const RatingScaleDescriptionSchema = new Schema({
         rating_scale: {
             type: String,
             required: true,
-            unique: true,
-            uniqueCaseInsensitive: true
+            // unique: true,
+            // uniqueCaseInsensitive: true
         },
         definition: {
             type: String,
