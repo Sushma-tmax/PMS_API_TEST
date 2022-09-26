@@ -133,8 +133,13 @@ const TemplateSchema = new Schema({
         }],
         potential:{
             type: Boolean,
-            default: false
-        }
+           
+        },
+        
+        status_template: {
+            type: String,
+            default: ''
+        },
 
     },
     {timestamps: true}

@@ -116,6 +116,8 @@ const EmployeeSchema = new Schema({
     isSupervisor: {
         type: Boolean
     },
+    manager_code: String,
+    manager_name: String,
 
     employee: {
         employee_agree: {
@@ -183,6 +185,9 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            Reason_for_rating_rejected: {
+                type: String,
+            },
             rating_value: {
                 type: Number,
             },
@@ -212,6 +217,7 @@ const EmployeeSchema = new Schema({
         appraiser: Boolean,
         reviewer: Boolean,
         normalizer: Boolean,
+        employee: Boolean
     },
 
     default_role: {
@@ -235,6 +241,9 @@ const EmployeeSchema = new Schema({
             rating_rejected: {
                 type: Boolean,
                 default: false
+            },
+            Reason_for_rating_rejected: {
+                type: String,
             },
             rating_value: {
                 type: Number,
@@ -313,7 +322,6 @@ const EmployeeSchema = new Schema({
                 default: false
             },
 
-
         }],
         training_recommendation: [{
             name: {
@@ -340,7 +348,15 @@ const EmployeeSchema = new Schema({
                 ref: 'RatingScaleDescription'
             },
         }],
-
+        feedback_questionnaire: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'FeedBackQuestionaire'
+            },
+            value: {
+                type:String
+            }
+        }],
     },
 
     appraisal: {
@@ -404,6 +420,9 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
+            remarks : {
+                type: String,
+            },
             rating_rejected: {
                 type: Boolean,
                 default: false
@@ -438,7 +457,11 @@ const EmployeeSchema = new Schema({
             name: {
                 type: Schema.Types.ObjectId,
                 ref: 'FeedBackQuestionaire'
+            },
+            value: {
+                type:String
             }
+
         }],
         training_recommendation: [{
             name: {

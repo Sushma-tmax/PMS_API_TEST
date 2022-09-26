@@ -370,6 +370,19 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     )
 
 
+const checkEmployeeStatus  = await Employee.find({ _id: { $in: getName(position) } ,"appraisal.appraisal.status": 'progress'} )
+
+    if(checkEmployeeStatus.length > 0) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            // success: true,
+            // data: position,
+            // appraisal,
+            // position,
+            "message": "Employee Already Exist in appraisal"
+        });
+
+    }
+
     const employee = await Employee.updateMany({ _id: { $in: getName(position) } },
         {
             $set: {
@@ -393,7 +406,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     other_recommendation_comments: '',
                     training_recommendation_comments: '',
                     feedback_questions: [],
-                    area_of_improvement: []
+                    area_of_improvement: [],
+                    attachments: []
 
                 },
                 reviewer: {
@@ -409,8 +423,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     other_recommendation_comments: '',
                     training_recommendation_comments: '',
                     feedback_questions: [],
-                    area_of_improvement: []
-
+                    area_of_improvement: [],
+                    attachments: []
                 },
                 normalizer: {
                     status: 'not-started',
@@ -426,7 +440,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-
+                    attachments: []
                 }
             },
 

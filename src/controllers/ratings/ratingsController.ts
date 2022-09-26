@@ -69,11 +69,35 @@ const deleteRatings = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const createRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
-    const newRatingScaleDescription = await RatingScaleDescription.insertMany(req.body);
-    res.status(201).json({
-        success: true,
-        data: newRatingScaleDescription
-    });
+    console.log(req.body)
+
+    const [rating] = req.body
+    const rat = req.body
+
+    const mapped = rat.map((j:any) => j.rating)
+
+    const newRatingScaleDescription = await RatingScaleDescription.find({rating: {$in: mapped }})
+
+    if(newRatingScaleDescription.length > 0) {
+        const temp  = newRatingScaleDescription.map((j:any) => j.rating)
+
+        res.status(400).json({
+            success: false,
+            message: "Rating" + " " + temp.toString() + " Already exist" ,
+            data: rating,
+            body: newRatingScaleDescription
+        });
+    } else  if (newRatingScaleDescription.length === 0) {
+        const newRatingScaleDescriptiondone  = await RatingScaleDescription.insertMany(req.body);
+
+        res.status(201).json({
+            success: true,
+            data: rating,
+            body: newRatingScaleDescriptiondone
+        });
+    }
+
+
 })
 
 
@@ -99,20 +123,46 @@ const getRatingScaleDescription = asyncHandler(async (req: Request, res: Respons
 })
 
 const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
-    const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
-    if (!ratingScaleDescription) {
-        return res.status(404).json({
+
+
+    const {rating} = req.body  
+
+    const newRatingScaleDescription = await RatingScaleDescription.find({rating:rating })
+
+    if(newRatingScaleDescription.length > 0) {
+        const temp  = newRatingScaleDescription.map((j:any) => j.rating)
+
+        res.status(400).json({
             success: false,
-            error: 'RatingScaleDescription not found'
+            message: "Rating" + " " + temp.toString() + " Already exist" ,
+
+            body: newRatingScaleDescription
+        });
+    } else  if (newRatingScaleDescription.length === 0) {
+        const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        res.status(200).json({
+            success: true,
+            body: ratingScaleDescription
         });
     }
-    res.status(200).json({
-        success: true,
-        data: ratingScaleDescription
-    });
+    // const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
+    //     new: true,
+    //     runValidators: true
+    // });
+    // if (!ratingScaleDescription) {
+    //     return res.status(404).json({
+    //         success: false,
+    //         error: 'RatingScaleDescription not found'
+    //     });
+    // }
+    // res.status(200).json({
+    //     success: true,
+    //     data: ratingScaleDescription
+    // });
 })
 
 const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
