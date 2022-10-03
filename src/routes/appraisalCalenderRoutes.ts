@@ -8,6 +8,7 @@ import {
     startAppraisal,
     startProbationAppraisal,
     getRecentAppraisalCalender,
+    addPositionsToAppraisalCalendar
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
 
@@ -21,6 +22,7 @@ router.get('/', getAllAppraisalCalender)
 router.get('/recent', getRecentAppraisalCalender)
 router.get('/:id', getAppraisalCalenderById)
 router.post('/', createAppraisalCalender)
+router.post('/employee/:id', addPositionsToAppraisalCalendar)
 
 router.delete('/:id', deleteAppraisalCalender)
 

@@ -603,7 +603,8 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         objective_description_name,
         objective_description,
         rating_comments,
-        value
+        value,
+        remarks
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -624,6 +625,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].rating_comments": rating_comments,
                 // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
+                "appraisal.objective_description.$[description].remarks": remarks,
             }
         },
         {

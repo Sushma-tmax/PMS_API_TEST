@@ -118,7 +118,7 @@ const addPosition = asyncHandler(async (req: Request, res: Response) => {
 
 const getAllTemplates = asyncHandler(async (req: Request, res: Response) => {
 
-    const templates = await Template.find({}).sort({createdAt: -1}).populate({
+    const templates = await Template.find({}).sort({updatedAt: -1}).populate({
             path: 'weightage',
             populate: {
                 path: 'objective_group.name',

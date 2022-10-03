@@ -420,6 +420,9 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
+            remarks : {
+                type: String,
+            },
             rating_rejected: {
                 type: Boolean,
                 default: false

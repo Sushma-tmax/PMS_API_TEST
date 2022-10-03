@@ -8,16 +8,27 @@ const createNineBox = asyncHandler(async (req: Request, res: Response) => {
     const nineBox = await NineBox.create(req.body);
     res.status(StatusCodes.CREATED).json({
         success: true,
-        data:nineBox
+        data: nineBox
     });
 
 })
 
 const updateNineBox = asyncHandler(async (req: Request, res: Response) => {
-    const nineBox = await NineBox.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
+    const {potential_definitions, performance_definitions, box_9_definitions} = req.body
+    const nineBox = await NineBox.findByIdAndUpdate(req.params.id, {
+            $set: {
+                "potential_definitions": potential_definitions,
+                "performance_definitions": performance_definitions,
+                "box_9_definitions": box_9_definitions
+            },
+            // $push: {
+            //     "box_9_definitions": box_9_definitions
+            // }
+        }
+        , {
+            new: true,
+            runValidators: true
+        });
     res.status(StatusCodes.OK).json({
         success: true,
         nineBox

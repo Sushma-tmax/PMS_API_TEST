@@ -117,6 +117,24 @@ const createAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 })
 
 
+const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee} = req.body
+
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id, {
+        $push: {
+            "position": employee,
+        }
+    })
+    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+
+
+})
+
+
 const getAllAppraisalCalender = asyncHandler(async (req: Request, res: Response) => {
 
     const calenders = await AppraisalCalender.find().sort({ createdAt: -1 }).populate('template').populate('calendar').populate('position.name');
@@ -222,7 +240,7 @@ const updateAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 
 const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    const { template, calendar } = await AppraisalCalender.findById(req.params.id);
+    const { template, calendar, position } = await AppraisalCalender.findById(req.params.id);
     const {_id: templateId } = template;
     // const news  = new mongoose.Types.ObjectId(calender)
     const getIdFromRating = (arr: any) => {
@@ -244,14 +262,14 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
     });
     console.log(templateId)
     // template.forEach(templateId => {
-    updateTemplateForPositions(templateId, calendar, ratingScale, req, res)
+    updateTemplateForPositions(templateId, calendar, ratingScale, req, res,position)
     // })
 
 })
 
-const updateTemplateForPositions = async (template, calendar, ratingScale, req, res) => {
+const updateTemplateForPositions = async (template, calendar, ratingScale, req, res,position) => {
 
-    const { weightage, position, training_recommendation, other_recommendation, feedback_questionnaire, potential } = await Template.findById(template);
+    const { weightage, training_recommendation, other_recommendation, feedback_questionnaire, potential } = await Template.findById(template);
     console.log(position, "position", template)
     const getIdFromRating = (arr: any) => {
         return arr.map((item: any) => {
@@ -369,6 +387,19 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     },
     //     )
 
+
+const checkEmployeeStatus  = await Employee.find({ _id: { $in: getName(position) } ,"appraisal.appraisal.status": 'progress'} )
+
+    if(checkEmployeeStatus.length > 0) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            // success: true,
+            // data: position,
+            // appraisal,
+            // position,
+            "message": "Employee Already Exist in appraisal"
+        });
+
+    }
 
     const employee = await Employee.updateMany({ _id: { $in: getName(position) } },
         {
@@ -558,5 +589,6 @@ export {
     getRecentAppraisalCalender,
     updateAppraisalCalender,
     startAppraisal,
-    startProbationAppraisal
+    startProbationAppraisal,
+    addPositionsToAppraisalCalendar
 }
