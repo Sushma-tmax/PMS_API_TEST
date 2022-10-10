@@ -94,16 +94,20 @@ const AppraisalCalenderSchema = new Schema({
             }],
             weightage_status: Boolean
         },
-        position: [{
-            name: {
-                type: Schema.Types.ObjectId,
-                ref: "Employee"
-            },
-            isChecked: {
-                type: Boolean,
-                default: false
-            }
-        }],
+
+        position: {
+            type: [{
+                name: {
+                    type: Schema.Types.ObjectId,
+                    ref: "Employee"
+                },
+                isChecked: {
+                    type: Boolean,
+                    default: false
+                }
+            }]
+        },
+
 
         training_recommendation: [{
             name: {

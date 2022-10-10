@@ -37,7 +37,10 @@ const ObjectiveDescriptionSchema = new Schema(
             type: Boolean,
             default: false
         },
-
+        isTitleActive: {
+            type: Boolean,
+            default: false
+        },
 
         level_1: {
             level_definition: {

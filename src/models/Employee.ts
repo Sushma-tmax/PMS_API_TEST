@@ -339,6 +339,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            sort_value: Number
         }],
 
         rating: [{
@@ -496,6 +497,7 @@ const EmployeeSchema = new Schema({
                 type: String,
                 default: ''
             },
+            sort_value: Number
         }],
        
         appraiser_overall_feedback: {
@@ -733,6 +735,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            sort_value: Number
 
         }],
 
@@ -881,7 +884,8 @@ const EmployeeSchema = new Schema({
             isChecked: {
                 type: Boolean,
                 default: false
-            }
+            },
+            sort_value: Number
         }],
         other_recommendation_comments: {
             type: String,

@@ -10,7 +10,9 @@ const OtherRecommendationSchema = new Schema({
         required: true,
         unique: true,
         uniqueCaseInsensitive: true
-    }
+    },
+    sort_value: Number
+
 },
 
     {timestamps: true})

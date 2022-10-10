@@ -117,6 +117,68 @@ const createAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 })
 
 
+const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee} = req.body
+    const data = employee
+    console.log(data)
+
+    // const updatedCalendarr = await AppraisalCalender.findById(id)
+
+    const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+        {
+        $push: {
+            position: {$each:  employee},
+        }
+    },{  new: true}
+    )
+    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+
+
+})
+
+const removePositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee} = req.body
+    const data = employee.map((j:any) => j.name)
+    console.log(data)
+
+    // const updatedCalendarr = await AppraisalCalender.findById(id)
+    const empp =   [
+        {
+            "name": "62ac2037c1c19127416ab005"
+
+        },
+        {
+            "name": "62ac2037c1c19127416ab006"
+
+        }]
+
+    const emppp =   [
+       "62ac2037c1c19127416ab005",
+        "62ac2037c1c19127416ab006"
+
+]
+
+
+
+    const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+        {
+        $pull: {
+            position: { "name":  {$in: data}},
+        }
+    },{  new: true,multi:true}
+    )
+    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+
+
+})
+
+
 const getAllAppraisalCalender = asyncHandler(async (req: Request, res: Response) => {
 
     const calenders = await AppraisalCalender.find().sort({ createdAt: -1 }).populate('template').populate('calendar').populate('position.name');
@@ -222,7 +284,7 @@ const updateAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 
 const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    const { template, calendar } = await AppraisalCalender.findById(req.params.id);
+    const { template, calendar, position } = await AppraisalCalender.findById(req.params.id);
     const {_id: templateId } = template;
     // const news  = new mongoose.Types.ObjectId(calender)
     const getIdFromRating = (arr: any) => {
@@ -244,14 +306,14 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
     });
     console.log(templateId)
     // template.forEach(templateId => {
-    updateTemplateForPositions(templateId, calendar, ratingScale, req, res)
+    updateTemplateForPositions(templateId, calendar, ratingScale, req, res,position)
     // })
 
 })
 
-const updateTemplateForPositions = async (template, calendar, ratingScale, req, res) => {
+const updateTemplateForPositions = async (template, calendar, ratingScale, req, res,position) => {
 
-    const { weightage, position, training_recommendation, other_recommendation, feedback_questionnaire, potential } = await Template.findById(template);
+    const { weightage, training_recommendation, other_recommendation, feedback_questionnaire, potential } = await Template.findById(template);
     console.log(position, "position", template)
     const getIdFromRating = (arr: any) => {
         return arr.map((item: any) => {
@@ -571,5 +633,7 @@ export {
     getRecentAppraisalCalender,
     updateAppraisalCalender,
     startAppraisal,
-    startProbationAppraisal
+    startProbationAppraisal,
+    addPositionsToAppraisalCalendar,
+    removePositionsToAppraisalCalendar
 }
