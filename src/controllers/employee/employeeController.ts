@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import {getImage} from "../azureImageStorage";
 import AppraisalCalender from "../../models/AppraisalCalender";
 import _ from "lodash";
+import template from "../../models/Template";
 
 
 const getRatingsfromObjectiveDescription = (data:any) => {
@@ -1810,6 +1811,60 @@ const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
 
 })
 
+const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => {
+
+   const calendar =  req.params.id
+
+
+    const appraisalCalendar = await AppraisalCalender.find({calendar:"633ab35409a387dbad930bcb"})
+
+    // const  getEmployee = await Employee.find({})
+    // const templates = await Template.find()
+
+    const findEmployee = async (id:any) => {
+        const emp = await Employee.find({})
+
+        console.log(id)
+        return emp.find((k:any) => k._id == id)
+    }
+    const findTemplate = async (id:any) => {
+        const emp = await Template.find({})
+
+        return emp.find((k:any) => k._id === id)
+    }
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
+
+        const data =  j.position.map((k:any) => {
+
+            return {
+              employee: findEmployee(k.name.toString()),
+              template: findTemplate(j.template.toString())
+            }})
+        // return {
+        //     employee: data,
+        //     "employee.template": j.template,
+        //     template: j.template
+        // }
+
+        return data
+
+    }).flat()
+
+    res.status(StatusCodes.OK).json({
+        // getEmployeefromAppraisalCalendar,
+        //     newArray,
+        //     employeeId
+        //     getEmployee,
+        data: getEmployeefromAppraisalCalendar
+    });
+
+
+
+
+
+
+
+})
 
 const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
 
@@ -1821,7 +1876,7 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
         return data
     }).flat()
 
-    const  getEmployee = await Employee.find({}, )
+    const  getEmployee = await Employee.find({})
 
     const employeeId = getEmployee?.map(k => k._id.toString())
 
@@ -1886,15 +1941,12 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 
     res.status(StatusCodes.OK).json({
-    // data:     getEmployeefromAppraisalCalendar[1],
+      // getEmployeefromAppraisalCalendar,
     //     newArray,
     //     employeeId
     //     getEmployee,
         data: myArray
     });
-
-
-
 })
 
 
@@ -1938,5 +1990,6 @@ export {
     filterEmployeeByManagerCode,
     employeeAppraisalClose,
     statusBasedCount,
-    getUnMappedEmployee
+    getUnMappedEmployee,
+    getEmployeeTemplate
 }

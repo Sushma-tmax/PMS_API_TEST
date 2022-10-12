@@ -11,7 +11,7 @@ const AppraisalCalenderSchema = new Schema({
         },
         status: {
             type: String,
-            enum: ['active', 'inactive'],
+            default: 'Draft',
         },
         template: {
             type: Schema.Types.ObjectId,

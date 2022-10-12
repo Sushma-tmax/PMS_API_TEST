@@ -9,13 +9,14 @@ import {
     startProbationAppraisal,
     getRecentAppraisalCalender,
     addPositionsToAppraisalCalendar,
-    removePositionsToAppraisalCalendar
+    removePositionsToAppraisalCalendar,
+    getAppraisalCalendarofCurrentYear
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
 
 const router = Router()
 
-// router.get('/check-position', checkTemplatesPosition)
+ router.get('/current-year-calendar', getAppraisalCalendarofCurrentYear)
 router.patch('/employee/:id', addPositionsToAppraisalCalendar)
 router.patch('/remove-employee/:id', removePositionsToAppraisalCalendar)
 router.get('/probation', startProbationAppraisal)

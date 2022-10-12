@@ -5,7 +5,8 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit'];
+    const removeFields = ['select', 'sort', 'page', 'limit','populate'];
+    console.log(req.query.populate,'pop')
 
     // Loop over removeFields and delete them from reqQuery
     removeFields.forEach(param => delete reqQuery[param]);
@@ -43,7 +44,7 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     query = query.skip(startIndex).limit(limit);
 
     if (populate) {
-        query = query.populate(populate);
+        query = query.populate(req.query.populate);
     }
 
     // Executing query
