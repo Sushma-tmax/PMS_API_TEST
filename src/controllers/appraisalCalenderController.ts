@@ -660,7 +660,7 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
     const getTodayCalendars = await Calender.find({star_date:  {$gte: year}}, '_id')
 
 
-    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}})
+    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).sort({ createdAt: -1 }).populate('template').populate('calendar').populate('position.name');
 
 
     res.status(StatusCodes.OK).json({

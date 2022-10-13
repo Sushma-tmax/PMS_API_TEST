@@ -1869,7 +1869,7 @@ const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => 
 const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     // const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
-    const appraisalCalendar = await AppraisalCalender.find({calendar:"633ab35409a387dbad930bcb"})
+    const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
 
     const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
      const data =  j.position.map((k:any) => k.name.toString())
