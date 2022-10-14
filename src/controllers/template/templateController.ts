@@ -142,9 +142,11 @@ const getAllTemplates = asyncHandler(async (req: Request, res: Response) => {
             path: 'training_recommendation.name'
         }).populate({
             path: 'other_recommendation.name'
-        }).populate({
-            path: 'position.name'
-        }).populate(
+        })
+        // .populate({
+        //     path: 'position.name'
+        // })
+        .populate(
             {
                 path: 'calendar'
             }

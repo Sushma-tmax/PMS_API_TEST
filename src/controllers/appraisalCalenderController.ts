@@ -8,6 +8,8 @@ import Calender from "../models/Calender";
 import { BadRequestError } from "../errors";
 import mongoose from "mongoose";
 import RatingScaleDescription from "../models/Ratings/RatingScaleDescription";
+import schedule from 'node-schedule'
+
 
 const validateTemplate = asyncHandler(async (req: Request, res: Response) => {
     const { template } = req.body;
@@ -122,13 +124,57 @@ const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: R
     const {id} = req.params
 
     const {employee} = req.body
+    const data = employee
+    console.log(data)
 
+    // const updatedCalendarr = await AppraisalCalender.findById(id)
 
-    const updatedCalendar = await Employee.findByIdAndUpdate(id, {
+    const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+        {
         $push: {
-            "position": employee,
+            position: {$each:  employee},
         }
-    })
+    },{  new: true}
+    )
+    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+
+
+})
+
+const removePositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
+
+    const {id} = req.params
+
+    const {employee} = req.body
+    const data = employee.map((j:any) => j.name)
+    console.log(data)
+
+    // const updatedCalendarr = await AppraisalCalender.findById(id)
+    const empp =   [
+        {
+            "name": "62ac2037c1c19127416ab005"
+
+        },
+        {
+            "name": "62ac2037c1c19127416ab006"
+
+        }]
+
+    const emppp =   [
+       "62ac2037c1c19127416ab005",
+        "62ac2037c1c19127416ab006"
+
+]
+
+
+
+    const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+        {
+        $pull: {
+            position: { "name":  {$in: data}},
+        }
+    },{  new: true,multi:true}
+    )
     res.status(StatusCodes.OK).json({"message": updatedCalendar});
 
 
@@ -555,6 +601,8 @@ const deleteAppraisalCalender = asyncHandler(async (req: Request, res: Response)
     });
 })
 
+
+
 const startProbationAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
     const employee = await Employee.find({ _id: '62a94e8368ab2d3848e6f9f1' })
@@ -581,6 +629,54 @@ const startProbationAppraisal = asyncHandler(async (req: Request, res: Response)
 })
 
 
+
+
+let date_time = new Date();
+let date = ("0" + date_time.getDate()).slice(-2);
+let month = ("0" + (date_time.getMonth() + 1)).slice(-2);
+let year = date_time.getFullYear();
+
+const today_date = year + "-" + month + "-" + date
+
+export const job = schedule.scheduleJob('* * * * *', async ()   =>  {
+
+    //get current appraisal calendar then check there dates  and match it
+    //if current data = end data then change the status
+
+    // const appraisalCalen = await AppraisalCalender
+
+    const getTodayCalendars = await Calender.find({end_date: today_date}, '_id')
+
+    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}})
+
+    const updateStatus  = await AppraisalCalender.updateMany({calendar: {$in: getTodayCalendars}},{status: "completed"})
+
+
+
+    console.log('sdfsdf', getTodayCalendars, "appraisal" + getAppraislaCalendar);
+});
+const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res: Response) => {
+
+    const getTodayCalendars = await Calender.find({star_date:  {$gte: year}}, '_id')
+
+
+    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).sort({ createdAt: -1 }).populate('template').populate('calendar').populate('position.name');
+
+
+    res.status(StatusCodes.OK).json({
+        // success: true,
+        // data: position,
+        // appraisal,
+        // position,
+        data: getAppraislaCalendar
+    })
+
+})
+
+
+
+
+
 export {
     createAppraisalCalender,
     deleteAppraisalCalender,
@@ -590,5 +686,7 @@ export {
     updateAppraisalCalender,
     startAppraisal,
     startProbationAppraisal,
-    addPositionsToAppraisalCalendar
+    addPositionsToAppraisalCalendar,
+    removePositionsToAppraisalCalendar,
+    getAppraisalCalendarofCurrentYear
 }

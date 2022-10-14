@@ -5,6 +5,9 @@ import {StatusCodes} from "http-status-codes";
 import Template from "../../models/Template";
 import mongoose from "mongoose";
 import {getImage} from "../azureImageStorage";
+import AppraisalCalender from "../../models/AppraisalCalender";
+import _ from "lodash";
+import template from "../../models/Template";
 
 
 const getRatingsfromObjectiveDescription = (data:any) => {
@@ -49,17 +52,17 @@ const employeeAppraisalClose = asyncHandler(async (req: Request, res: Response) 
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
             $set: {
-                // reviewerIsChecked: false,
-                // reviewerIsDisabled: true,
-                // normalizerIsChecked: false,
-                // normalizerIsDisabled: true,
-                // appraiserIsDisabled: true,
-                // appraiserIsChecked: false,
-                // employee: {},
-                // appraisal_template : {},
-                // appraisal : {},
-                // reviewer : {},
-                // normalizer : {},
+                reviewerIsChecked: false,
+                reviewerIsDisabled: true,
+                normalizerIsChecked: false,
+                normalizerIsDisabled: true,
+                appraiserIsDisabled: true,
+                appraiserIsChecked: false,
+                employee: {},
+                appraisal_template : {},
+                appraisal : {},
+                reviewer : {},
+                normalizer : {},
                 "appraisal.status" : "not-started"
             }
         }
@@ -1808,8 +1811,154 @@ const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
 
 })
 
+const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => {
+
+   const calendar =  req.params.id
 
 
+    const appraisalCalendar = await AppraisalCalender.find({calendar:"633ab35409a387dbad930bcb"})
+
+    // const  getEmployee = await Employee.find({})
+    // const templates = await Template.find()
+
+    const findEmployee = async (id:any) => {
+        const emp = await Employee.find({})
+
+        console.log(id)
+        return emp.find((k:any) => k._id == id)
+    }
+    const findTemplate = async (id:any) => {
+        const emp = await Template.find({})
+
+        return emp.find((k:any) => k._id === id)
+    }
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
+
+        const data =  j.position.map((k:any) => {
+
+            return {
+              employee: findEmployee(k.name.toString()),
+              template: findTemplate(j.template.toString())
+            }})
+        // return {
+        //     employee: data,
+        //     "employee.template": j.template,
+        //     template: j.template
+        // }
+
+        return data
+
+    }).flat()
+
+    res.status(StatusCodes.OK).json({
+        // getEmployeefromAppraisalCalendar,
+        //     newArray,
+        //     employeeId
+        //     getEmployee,
+        data: getEmployeefromAppraisalCalendar
+    });
+
+
+
+
+
+
+
+})
+
+const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    // const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
+    const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
+
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
+     const data =  j.position.map((k:any) => k.name.toString())
+        return data
+    }).flat()
+
+    const  getEmployee = await Employee.find({})
+
+    const employeeId = getEmployee?.map(k => k._id.toString())
+
+    const empp = [
+        '62ac2037c1c19127416ab019',
+        '62ac2037c1c19127416ab01a',
+        '62ac2037c1c19127416ab01b',
+        '62ac2037c1c19127416ab016',
+        '62ac2037c1c19127416ab016',
+        '62ac2037c1c19127416ab017'
+
+    ]
+
+    // const myArray = getEmployeefromAppraisalCalendar.filter(ar => !getEmployee.find(rm => (rm._id === ar.name ) ))
+    // const myArray = employeeId.filter(ar => !getEmployeefromAppraisalCalendar.includes(rm => (rm === ar ) ))
+
+   const appraisalCal = [
+       "62ac2037c1c19127416ab004",
+       "62ac2037c1c19127416ab005",
+       "62ac2037c1c19127416ab006",
+       "62ac2037c1c19127416ab007",
+       "62ac2037c1c19127416ab008",
+       "62ac2037c1c19127416ab009",
+       "62ac2037c1c19127416ab00a",
+       "62ac2037c1c19127416ab00b",
+       "62ac2037c1c19127416ab00c",
+       "62ac2037c1c19127416ab00d",
+       "62ac2037c1c19127416ab00e",
+       "62ac2037c1c19127416ab00f",
+       "62ac2037c1c19127416ab010",
+       "62ac2037c1c19127416ab011",
+       "62ac2037c1c19127416ab012",
+       "62ac2037c1c19127416ab013",
+       "62ac2037c1c19127416ab014",
+       "62ac2037c1c19127416ab015",
+       "62ac2037c1c19127416aafe9",
+       "62ac2037c1c19127416aafea",
+       "62ac2037c1c19127416aafeb",
+       "62ac2037c1c19127416aafec",
+       "62ac2037c1c19127416aafed",
+       "62ac2037c1c19127416aafee",
+       "62ac2037c1c19127416aafef",
+       "62ac2037c1c19127416aaff0",
+       "62ac2037c1c19127416aaff1",
+       "62ac2037c1c19127416aaff2",
+       "62ac2037c1c19127416aaff3",
+       "62ac2037c1c19127416aaff4",
+       "62ac2037c1c19127416aaff5",
+       "62ac2037c1c19127416aaff6",
+       "62ac2037c1c19127416aaff7",
+       "62ac2037c1c19127416aaff8",
+       "62ac2037c1c19127416aaff9",
+       "62ac2037c1c19127416aaffa",
+       "62ac2037c1c19127416aaffb",
+       "62ac2037c1c19127416aaffc",
+       "62ac2037c1c19127416aaffd",
+       "62ac2037c1c19127416aaffe",
+       "62ac2037c1c19127416aafff",
+       "62ac2037c1c19127416ab000",
+       "62ac2037c1c19127416ab001",
+       "62ac2037c1c19127416ab002",
+       "62ac2037c1c19127416ab003"
+   ]
+
+
+
+    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString()))
+
+    const newArray = _.difference(getEmployee.map((j:any) => j._id.toString()),getEmployeefromAppraisalCalendar)
+
+    console.log(getEmployeefromAppraisalCalendar)
+
+
+    res.status(StatusCodes.OK).json({
+      // getEmployeefromAppraisalCalendar,
+      //   newArray,
+    //     employeeId
+    //     getEmployee,
+        data: myArray,
+        getEmployeefromAppraisalCalendar
+    });
+})
 
 
 export {
@@ -1851,5 +2000,7 @@ export {
     attachmentsEmployee,
     filterEmployeeByManagerCode,
     employeeAppraisalClose,
-    statusBasedCount
+    statusBasedCount,
+    getUnMappedEmployee,
+    getEmployeeTemplate
 }

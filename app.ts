@@ -46,10 +46,16 @@ app.use(cors());
 
 dotenv.config({path: __dirname + '/.env'});
 
-//connectDB('mongodb+srv://austy:oezUKzp7vEDAnDLM@cluster0.mzmcv.mongodb.net/PMS?retryWrites=true&w=majority');
+
+
+ //connectDB('mongodb+srv://austy:oezUKzp7vEDAnDLM@cluster0.mzmcv.mongodb.net/PMS?retryWrites=true&w=majority');
+
 // connectDB('mongodb://127.0.0.1:27017/pms');
- connectDB('mongodb+srv://augustya:brOlGGq5fjj5EL5z@cluster0.22mx4.mongodb.net/PMS?retryWrites=true&w=majority');
-// connectDB('mongodb+srv://pms:yGMXa8yrjjnjydFc@cluster0.axzjq.mongodb.net/PMS?retryWrites=true&w=majority');
+
+// connectDB('mongodb+srv://augustya:brOlGGq5fjj5EL5z@cluster0.22mx4.mongodb.net/PMS?retryWrites=true&w=majority');
+
+
+connectDB('mongodb+srv://pms:yGMXa8yrjjnjydFc@cluster0.axzjq.mongodb.net/PMS?retryWrites=true&w=majority');
 console.log(process.env.MONGO_URI);
 
 
@@ -101,6 +107,8 @@ app.get('/test', (req, res) => {
 app.post('/graph-api', graphAPIQuery);
 
 app.use(express.static(path.join(__dirname, '../build')));
+
+
 
 
 app.get('*', (req, res) => {

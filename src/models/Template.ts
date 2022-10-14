@@ -93,6 +93,7 @@ const TemplateSchema = new Schema({
                 default: false
             }
         }],
+
         calendar: {
             type: Schema.Types.ObjectId,
             ref: 'Calender',
