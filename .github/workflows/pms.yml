@@ -16,6 +16,8 @@ jobs:
         with:
           node-version: '16.x'
       - run: |
+          npm install node-schedule --save
+          npm install lodash --save
           sudo npm i
           npm run build 
           sudo pm2 restart pm2.config.js
