@@ -13,10 +13,15 @@ import {
     getAppraisalCalendarofCurrentYear
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
+import {advancedResults} from "../middleware/advancedResults";
+import AppraisalCalender from "../models/AppraisalCalender";
+import {testFilter} from "../controllers/employee/employeeController";
 
 const router = Router()
 
- router.get('/current-year-calendar', getAppraisalCalendarofCurrentYear)
+
+router.route('/filter').get(advancedResults(AppraisalCalender,'calendar'), testFilter)
+router.get('/current-year-calendar', getAppraisalCalendarofCurrentYear)
 router.patch('/employee/:id', addPositionsToAppraisalCalendar)
 router.patch('/remove-employee/:id', removePositionsToAppraisalCalendar)
 router.get('/probation', startProbationAppraisal)
@@ -28,6 +33,7 @@ router.get('/:id', getAppraisalCalenderById)
 router.post('/', createAppraisalCalender)
 // router.post('/employee/:id', addPositionsToAppraisalCalendar)
 router.delete('/:id', deleteAppraisalCalender)
+
 
 
 

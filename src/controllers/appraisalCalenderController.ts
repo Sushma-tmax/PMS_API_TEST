@@ -50,7 +50,7 @@ const createAppraisalCalender = asyncHandler(async (req: Request, res: Response)
         name: templateName,
         other_recommendation,
         training_recommendation,
-        position,
+        // position,
         calendar,
         weightage,
         feedback_questionnaire
@@ -102,7 +102,7 @@ const createAppraisalCalender = asyncHandler(async (req: Request, res: Response)
         template,
         other_recommendation,
         training_recommendation,
-        position,
+        // position,
         weightage,
         feedback_questionnaire
     })

@@ -11,9 +11,13 @@ import {
     addCalendar,
     filterTemplate
 } from "../controllers/template/templateController";
+import {advancedResults} from "../middleware/advancedResults";
+import Template from "../models/Template";
+import {testFilter} from "../controllers/employee/employeeController";
 
 const router = Router()
 
+router.route('/filter').get(advancedResults(Template,''),testFilter)
 router.post('/template', createTemplate)
 router.get('/template', getAllTemplates)
 router.get('/template/:id', getTemplate)
