@@ -56,7 +56,7 @@ export interface Employee {
 }
 
 const EmployeeSchema = new Schema({
-    employeeCode: {
+    employee_code: {
         type: String,
     },
     name: {
@@ -66,6 +66,7 @@ const EmployeeSchema = new Schema({
     email: {
         type: String,
     },
+    appraiser: String,
     mobile: {
         type: String,
 

@@ -52,17 +52,17 @@ const employeeAppraisalClose = asyncHandler(async (req: Request, res: Response) 
 
     const employee = await Employee.updateMany({_id: {$in: id}}, {
             $set: {
-                // reviewerIsChecked: false,
-                // reviewerIsDisabled: true,
-                // normalizerIsChecked: false,
-                // normalizerIsDisabled: true,
-                // appraiserIsDisabled: true,
-                // appraiserIsChecked: false,
-                // employee: {},
-                // appraisal_template : {},
-                // appraisal : {},
-                // reviewer : {},
-                // normalizer : {},
+                reviewerIsChecked: false,
+                reviewerIsDisabled: true,
+                normalizerIsChecked: false,
+                normalizerIsDisabled: true,
+                appraiserIsDisabled: true,
+                appraiserIsChecked: false,
+                employee: {},
+                appraisal_template : {},
+                appraisal : {},
+                reviewer : {},
+                normalizer : {},
                 "appraisal.status" : "not-started"
             }
         }
@@ -1610,7 +1610,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
     if (employee.employee_rating - normalizer.normalizer_rating <= 0.5) {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-1',
+                "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": 'completed',
@@ -1880,6 +1880,16 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 
     const employeeId = getEmployee?.map(k => k._id.toString())
 
+    const empp = [
+        '62ac2037c1c19127416ab019',
+        '62ac2037c1c19127416ab01a',
+        '62ac2037c1c19127416ab01b',
+        '62ac2037c1c19127416ab016',
+        '62ac2037c1c19127416ab016',
+        '62ac2037c1c19127416ab017'
+
+    ]
+
     // const myArray = getEmployeefromAppraisalCalendar.filter(ar => !getEmployee.find(rm => (rm._id === ar.name ) ))
     // const myArray = employeeId.filter(ar => !getEmployeefromAppraisalCalendar.includes(rm => (rm === ar ) ))
 
@@ -1933,19 +1943,38 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 
 
-    const myArray = getEmployee.filter(ar => !appraisalCal.includes(ar._id.toString() ))
+    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString()))
 
-    const newArray = _.difference(employeeId,appraisalCal)
+    const newArray = _.difference(getEmployee.map((j:any) => j._id.toString()),getEmployeefromAppraisalCalendar)
 
     console.log(getEmployeefromAppraisalCalendar)
 
 
     res.status(StatusCodes.OK).json({
       // getEmployeefromAppraisalCalendar,
-    //     newArray,
+      //   newArray,
     //     employeeId
     //     getEmployee,
-        data: myArray
+        data: myArray,
+        getEmployeefromAppraisalCalendar
+    });
+})
+
+const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {
+    const emp = await Employee.findById({_id:req.params.id})
+    console.log(emp.legal_full_name,'emppp')
+    // const emp2 = await Employee.findOne({manager_code: emp.employee_code})
+    const reviewerData = await Employee.find({manager_code: emp.appraiser})
+
+
+    res.status(StatusCodes.OK).json({
+        // getEmployeefromAppraisalCalendar,
+        //   newArray,
+        //     employeeId
+        //     getEmployee,
+        // appraiserOfReviewer: emp2,
+        emp,
+        reviewerData
     });
 })
 
@@ -1991,5 +2020,6 @@ export {
     employeeAppraisalClose,
     statusBasedCount,
     getUnMappedEmployee,
-    getEmployeeTemplate
+    getEmployeeTemplate,
+    getReviewerEmployee
 }
