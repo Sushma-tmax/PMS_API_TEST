@@ -1610,7 +1610,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
     if (employee.employee_rating - normalizer.normalizer_rating <= 0.5) {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-1',
+                "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": 'completed',
@@ -1960,6 +1960,24 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
     });
 })
 
+const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {
+    const emp = await Employee.findById({_id:req.params.id})
+    console.log(emp.legal_full_name,'emppp')
+    // const emp2 = await Employee.findOne({manager_code: emp.employee_code})
+    const reviewerData = await Employee.find({manager_code: emp.appraiser})
+
+
+    res.status(StatusCodes.OK).json({
+        // getEmployeefromAppraisalCalendar,
+        //   newArray,
+        //     employeeId
+        //     getEmployee,
+        // appraiserOfReviewer: emp2,
+        emp,
+        reviewerData
+    });
+})
+
 
 export {
     createEmployee,
@@ -2002,5 +2020,6 @@ export {
     employeeAppraisalClose,
     statusBasedCount,
     getUnMappedEmployee,
-    getEmployeeTemplate
+    getEmployeeTemplate,
+    getReviewerEmployee
 }
