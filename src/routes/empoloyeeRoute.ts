@@ -38,7 +38,8 @@ import {
     filterEmployeeByManagerCode, employeeAppraisalClose,
     statusBasedCount,
     getUnMappedEmployee,
-    getEmployeeTemplate, getReviewerEmployee
+    getEmployeeTemplate, getReviewerEmployee,
+    removeAppraiserAttachments
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -84,6 +85,7 @@ router.patch('/appraiser-accept-employee/:id', appraiserAcceptsEmployee)
 router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
 router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)
 router.patch('/appraiser-attachments/:id', attachmentsAppraiser)
+router.patch('/delete/appraiser-attachments/:id', removeAppraiserAttachments)
 router.patch('/reviewer-attachments/:id', attachmentsReviewer)
 router.patch('/normalizer-attachments/:id', attachmentsNormalizer)
 router.patch('/employee-attachments/:id', attachmentsEmployee)
