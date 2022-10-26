@@ -149,24 +149,6 @@ const removePositionsToAppraisalCalendar = asyncHandler(async (req: Request, res
     const data = employee.map((j:any) => j.name)
     console.log(data)
 
-    // const updatedCalendarr = await AppraisalCalender.findById(id)
-    const empp =   [
-        {
-            "name": "62ac2037c1c19127416ab005"
-
-        },
-        {
-            "name": "62ac2037c1c19127416ab006"
-
-        }]
-
-    const emppp =   [
-       "62ac2037c1c19127416ab005",
-        "62ac2037c1c19127416ab006"
-
-]
-
-
 
     const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
         {
@@ -176,7 +158,6 @@ const removePositionsToAppraisalCalendar = asyncHandler(async (req: Request, res
     },{  new: true,multi:true}
     )
     res.status(StatusCodes.OK).json({"message": updatedCalendar});
-
 
 })
 

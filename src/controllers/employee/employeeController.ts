@@ -1978,6 +1978,39 @@ const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => 
     });
 })
 
+const removeAppraiserAttachments = asyncHandler(async (req: Request, res: Response) => {
+
+
+
+    const {id} = req.params
+    const {name} = req.body
+
+    // const {attachments} = req.body
+    // console.log(attachments)
+    //
+    // const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+    //     $push: {
+    //         "appraisal.attachments": attachments,
+    //     }
+    // })
+    //
+    // const {employee} = req.body
+    // const data = employee.map((j:any) => j.name)
+    // console.log(data)
+
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "appraisal.attachments": { "url":  name},
+            }
+        },{  new: true,multi:true}
+    )
+    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+
+})
+
+
 
 export {
     createEmployee,
@@ -2021,5 +2054,6 @@ export {
     statusBasedCount,
     getUnMappedEmployee,
     getEmployeeTemplate,
-    getReviewerEmployee
+    getReviewerEmployee,
+    removeAppraiserAttachments
 }
