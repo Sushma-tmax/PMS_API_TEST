@@ -125,6 +125,10 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false,
         },
+       employee_status: {
+            type: String,
+            default: 'not-started'
+        },
         attachments: [{
             url: { type: String},
             objective_description : {type: String},
@@ -365,6 +369,11 @@ const EmployeeSchema = new Schema({
         rejection_count: Number,
         confirmed: Boolean,
 
+        comments : {
+            type: String,
+            default: "",
+        },
+
         attachments: [{
            url: { type: String},
             objective_description : {type: String},
@@ -602,6 +611,10 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
+        reviewer_overall_feedback: {
+            type: String,
+            default: ''
+        },
         reason_for_rejection: {
             type: String
         },
@@ -739,6 +752,7 @@ const EmployeeSchema = new Schema({
             sort_value: Number
 
         }],
+        
 
         area_of_improvement: [{
             value: {
@@ -778,10 +792,18 @@ const EmployeeSchema = new Schema({
             objective_description : {type: String},
             name: {type: String}
         }],
+        
+        comments: {
+            type: String,
+        },
 
         isChecked: {
             type: Boolean,
             default: false
+        },
+        normalizer_overall_feedback: {
+            type: String,
+            default: ''
         },
         normalizer_status: {
             type: String,
@@ -915,6 +937,7 @@ const EmployeeSchema = new Schema({
                 default: ""
             },
         }],
+        
 
         area_of_improvement: [{
             value: {

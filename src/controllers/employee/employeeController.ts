@@ -1,17 +1,17 @@
-import {Employee, ObjectiveType} from "../../models";
+import { Employee, ObjectiveType } from "../../models";
 import asyncHandler from "../../middleware/asyncHandler";
-import {Request, Response} from "express";
-import {StatusCodes} from "http-status-codes";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import Template from "../../models/Template";
 import mongoose from "mongoose";
-import {getImage} from "../azureImageStorage";
+import { getImage } from "../azureImageStorage";
 import AppraisalCalender from "../../models/AppraisalCalender";
 import _ from "lodash";
 import template from "../../models/Template";
 
 
-const getRatingsfromObjectiveDescription = (data:any) => {
-    return data?.map((k:any) => {
+const getRatingsfromObjectiveDescription = (data: any) => {
+    return data?.map((k: any) => {
         return {
             // ratings: k.ratings,
             // rating_rejected: false,
@@ -29,15 +29,15 @@ const getRatingsfromObjectiveDescription = (data:any) => {
 }
 
 const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
+    const { id } = req.body
     // console.log(id, '`````````````````````````````````````````````````')
     // const {reviewer: appraisal} = await Employee.findById(id);
 
-    const employee = await Employee.updateMany({_id: {$in: id}}, {
-            $set: {
-                "manager_code": "1080"
-            }
+    const employee = await Employee.updateMany({ _id: { $in: id } }, {
+        $set: {
+            "manager_code": "1080"
         }
+    }
     )
     res.status(StatusCodes.OK).json({
         employee
@@ -46,26 +46,26 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
 
 
 const employeeAppraisalClose = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
+    const { id } = req.body
     // console.log(id, '`````````````````````````````````````````````````')
     // const {reviewer: appraisal} = await Employee.findById(id);
 
-    const employee = await Employee.updateMany({_id: {$in: id}}, {
-            $set: {
-                reviewerIsChecked: false,
-                reviewerIsDisabled: true,
-                normalizerIsChecked: false,
-                normalizerIsDisabled: true,
-                appraiserIsDisabled: true,
-                appraiserIsChecked: false,
-                employee: {},
-                appraisal_template : {},
-                appraisal : {},
-                reviewer : {},
-                normalizer : {},
-                "appraisal.status" : "not-started"
-            }
+    const employee = await Employee.updateMany({ _id: { $in: id } }, {
+        $set: {
+            reviewerIsChecked: false,
+            reviewerIsDisabled: true,
+            normalizerIsChecked: false,
+            normalizerIsDisabled: true,
+            appraiserIsDisabled: true,
+            appraiserIsChecked: false,
+            employee: {},
+            appraisal_template: {},
+            appraisal: {},
+            reviewer: {},
+            normalizer: {},
+            "appraisal.status": "not-started"
         }
+    }
     )
     res.status(StatusCodes.OK).json({
         employee
@@ -88,7 +88,7 @@ const createEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
 
-    const {status} = req.params
+    const { status } = req.params
 
     let employees: any
 
@@ -96,7 +96,7 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
     if (status === 'all') {
         employees = await Employee.find()
     } else {
-        employees = await Employee.find({"appraisal.status": status})
+        employees = await Employee.find({ "appraisal.status": status })
     }
     //employees.populate('calendar')
     // employees.populate({
@@ -369,7 +369,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         .populate('appraisal_template.feedback_questionnaire.name')
         .populate('calendar')
 
-    const fun =  (test:any) => {
+    const fun = (test: any) => {
         return "www.google.com" + test
 
     }
@@ -389,7 +389,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-// @ts-ignore
+    // @ts-ignore
     employee?.reviewer?.attachments = employee.reviewer.attachments.map((j: any) => {
         // const at : {
         //
@@ -506,7 +506,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 const addTemplateToEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params;
+    const { id } = req.params;
 
 
     // const {weightage} = template;
@@ -517,8 +517,8 @@ const addTemplateToEmployee = asyncHandler(async (req: Request, res: Response) =
         }
     )
 
-    const {appraisal_template: {objective_group, objective_type, objective_description}} = employee;
-    const {appraisal: {objective_description: appraisal_objective_description}} = employee;
+    const { appraisal_template: { objective_group, objective_type, objective_description } } = employee;
+    const { appraisal: { objective_description: appraisal_objective_description } } = employee;
 
     if (appraisal_objective_description.length === 0) {
         const updatedEmployee = await Employee.findByIdAndUpdate(
@@ -527,12 +527,12 @@ const addTemplateToEmployee = asyncHandler(async (req: Request, res: Response) =
             },
             {
                 $set:
-                    {
-                        appraisal_status: 'appraiser',
-                        appraisal: {
-                            status: 'in-progress',
-                        }
-                    },
+                {
+                    appraisal_status: 'appraiser',
+                    appraisal: {
+                        status: 'in-progress',
+                    }
+                },
                 new: true,
                 runValidators: true
             }
@@ -554,18 +554,18 @@ const addTemplateToEmployee = asyncHandler(async (req: Request, res: Response) =
 
 const addRating = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id, rating} = req.body
+    const { id, rating } = req.body
     // {"appraisal.objective_group.objective_type.objective_description._id": "6207ec6ac1226d3f36fc4"}
     const employee = await Employee.updateOne({
-            "_id": "6204935ebca89023952f2da9",
-            "appraisal.objective_group._id": ("6207ec6a8bfc1226d3f36fb1")
-        }, {
+        "_id": "6204935ebca89023952f2da9",
+        "appraisal.objective_group._id": ("6207ec6a8bfc1226d3f36fb1")
+    }, {
 
-            $set: {
-                "appraisal.objective_group.$.value": 23
-            }
-
+        $set: {
+            "appraisal.objective_group.$.value": 23
         }
+
+    }
         // {"appraisal.objective_group.objective_type.value": 1}
     )
         .populate({
@@ -594,7 +594,7 @@ const addRating = asyncHandler(async (req: Request, res: Response) => {
 
 const appraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const {
         ratings,
@@ -611,15 +611,15 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
-            "_id": new mongoose.Types.ObjectId(id),
+        "_id": new mongoose.Types.ObjectId(id),
 
-            // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "appraisal.objective_description": {
-                $elemMatch: {
-                    name: new mongoose.Types.ObjectId(objective_description_name)
-                }
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "appraisal.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
             }
-        },
+        }
+    },
         {
             $set: {
                 "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
@@ -647,7 +647,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
 
 const uploadAttachmentsAppraiser = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const {
         ratings,
@@ -660,15 +660,15 @@ const uploadAttachmentsAppraiser = asyncHandler(async (req: Request, res: Respon
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
-            "_id": new mongoose.Types.ObjectId(id),
+        "_id": new mongoose.Types.ObjectId(id),
 
-            // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "appraisal.objective_description": {
-                $elemMatch: {
-                    name: new mongoose.Types.ObjectId(objective_description_name)
-                }
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "appraisal.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
             }
-        },
+        }
+    },
         {
             $set: {
                 "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
@@ -690,7 +690,7 @@ const uploadAttachmentsAppraiser = asyncHandler(async (req: Request, res: Respon
 
 const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const {
         ratings,
@@ -705,15 +705,15 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
-            "_id": new mongoose.Types.ObjectId(id),
+        "_id": new mongoose.Types.ObjectId(id),
 
-            // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "reviewer.objective_description": {
-                $elemMatch: {
-                    name: new mongoose.Types.ObjectId(objective_description_name)
-                }
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "reviewer.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
             }
-        },
+        }
+    },
         {
             $set: {
                 "reviewer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
@@ -741,7 +741,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
 
 const normalizerRejection = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const {
         ratings,
@@ -754,15 +754,15 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
-            "_id": new mongoose.Types.ObjectId(id),
+        "_id": new mongoose.Types.ObjectId(id),
 
-            // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "normalizer.objective_description": {
-                $elemMatch: {
-                    name: new mongoose.Types.ObjectId(objective_description_name)
-                }
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "normalizer.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
             }
-        },
+        }
+    },
         {
             $set: {
                 "normalizer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
@@ -789,7 +789,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
 
 const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const {
         ratings,
@@ -805,15 +805,15 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
         objective_description, id)
 
     const employee = await Employee.findOneAndUpdate({
-            "_id": new mongoose.Types.ObjectId(id),
+        "_id": new mongoose.Types.ObjectId(id),
 
-            // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
-            "employee.objective_description": {
-                $elemMatch: {
-                    name: new mongoose.Types.ObjectId(objective_description_name)
-                }
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "employee.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
             }
-        },
+        }
+    },
         {
             $set: {
                 "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
@@ -841,11 +841,11 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
 const appraisalStatusFilter = asyncHandler(async (req: Request, res: Response) => {
 
-    const {status} = req.params
+    const { status } = req.params
 
     const employee = await Employee.find({
-            "appraisal.status": status
-        }
+        "appraisal.status": status
+    }
     )
     res.status(StatusCodes.OK).json({
         employee
@@ -889,11 +889,11 @@ const appraisalStatusFilter = asyncHandler(async (req: Request, res: Response) =
 
 
 const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
+    const { id } = req.body
     console.log(id, '`````````````````````````````````````````````````')
-    const {reviewer: appraisal} = await Employee.findById(id);
+    const { reviewer: appraisal } = await Employee.findById(id);
 
-    const employee = await Employee.updateMany({_id: {$in: id}},
+    const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
                 "normalizer.objective_type": appraisal.objective_type,
@@ -909,9 +909,9 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.normalizer_acceptance": true,
                 "normalizer.normalizer_status": 'accepted',
                 "appraisal.normalizer_status": 'accepted',
-                "appraisal.status":"normalized"
-
-
+                "appraisal.status": "normalized",
+                "employee.employee_status": "pending",
+                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
         }
     )
@@ -923,12 +923,12 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
 // const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
+    const { id } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
-    const {appraisal} = await Employee.findById(id);
+    const { appraisal } = await Employee.findById(id);
 
-    const employee = await Employee.updateMany({_id: {$in: id}},
+    const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
 
@@ -956,12 +956,38 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+const acceptReviewerRatings = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.body
+    console.log(id, '`````````````````````````````````````````````````')
+
+    const { appraisal } = await Employee.findById(id);
+
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        {
+            $set: {
+
+                "reviewer.objective_group": appraisal.objective_group,
+                "reviewer.objective_type": appraisal.objective_type,
+                "reviewer.objective_description": appraisal.objective_description,
+                "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                "reviewer.training_recommendation": appraisal.training_recommendation,
+                "reviewer.other_recommendation": appraisal.other_recommendation,
+                "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                "reviewer.feedback_questions": appraisal.feedback_questions,
+            }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
 
 const acceptAppraisalEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
+    const { id } = req.params
     const employee = await Employee.updateMany({
-            "_id": new mongoose.Types.ObjectId(id),
-        },
+        "_id": new mongoose.Types.ObjectId(id),
+    },
         {
             $set: {
                 "appraisal.status": "completed"
@@ -974,15 +1000,15 @@ const acceptAppraisalEmployee = asyncHandler(async (req: Request, res: Response)
 })
 
 const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
-    const {value} = req.body
+    const { id } = req.params
+    const { value } = req.body
 
 
 
 
     const employee = await Employee.updateMany({
-            "_id": new mongoose.Types.ObjectId(id),
-        },
+        "_id": new mongoose.Types.ObjectId(id),
+    },
         {
             $set: {
                 "reviewer.reviewer_acceptance": false,
@@ -993,7 +1019,7 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
     )
 
     // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true) {
-    const {appraisal,reviewer} = await Employee.findById(id)
+    const { appraisal, reviewer } = await Employee.findById(id)
     // console.log(reviewer.rejection_count,'111111111111``````')
 
     // const employeeRating = await Employee.updateMany({_id: {$in: id}},
@@ -1020,12 +1046,12 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
     // console.log(employee, 'employee')
     // }
 
-    console.log(reviewer,'```````````````````')
-    if (reviewer.rejection_count === 0 ||  reviewer.rejection_count === undefined) {
+    console.log(reviewer, '```````````````````')
+    if (reviewer.rejection_count === 0 || reviewer.rejection_count === undefined) {
         // if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
-        const {appraisal} = await Employee.findById(id)
+        const { appraisal } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1050,8 +1076,8 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
         )
 
         res.status(StatusCodes.OK).json({
-           message: "WOrks",
-            stat:   reviewer
+            message: "WOrks",
+            stat: reviewer
         });
 
     } else if (reviewer.rejection_count > 0) {
@@ -1179,15 +1205,15 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
 
 const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const findEmpoloyee = await Employee.findById(id)
 
     const value = findEmpoloyee.reviewer.reviewer_rejected_value
 
     const employee = await Employee.updateMany({
-            "_id": new mongoose.Types.ObjectId(id),
-        },
+        "_id": new mongoose.Types.ObjectId(id),
+    },
         {
             $set: {
                 "appraisal.appraisal_acceptance": true,
@@ -1204,9 +1230,9 @@ const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: R
 
 
     if (findEmpoloyee.reviewer.reviewer_rejected_value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1243,15 +1269,15 @@ const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: R
 
 const acceptNormalizerRejectedAppraiser = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
     const findEmpoloyee = await Employee.findById(id)
 
     const value = findEmpoloyee.normalizer.normalizer_rejected_value
 
     const employee = await Employee.updateMany({
-            "_id": new mongoose.Types.ObjectId(id),
-        },
+        "_id": new mongoose.Types.ObjectId(id),
+    },
         {
             $set: {
                 "appraisal.appraisal_acceptance": false,
@@ -1268,9 +1294,9 @@ const acceptNormalizerRejectedAppraiser = asyncHandler(async (req: Request, res:
 
 
     if (findEmpoloyee.normalizer.normalizer_rejected_value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
-        const {normalizer} = await Employee.findById(id)
+        const { normalizer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1303,12 +1329,12 @@ const acceptNormalizerRejectedAppraiser = asyncHandler(async (req: Request, res:
 })
 
 const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
-    const {value} = req.body
+    const { id } = req.params
+    const { value } = req.body
 
     const employee = await Employee.updateMany({
-            "_id": new mongoose.Types.ObjectId(id),
-        },
+        "_id": new mongoose.Types.ObjectId(id),
+    },
         {
             $set: {
                 "normalizer.normalizer_rejected_value": value,
@@ -1320,9 +1346,9 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
     )
 
     if (value.filter((i: any) => i.value === 'rating')[0].isChecked === true || value.filter((i: any) => i.value === 'rating')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1348,9 +1374,9 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
 
 
     if (value.filter((i: any) => i.value === 'other_recommendation')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1374,9 +1400,9 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
         console.log(employee, 'employee')
     }
     if (value.filter((i: any) => i.value === 'training_recommendation')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1401,9 +1427,9 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
     }
 
     if (value.filter((i: any) => i.value === 'Feedback_questionnaire')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1426,9 +1452,9 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
     }
 
     if (value.filter((i: any) => i.value === 'area_of_improvement')[0].isChecked === false) {
-        const {reviewer} = await Employee.findById(id)
+        const { reviewer } = await Employee.findById(id)
 
-        const employee = await Employee.updateMany({_id: {$in: id}},
+        const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
 
@@ -1465,9 +1491,11 @@ const startProbationAppraisal = asyncHandler(async (req: Request, res: Response)
 })
 
 const appraisalStatusAppraiser = asyncHandler(async (req: Request, res: Response) => {
-    const {status} = req.params
+    const { status } = req.params
     console.log(status)
-    const employee = await Employee.find({"appraisal.appraiser_status": status})
+
+    const employee = await Employee.find({ "appraisal.appraiser_status": status })
+
 
     res.status(StatusCodes.OK).json({
         employee
@@ -1475,9 +1503,11 @@ const appraisalStatusAppraiser = asyncHandler(async (req: Request, res: Response
 })
 
 const appraisalStatusReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const {status} = req.params
+    const { status } = req.params
     console.log(status)
-    const employee = await Employee.find({"reviewer.reviewer_status": status})
+
+    const employee = await Employee.find({ "reviewer.reviewer_status": status })
+
 
     res.status(StatusCodes.OK).json({
         employee
@@ -1485,9 +1515,11 @@ const appraisalStatusReviewer = asyncHandler(async (req: Request, res: Response)
 })
 
 const appraisalStatusNormalizer = asyncHandler(async (req: Request, res: Response) => {
-    const {status} = req.params
+    const { status } = req.params
     console.log(status)
-    const employee = await Employee.find({"normalizer.normalizer_status": status})
+
+    const employee = await Employee.find({ "normalizer.normalizer_status": status })
+
 
     res.status(StatusCodes.OK).json({
         employee
@@ -1495,9 +1527,9 @@ const appraisalStatusNormalizer = asyncHandler(async (req: Request, res: Respons
 })
 
 const filterByRatings = asyncHandler(async (req: Request, res: Response) => {
-    const {gt, lt} = req.params
+    const { gt, lt } = req.params
 
-    const employee = await Employee.find({"appraisal.appraiser_rating": {$gt: gt, $lt: lt}})
+    const employee = await Employee.find({ "appraisal.appraiser_rating": { $gt: gt, $lt: lt } })
 
     res.status(StatusCodes.OK).json({
         employee
@@ -1505,9 +1537,9 @@ const filterByRatings = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const filterByPotential = asyncHandler(async (req: Request, res: Response) => {
-    const {potential} = req.params
+    const { potential } = req.params
 
-    const employee = await Employee.find({"appraisal.potential": {potential}})
+    const employee = await Employee.find({ "appraisal.potential": { potential } })
 
     res.status(StatusCodes.OK).json({
         employee
@@ -1520,15 +1552,15 @@ const testFilter = asyncHandler(async (req: Request, res: Response) => {
     console.log(req)
 
     // const employee = await Employee.find({"appraisal.potential": {potential} })
-//@ts-ignore
+    //@ts-ignore
     res.status(200).json(res.advancedResults);
 })
 
 const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
-    const {comments} = req.body
+    const { id } = req.params
+    const { comments } = req.body
 
-    console.log('```````````` running ',id,comments)
+    console.log('```````````` running ', id, comments)
 
     // const  id = "62ac2037c1c19127416aaff1"
 
@@ -1539,32 +1571,34 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
 
     if (agreeValue === true) {
 
-        const employee = await Employee.updateMany({_id: {$in: id}}, {
+        const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
                 "employee.comments": comments,
                 "appraisal.appraiser_status": 'employee-rejected',
                 "appraisal.status":"rejected",
+                "employee.employee_status" : "rejected"
             }
         })
 
     } else if (agreeValue === false) {
-        const employee = await Employee.updateMany({_id: {$in: id}}, {
+        const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
                 "employee.comments": comments,
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
                 "normalizer.normalizer_status": 'employee-rejected',
                 "appraisal.status":"rejected",
+                "employee.employee_status" : "rejected"
             }
         })
     }
-    res.status(StatusCodes.OK).json({"message": agreeValue});
+    res.status(StatusCodes.OK).json({ "message": agreeValue });
 })
 
 const normalizerRejectsEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    const {empoloyee, normalizer} = await Employee.findById(id)
+    const { empoloyee, normalizer } = await Employee.findById(id)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
@@ -1577,14 +1611,14 @@ const normalizerRejectsEmployee = asyncHandler(async (req: Request, res: Respons
         }
     })
 
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 
 })
 
 const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.params
+    const { id } = req.params
 
-    const {employee, normalizer} = await Employee.findById(id)
+    const { employee, normalizer } = await Employee.findById(id)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
@@ -1592,26 +1626,28 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
             "normalizerIsDisabled": true,
             "normalizer.normalizer_status": 'normalizer-accepted',
             "normalizer.objective_description": employee.objective_description,
-            "appraisal.status": 'completed'
+            "appraisal.status": 'completed',
 
         }
     })
 
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 
 })
 
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
+    const { comments } = req.body
 
-    const {employee, normalizer, appraisal} = await Employee.findById(id)
+    const { employee, normalizer, appraisal } = await Employee.findById(id)
 
     if (employee.employee_rating - normalizer.normalizer_rating <= 0.5) {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
+                "appraisal.comments": comments,
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": 'completed',
                 "normalizer.objective_description": appraisal.objective_description,
@@ -1619,7 +1655,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             }
         })
         console.log('comppp')
-        res.status(StatusCodes.OK).json({"message": updatedEmployee});
+        res.status(StatusCodes.OK).json({ "message": updatedEmployee });
     }
 
     if (employee.employee_rating - normalizer.normalizer_rating >= 0.5) {
@@ -1627,8 +1663,9 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.appraiser_rating": employee.employee_rating,
+                "appraisal.comments": comments,
                 "appraisal.objective_description": employee.objective_description,
-                "appraisal.status": 'in-progress',
+                "appraisal.status": 'rejected',
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
             }
@@ -1638,49 +1675,52 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     }
 
-    res.status(StatusCodes.OK).json({"message": "success"})
+    res.status(StatusCodes.OK).json({ "message": "success" })
 
 })
 
 
 const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {employee, normalizer} = await Employee.findById(id)
+    const { employee, normalizer } = await Employee.findById(id)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
             "appraisal.appraiser_status": 'appraiser-rejected-employee',
+            "employee.employee_status":"pending"
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
+    const { comments } = req.body
 
-    const {employee, normalizer} = await Employee.findById(id)
+    const { employee, normalizer } = await Employee.findById(id)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
             "appraisal.status": 'completed',
+            "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
             "employee.objective_description": normalizer.objective_description,
             "employee.employee_rating": normalizer.normalizer_rating,
-            "normalizer.normalizer_status":"re-normalized"
+            "normalizer.normalizer_status": "re-normalized",
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {attachments} = req.body
+    const { attachments } = req.body
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
@@ -1688,15 +1728,15 @@ const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) =>
             "appraisal.attachments": attachments,
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 
 const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {attachments} = req.body
+    const { attachments } = req.body
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
@@ -1704,15 +1744,15 @@ const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => 
             "reviewer.attachments": attachments,
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 
 const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {attachments} = req.body
+    const { attachments } = req.body
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
@@ -1720,14 +1760,14 @@ const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) =
             "normalizer.attachments": attachments,
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {attachments} = req.body
+    const { attachments } = req.body
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
@@ -1735,23 +1775,23 @@ const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => 
             "employee.attachments": attachments,
         }
     })
-    res.status(StatusCodes.OK).json({"message": updatedEmployee});
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
 
-const  calculateRatings = asyncHandler(async (req: Request, res: Response) => {
+const calculateRatings = asyncHandler(async (req: Request, res: Response) => {
 
 
-    const findObjectiveType =  async (id: string) => {
-        const  objective_type = await ObjectiveType.findById("62b4458f0e7b97416df32950")
-        return  objective_type
+    const findObjectiveType = async (id: string) => {
+        const objective_type = await ObjectiveType.findById("62b4458f0e7b97416df32950")
+        return objective_type
     }
 
 
-    console.log(findObjectiveType("62b4458f0e7b97416df32950"),'`````````````````````````````')
+    console.log(findObjectiveType("62b4458f0e7b97416df32950"), '`````````````````````````````')
     const objective_description = req.body.objective_description
 
-    const employee_rating = objective_description.map((j:any) => {
+    const employee_rating = objective_description.map((j: any) => {
 
 
     })
@@ -1769,19 +1809,19 @@ const  calculateRatings = asyncHandler(async (req: Request, res: Response) => {
 
     const data = req.body
 
-    res.status(StatusCodes.OK).json({"message": findObjectiveType("62b4458f0e7b97416df32950")});
+    res.status(StatusCodes.OK).json({ "message": findObjectiveType("62b4458f0e7b97416df32950") });
     // res.status(StatusCodes.OK).json({"message": "fgfgf"});
 })
 
 
 const filterEmployeeByManagerCode = asyncHandler(async (req: Request, res: Response) => {
-    const {code} = req.params
+    const { code } = req.params
 
     const toSte = code.toString()
 
-    console.log(typeof  toSte)
+    console.log(typeof toSte)
 
-    const data = await Employee.find({manager_code: `"${code}"`})
+    const data = await Employee.find({ manager_code: `"${code}"` })
 
 
     res.status(StatusCodes.OK).json(data);
@@ -1793,13 +1833,13 @@ const filterEmployeeByManagerCode = asyncHandler(async (req: Request, res: Respo
 
 const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
 
-    const {manager_code} = req.body
+    const { manager_code } = req.body
     console.log(manager_code, '````````````````')
 
-    const filter = {manager_code:  `${manager_code}`}
+    const filter = { manager_code: `${manager_code}` }
 
     const resp = await Employee.aggregate([
-        {$match: filter},
+        { $match: filter },
         // {$group: {
         //         "appraisal.status": "not-started",
         //         // count: ""
@@ -1813,33 +1853,34 @@ const statusBasedCount = asyncHandler(async (req: Request, res: Response) => {
 
 const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => {
 
-   const calendar =  req.params.id
+    const calendar = req.params.id
 
 
-    const appraisalCalendar = await AppraisalCalender.find({calendar:"633ab35409a387dbad930bcb"})
+    const appraisalCalendar = await AppraisalCalender.find({ calendar: "633ab35409a387dbad930bcb" })
 
     // const  getEmployee = await Employee.find({})
     // const templates = await Template.find()
 
-    const findEmployee = async (id:any) => {
+    const findEmployee = async (id: any) => {
         const emp = await Employee.find({})
 
         console.log(id)
-        return emp.find((k:any) => k._id == id)
+        return emp.find((k: any) => k._id == id)
     }
-    const findTemplate = async (id:any) => {
+    const findTemplate = async (id: any) => {
         const emp = await Template.find({})
 
-        return emp.find((k:any) => k._id === id)
+        return emp.find((k: any) => k._id === id)
     }
-    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j: any) => {
 
-        const data =  j.position.map((k:any) => {
+        const data = j.position.map((k: any) => {
 
             return {
-              employee: findEmployee(k.name.toString()),
-              template: findTemplate(j.template.toString())
-            }})
+                employee: findEmployee(k.name.toString()),
+                template: findTemplate(j.template.toString())
+            }
+        })
         // return {
         //     employee: data,
         //     "employee.template": j.template,
@@ -1869,14 +1910,14 @@ const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => 
 const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     // const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
-    const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
+    const appraisalCalendar = await AppraisalCalender.find({ calendar: req.params.id })
 
-    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j:any) => {
-     const data =  j.position.map((k:any) => k.name.toString())
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j: any) => {
+        const data = j.position.map((k: any) => k.name.toString())
         return data
     }).flat()
 
-    const  getEmployee = await Employee.find({})
+    const getEmployee = await Employee.find({})
 
     const employeeId = getEmployee?.map(k => k._id.toString())
 
@@ -1893,78 +1934,78 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
     // const myArray = getEmployeefromAppraisalCalendar.filter(ar => !getEmployee.find(rm => (rm._id === ar.name ) ))
     // const myArray = employeeId.filter(ar => !getEmployeefromAppraisalCalendar.includes(rm => (rm === ar ) ))
 
-   const appraisalCal = [
-       "62ac2037c1c19127416ab004",
-       "62ac2037c1c19127416ab005",
-       "62ac2037c1c19127416ab006",
-       "62ac2037c1c19127416ab007",
-       "62ac2037c1c19127416ab008",
-       "62ac2037c1c19127416ab009",
-       "62ac2037c1c19127416ab00a",
-       "62ac2037c1c19127416ab00b",
-       "62ac2037c1c19127416ab00c",
-       "62ac2037c1c19127416ab00d",
-       "62ac2037c1c19127416ab00e",
-       "62ac2037c1c19127416ab00f",
-       "62ac2037c1c19127416ab010",
-       "62ac2037c1c19127416ab011",
-       "62ac2037c1c19127416ab012",
-       "62ac2037c1c19127416ab013",
-       "62ac2037c1c19127416ab014",
-       "62ac2037c1c19127416ab015",
-       "62ac2037c1c19127416aafe9",
-       "62ac2037c1c19127416aafea",
-       "62ac2037c1c19127416aafeb",
-       "62ac2037c1c19127416aafec",
-       "62ac2037c1c19127416aafed",
-       "62ac2037c1c19127416aafee",
-       "62ac2037c1c19127416aafef",
-       "62ac2037c1c19127416aaff0",
-       "62ac2037c1c19127416aaff1",
-       "62ac2037c1c19127416aaff2",
-       "62ac2037c1c19127416aaff3",
-       "62ac2037c1c19127416aaff4",
-       "62ac2037c1c19127416aaff5",
-       "62ac2037c1c19127416aaff6",
-       "62ac2037c1c19127416aaff7",
-       "62ac2037c1c19127416aaff8",
-       "62ac2037c1c19127416aaff9",
-       "62ac2037c1c19127416aaffa",
-       "62ac2037c1c19127416aaffb",
-       "62ac2037c1c19127416aaffc",
-       "62ac2037c1c19127416aaffd",
-       "62ac2037c1c19127416aaffe",
-       "62ac2037c1c19127416aafff",
-       "62ac2037c1c19127416ab000",
-       "62ac2037c1c19127416ab001",
-       "62ac2037c1c19127416ab002",
-       "62ac2037c1c19127416ab003"
-   ]
+    const appraisalCal = [
+        "62ac2037c1c19127416ab004",
+        "62ac2037c1c19127416ab005",
+        "62ac2037c1c19127416ab006",
+        "62ac2037c1c19127416ab007",
+        "62ac2037c1c19127416ab008",
+        "62ac2037c1c19127416ab009",
+        "62ac2037c1c19127416ab00a",
+        "62ac2037c1c19127416ab00b",
+        "62ac2037c1c19127416ab00c",
+        "62ac2037c1c19127416ab00d",
+        "62ac2037c1c19127416ab00e",
+        "62ac2037c1c19127416ab00f",
+        "62ac2037c1c19127416ab010",
+        "62ac2037c1c19127416ab011",
+        "62ac2037c1c19127416ab012",
+        "62ac2037c1c19127416ab013",
+        "62ac2037c1c19127416ab014",
+        "62ac2037c1c19127416ab015",
+        "62ac2037c1c19127416aafe9",
+        "62ac2037c1c19127416aafea",
+        "62ac2037c1c19127416aafeb",
+        "62ac2037c1c19127416aafec",
+        "62ac2037c1c19127416aafed",
+        "62ac2037c1c19127416aafee",
+        "62ac2037c1c19127416aafef",
+        "62ac2037c1c19127416aaff0",
+        "62ac2037c1c19127416aaff1",
+        "62ac2037c1c19127416aaff2",
+        "62ac2037c1c19127416aaff3",
+        "62ac2037c1c19127416aaff4",
+        "62ac2037c1c19127416aaff5",
+        "62ac2037c1c19127416aaff6",
+        "62ac2037c1c19127416aaff7",
+        "62ac2037c1c19127416aaff8",
+        "62ac2037c1c19127416aaff9",
+        "62ac2037c1c19127416aaffa",
+        "62ac2037c1c19127416aaffb",
+        "62ac2037c1c19127416aaffc",
+        "62ac2037c1c19127416aaffd",
+        "62ac2037c1c19127416aaffe",
+        "62ac2037c1c19127416aafff",
+        "62ac2037c1c19127416ab000",
+        "62ac2037c1c19127416ab001",
+        "62ac2037c1c19127416ab002",
+        "62ac2037c1c19127416ab003"
+    ]
 
 
 
     const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString()))
 
-    const newArray = _.difference(getEmployee.map((j:any) => j._id.toString()),getEmployeefromAppraisalCalendar)
+    const newArray = _.difference(getEmployee.map((j: any) => j._id.toString()), getEmployeefromAppraisalCalendar)
 
     console.log(getEmployeefromAppraisalCalendar)
 
 
     res.status(StatusCodes.OK).json({
-      // getEmployeefromAppraisalCalendar,
-      //   newArray,
-    //     employeeId
-    //     getEmployee,
+        // getEmployeefromAppraisalCalendar,
+        //   newArray,
+        //     employeeId
+        //     getEmployee,
         data: myArray,
         getEmployeefromAppraisalCalendar
     });
 })
 
 const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const emp = await Employee.findById({_id:req.params.id})
-    console.log(emp.legal_full_name,'emppp')
+    const emp = await Employee.findById({ _id: req.params.id })
+    console.log(emp.legal_full_name, 'emppp')
     // const emp2 = await Employee.findOne({manager_code: emp.employee_code})
-    const reviewerData = await Employee.find({manager_code: emp.appraiser})
+    const reviewerData = await Employee.find({ manager_code: emp.appraiser })
 
 
     res.status(StatusCodes.OK).json({
@@ -1982,35 +2023,69 @@ const removeAppraiserAttachments = asyncHandler(async (req: Request, res: Respon
 
 
 
-    const {id} = req.params
-    const {name} = req.body
+    const { id } = req.params
+    const { name } = req.body
 
-    // const {attachments} = req.body
-    // console.log(attachments)
-    //
-    // const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-    //     $push: {
-    //         "appraisal.attachments": attachments,
-    //     }
-    // })
-    //
-    // const {employee} = req.body
-    // const data = employee.map((j:any) => j.name)
-    // console.log(data)
 
 
     const updatedCalendar = await Employee.findByIdAndUpdate(id,
         {
             $pull: {
-                "appraisal.attachments": { "url":  name},
+                "appraisal.attachments": { "url": name },
             }
-        },{  new: true,multi:true}
+        }, { new: true, multi: true }
     )
-    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 })
 
+const removeReviewerAttachments = asyncHandler(async (req: Request, res: Response) => {
 
+    const { id } = req.params
+    const { name } = req.body
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "reviewer.attachments": { "url": name },
+            }
+        }, { new: true, multi: true }
+    )
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+
+})
+
+const removeNormalizerAttachments = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+    const { name } = req.body
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "normalizer.attachments": { "url": name },
+            }
+        }, { new: true, multi: true }
+    )
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+
+})
+
+const removeEmployeeAttachments = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+    const { name } = req.body
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "employee.attachments": { "url": name },
+            }
+        }, { new: true, multi: true }
+    )
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+
+})
 
 export {
     createEmployee,
@@ -2022,6 +2097,7 @@ export {
     appraisalStatusFilter,
     updateEmployee,
     acceptReviewer,
+    acceptReviewerRatings,
     acceptNormalizer,
     acceptAppraisalEmployee,
     rejectedNormalizerValues,
@@ -2055,5 +2131,8 @@ export {
     getUnMappedEmployee,
     getEmployeeTemplate,
     getReviewerEmployee,
-    removeAppraiserAttachments
+    removeAppraiserAttachments,
+    removeNormalizerAttachments,
+    removeEmployeeAttachments,
+    removeReviewerAttachments
 }
