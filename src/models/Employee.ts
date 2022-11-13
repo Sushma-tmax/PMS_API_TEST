@@ -347,6 +347,10 @@ const EmployeeSchema = new Schema({
             sort_value: Number
         }],
 
+        potential: {
+            type : Boolean,            
+        },
+
         rating: [{
 
             name: {

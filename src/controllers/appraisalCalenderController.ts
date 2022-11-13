@@ -267,6 +267,11 @@ const updateAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 
 const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
+
+    // const appraisalinCurrentCalendar = await  AppraisalCalender.find({})
+
+
+
     const { template, calendar, position } = await AppraisalCalender.findById(req.params.id);
     const {_id: templateId } = template;
     // const news  = new mongoose.Types.ObjectId(calender)
@@ -277,6 +282,7 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
             }
         })
     }
+
     const ratingScale = await RatingScaleDescription.find()
 
     const update = await AppraisalCalender.findByIdAndUpdate(req.params.id, {
