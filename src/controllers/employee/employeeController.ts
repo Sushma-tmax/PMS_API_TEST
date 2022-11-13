@@ -1567,8 +1567,8 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.normalizer_status": 'accepted',
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
-                "employee.employee_status": "pending",
-                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "employee":{},
+                // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
         }
     )
