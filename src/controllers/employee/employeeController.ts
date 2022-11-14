@@ -1553,6 +1553,8 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
+                "employee.employee_status": "pending",
+                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer.objective_type": appraisal.objective_type,
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer.normalizer_rating": appraisal.reviewer_rating,
@@ -1560,14 +1562,14 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
                 "normalizer.feedback_questions": appraisal.feedback_questions,
-                "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                // "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
                 "normalizer.normalizer_acceptance": true,
                 "normalizer.normalizer_status": 'accepted',
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
-                "employee":{},
+                // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
         }
@@ -2745,6 +2747,20 @@ const removeEmployeeAttachments = asyncHandler(async (req: Request, res: Respons
 
 })
 
+const appraiserDashboard = asyncHandler(async (req: Request, res: Response) => {
+
+   // const data = await Employee.aggregate([
+   //     {
+   //
+   //
+   //     }
+   // ])
+    res.status(StatusCodes.OK).json({message: "works "});
+   //  res.status(StatusCodes.OK).json(data);
+})
+
+
+
 export {
     createEmployee,
     getAllEmployees,
@@ -2792,5 +2808,6 @@ export {
     removeAppraiserAttachments,
     removeNormalizerAttachments,
     removeEmployeeAttachments,
-    removeReviewerAttachments
+    removeReviewerAttachments,
+    appraiserDashboard
 }

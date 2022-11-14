@@ -65,7 +65,7 @@ const deleteFeedBackQuestionarie = asyncHandler(async (req: Request, res: Respon
     if (ifExist) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Feedback Questionnaire is Used In Appraisal."
+            error: "This Feedback Questionnaire is used in the performance appraisal and cannot be deleted."
         });
     }
 

@@ -172,7 +172,7 @@ const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
     if (ifExist) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Rating Scale is used in Appraisal."
+            error: "This Rating Scale is used in the performance appraisal and cannot be deleted."
         });
     }
 

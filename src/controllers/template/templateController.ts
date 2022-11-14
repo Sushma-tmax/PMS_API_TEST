@@ -32,7 +32,7 @@ const deleteTemplate = asyncHandler(async (req: Request, res: Response) => {
     if(ifExist) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Template  is Used In Appraisal."
+            error: "This Template is used in the performance appraisal and cannot be deleted."
         });
     }
 

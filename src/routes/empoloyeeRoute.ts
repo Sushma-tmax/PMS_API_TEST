@@ -39,7 +39,8 @@ import {
     statusBasedCount,
     getUnMappedEmployee,
     getEmployeeTemplate, getReviewerEmployee,
-    removeAppraiserAttachments, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings
+    removeAppraiserAttachments, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
+    appraiserDashboard
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -54,6 +55,7 @@ router.route('/employee-filter').get(advancedResults(Employee,"calendar"), testF
 router.get('/zzzzzz', employeeUpdateMany)
 router.get('/close', employeeAppraisalClose)
 router.get('/reviewer-employee/:id',getReviewerEmployee)
+router.get('/appraiser-dashboard', appraiserDashboard)
 
 router.get('/appraiser-status/:status', appraisalStatusAppraiser)
 router.get('/reviewer-status/:status', appraisalStatusReviewer)

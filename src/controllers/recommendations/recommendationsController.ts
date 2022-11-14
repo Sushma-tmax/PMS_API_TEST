@@ -157,7 +157,7 @@ const deleteOtherRecommendation = asyncHandler(async (req: Request, res: Respons
     if (ifExist) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Other Recommendation is Used In Appraisal."
+            error: "This Recommendation is used in the performance appraisal and cannot be deleted."
         });
     }
 
