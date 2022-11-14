@@ -1875,6 +1875,7 @@ const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: R
             $set: {
                 "appraisal.appraisal_acceptance": true,
                 "reviewer.reviewer_status": 'appraiser-accepted',
+                "appraisal.objective_description": findEmpoloyee.reviewer.objective_description,
                 // "normalizer.normalizer_rejected_value": value,
                 // "normalizer.normalizer_status": 'draft',
                 // "normalizer.normalizer_acceptance": false,

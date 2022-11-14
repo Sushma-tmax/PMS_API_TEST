@@ -492,7 +492,8 @@ const checkEmployeeStatus  = await Employee.find({ _id: { $in: getName(position)
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: []
-                }
+                },
+                employee : {}
             },
 
         },
