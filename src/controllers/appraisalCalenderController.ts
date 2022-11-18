@@ -270,8 +270,6 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
     // const appraisalinCurrentCalendar = await  AppraisalCalender.find({})
 
-
-
     const { template, calendar, position } = await AppraisalCalender.findById(req.params.id);
     const {_id: templateId } = template;
     // const news  = new mongoose.Types.ObjectId(calender)
@@ -648,7 +646,7 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
     const getTodayCalendars = await Calender.find({star_date:  {$gte: year}}, '_id')
 
 
-    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).sort({ createdAt: -1 }).populate('template').populate('calendar').populate('position.name');
+    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).select('createdAt,calendar,template').sort({ createdAt: -1 }).populate('calendar').populate('template');
 
 
     res.status(StatusCodes.OK).json({
@@ -658,6 +656,22 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
         // position,
         data: getAppraislaCalendar
     })
+
+})
+
+const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, res: Response) => {
+
+
+
+    const getAppraisalCalendar  = await AppraisalCalender.find({calendar:req.params.id})
+
+    const checkIfEmpty = getAppraisalCalendar.map((j:any) => {
+       if (j.position.length <= 0)  {
+           // throw  new Error(`Appraisal Calendar Doesn't have employee Mapped`)
+           res.status(StatusCodes.BAD_REQUEST).json({message: "Appraisal Calendar Doesn't have employee Mapped"});
+       }
+    })
+    res.status(StatusCodes.OK).json({message: "OK"});
 
 })
 
@@ -676,5 +690,6 @@ export {
     startProbationAppraisal,
     addPositionsToAppraisalCalendar,
     removePositionsToAppraisalCalendar,
-    getAppraisalCalendarofCurrentYear
+    getAppraisalCalendarofCurrentYear,
+    appraisalCalendarEmployeeValidation
 }
