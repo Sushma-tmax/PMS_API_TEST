@@ -2326,6 +2326,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.comments": comments,
                 "appraisal.objective_description": employee.objective_description,
                 "appraisal.status": 'rejected',
+                "normalizer.normalizer_status":"pending",
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
             }
