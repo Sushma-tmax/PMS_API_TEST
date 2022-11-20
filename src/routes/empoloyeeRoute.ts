@@ -39,8 +39,9 @@ import {
     statusBasedCount,
     getUnMappedEmployee,
     getEmployeeTemplate, getReviewerEmployee,
-    removeAppraiserAttachments, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
-    appraiserDashboard
+    removeAppraiserAttachments,removeAppraiserAttachmentsOverview, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
+    appraiserDashboard,
+    attachmentsAppraiserOverview
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -88,7 +89,9 @@ router.patch('/appraiser-accept-employee/:id', appraiserAcceptsEmployee)
 router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
 router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)
 router.patch('/appraiser-attachments/:id', attachmentsAppraiser)
+router.patch('/appraiser-attachments-overview/:id', attachmentsAppraiserOverview)
 router.patch('/delete/appraiser-attachments/:id', removeAppraiserAttachments)
+router.patch('/delete/appraiser-attachments-overview/:id', removeAppraiserAttachmentsOverview)
 router.patch('/delete/employee-attachments/:id', removeEmployeeAttachments)
 router.patch('/delete/normalizer-attachments/:id', removeNormalizerAttachments)
 router.patch('/delete/normalizer-attachments/:id', removeNormalizerAttachments)

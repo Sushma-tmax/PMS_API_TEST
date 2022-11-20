@@ -1040,8 +1040,10 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         return {
             // attachments: j.name,
             // //@ts-ignore
-            url: getImage(j.url),
-            name: j.url,
+            // url: getImage(j.url),
+            // name: j.url,
+            url: j.url,
+            name: j.name,
             objective_description: j.objective_description,
         }
     })
@@ -2392,6 +2394,21 @@ const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) =>
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 })
 
+const attachmentsAppraiserOverview = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const { attachments } = req.body
+    console.log(attachments)
+
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            "appraisal.attachments": attachments,
+        }
+    })
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+})
+
 
 const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => {
 
@@ -2699,6 +2716,25 @@ const removeAppraiserAttachments = asyncHandler(async (req: Request, res: Respon
     res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 })
+const removeAppraiserAttachmentsOverview = asyncHandler(async (req: Request, res: Response) => {
+
+
+
+    const { id } = req.params
+    const { name } = req.body
+
+
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "appraisal.attachments": { "name": name },
+            }
+        }, { new: true, multi: true }
+    )
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+
+})
 
 const removeReviewerAttachments = asyncHandler(async (req: Request, res: Response) => {
 
@@ -2796,6 +2832,7 @@ export {
     appraiserRejectsEmployee,
     normalizerSubmitEmployeeRejection,
     attachmentsAppraiser,
+    attachmentsAppraiserOverview,
     calculateRatings,
     attachmentsReviewer,
     attachmentsNormalizer,
@@ -2807,6 +2844,7 @@ export {
     getEmployeeTemplate,
     getReviewerEmployee,
     removeAppraiserAttachments,
+    removeAppraiserAttachmentsOverview,
     removeNormalizerAttachments,
     removeEmployeeAttachments,
     removeReviewerAttachments,
