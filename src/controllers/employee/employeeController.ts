@@ -1595,7 +1595,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
 
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
-                "reviewer.objective_description": appraisal.objective_description,
+                "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description) ,
                 "reviewer.reviewer_rating": appraisal.appraiser_rating,
                 "reviewer.training_recommendation": appraisal.training_recommendation,
                 "reviewer.other_recommendation": appraisal.other_recommendation,
@@ -1629,7 +1629,7 @@ const acceptReviewerRatings = asyncHandler(async (req: Request, res: Response) =
 
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
-                "reviewer.objective_description": appraisal.objective_description,
+                "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer.reviewer_rating": appraisal.appraiser_rating,
                 "reviewer.training_recommendation": appraisal.training_recommendation,
                 "reviewer.other_recommendation": appraisal.other_recommendation,
