@@ -1040,10 +1040,10 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         return {
             // attachments: j.name,
             // //@ts-ignore
-            // url: getImage(j.url),
-            // name: j.url,
-            url: j.url,
-            name: j.name,
+            url: getImage(j.url),
+            name: j.url,
+            // url: j.url,
+            // name: j.name,
             objective_description: j.objective_description,
         }
     })
@@ -2000,7 +2000,7 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
         {
             $set: {
                 "normalizer.normalizer_rejected_value": value,
-                "normalizer.normalizer_status": 'draft',
+                // "normalizer.normalizer_status": 'draft',
                 "normalizer.normalizer_acceptance": false,
                 // "reviewerIsDisabled": true,
             }
