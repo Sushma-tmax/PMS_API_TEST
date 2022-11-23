@@ -228,6 +228,9 @@ const EmployeeSchema = new Schema({
     default_role: {
         type:String
     },
+    current_role : {
+        type: String
+    },
 
     employee_draft: {
         objective_description: [{

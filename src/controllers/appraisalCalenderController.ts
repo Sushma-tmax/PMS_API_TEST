@@ -661,8 +661,6 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
 
 const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, res: Response) => {
 
-
-
     const getAppraisalCalendar  = await AppraisalCalender.find({calendar:req.params.id})
 
     const checkIfEmpty = getAppraisalCalendar.map((j:any) => {
