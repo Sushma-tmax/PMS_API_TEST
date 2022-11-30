@@ -190,6 +190,10 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
             Reason_for_rating_rejected: {
                 type: String,
             },
@@ -445,6 +449,10 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
             rating_value: {
                 type: Number,
             },
@@ -689,6 +697,10 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
             reason_for_rejection: {
                 type: String
             },
@@ -866,6 +878,10 @@ const EmployeeSchema = new Schema({
                 ref: "RatingScaleDescription",
             },
             rating_rejected: {
+                type: Boolean,
+                default: false
+            },
+            action_performed: {
                 type: Boolean,
                 default: false
             },

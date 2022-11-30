@@ -1260,6 +1260,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         comments,
         rating_value,
         rating_rejected,
+        action_performed,
         objective_group,
         objective_type,
         objective_description_name,
@@ -1287,6 +1288,8 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].rating_comments": rating_comments,
                 // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
+                "appraisal.objective_description.$[description].action_performed": action_performed,
+
                 "appraisal.objective_description.$[description].remarks": remarks,
             }
         },
@@ -1355,6 +1358,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         ratings,
         rating_comments,
         rating_rejected,
+        action_performed,
         reason_for_rejection,
         rating_value,
         objective_description_name,
@@ -1379,6 +1383,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].rating_comments": rating_comments,
                 "reviewer.objective_description.$[description].rating_value": rating_value,
                 "reviewer.objective_description.$[description].rating_rejected": rating_rejected,
+                "reviewer.objective_description.$[description].action_performed": action_performed,
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
 
@@ -1407,6 +1412,8 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
         comments,
         rating_comments,
         rating_value,
+        rating_rejected,
+        action_performed,
         objective_description_name,
         objective_description,
         value
@@ -1428,7 +1435,10 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
                 "normalizer.objective_description.$[description].rating_comments": rating_comments,
                 "normalizer.objective_description.$[description].rating_value": rating_value,
                 "normalizer.objective_description.$[description].comments": comments,
-                "normalizer.objective_description.$[description].rating_rejected": true,
+                // "normalizer.objective_description.$[description].rating_rejected": true,
+                "normalizer.objective_description.$[description].rating_rejected": rating_rejected,
+                "normalizer.objective_description.$[description].action_performed": action_performed,
+
             }
         },
         {
@@ -1454,6 +1464,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
         ratings,
         comments,
         rating_rejected,
+        action_performed,
         objective_description_name,
         objective_description,
     } = req.body
@@ -1478,6 +1489,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
                 "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "employee.objective_description.$[description].comments": comments,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
+                "employee.objective_description.$[description].action_performed": action_performed,
 
             }
         },
@@ -1879,7 +1891,8 @@ const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: R
             $set: {
                 "appraisal.appraisal_acceptance": true,
                 "reviewer.reviewer_status": 'appraiser-accepted',
-                "appraisal.objective_description": findEmpoloyee.reviewer.objective_description,
+                "appraisal.appraiser_status": "accepted",
+                "appraisal.objective_description": getRatingsfromObjectiveDescription(findEmpoloyee.reviewer.objective_description),
                 // "normalizer.normalizer_rejected_value": value,
                 // "normalizer.normalizer_status": 'draft',
                 // "normalizer.normalizer_acceptance": false,
