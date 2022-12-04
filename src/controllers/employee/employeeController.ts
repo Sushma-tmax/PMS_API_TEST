@@ -1962,7 +1962,9 @@ const acceptNormalizerRejectedAppraiser = asyncHandler(async (req: Request, res:
                 "appraisal.appraiser_status": "accepted",
                 "reviewerIsDisabled": false,
                 "reviewerIsChecked": false,
-                "reviewer.reviewer_status": 'pending'
+                "reviewer.reviewer_status": 'pending',
+                "reviewer.rejection_count":0,
+                "appraiser.rejection_count":0
             }
         }
     )
