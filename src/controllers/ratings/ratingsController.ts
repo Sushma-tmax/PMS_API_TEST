@@ -40,7 +40,7 @@ const getRating = asyncHandler(async (req: Request, res: Response) => {
 const updateRatings = asyncHandler(async (req: Request, res: Response) => {
     const rating = await Ratings.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
-        runValidators: true
+        runValidators: false
     });
     if (!rating) {
         return res.status(404).json({
@@ -132,12 +132,12 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
     if(newRatingScaleDescription.length > 0) {
         const temp  = newRatingScaleDescription.map((j:any) => j.rating)
 
-        res.status(400).json({
-            success: false,
-            message: "Rating" + " " + temp.toString() + " Already exist" ,
+        // res.status(400).json({
+        //     success: false,
+        //     message: "Rating" + " " + temp.toString() + " Already exist" ,
 
-            body: newRatingScaleDescription
-        });
+        //     body: newRatingScaleDescription
+        // });
     } else  if (newRatingScaleDescription.length === 0) {
         const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -149,6 +149,15 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
             body: ratingScaleDescription
         });
     }
+    const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(200).json({
+        success: true,
+        body: ratingScaleDescription
+    });
     // const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
     //     new: true,
     //     runValidators: true
