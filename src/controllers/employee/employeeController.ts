@@ -2733,23 +2733,24 @@ const removeAppraiserAttachments = asyncHandler(async (req: Request, res: Respon
 })
 const removeAppraiserAttachmentsOverview = asyncHandler(async (req: Request, res: Response) => {
 
-
-
     const { id } = req.params
-    const { name } = req.body
-
+    const { name,objective_description } = req.body
 
 
     const updatedCalendar = await Employee.findByIdAndUpdate(id,
         {
             $pull: {
-                "appraisal.attachments": { "name": name },
+                "appraisal.attachments": { "url": name,"objective_description": new mongoose.Types.ObjectId(objective_description) },
             }
         }, { new: true, multi: true }
     )
     res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 })
+
+
+
+
 
 const removeReviewerAttachments = asyncHandler(async (req: Request, res: Response) => {
 
