@@ -1892,6 +1892,7 @@ const acceptReviewerRejectedAppraiser = asyncHandler(async (req: Request, res: R
                 "appraisal.appraisal_acceptance": true,
                 "reviewer.reviewer_status": 'appraiser-accepted',
                 "appraisal.appraiser_status": "accepted",
+                "appraisal.appraiser_rating":findEmpoloyee.reviewer.reviewer_rating,
                 "appraisal.objective_description": getRatingsfromObjectiveDescription(findEmpoloyee.reviewer.objective_description),
                 // "normalizer.normalizer_rejected_value": value,
                 // "normalizer.normalizer_status": 'draft',
