@@ -2032,7 +2032,7 @@ const rejectedNormalizerValues = asyncHandler(async (req: Request, res: Response
 
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
-                    "normalizer.objective_description": reviewer.objective_description,
+                    // "normalizer.objective_description": reviewer.objective_description,
                     // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                     // "reviewer.training_recommendation": appraisal.training_recommendation,
                     // "reviewer.other_recommendation": appraisal.other_recommendation,
