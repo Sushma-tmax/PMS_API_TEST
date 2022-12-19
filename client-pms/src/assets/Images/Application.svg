@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18.37" height="16.533" viewBox="0 0 18.37 16.533">
+  <g id="Group_1609" data-name="Group 1609" transform="translate(-1044.521 -660.47)">
+    <g id="icons8-microsoft-excel-2019" transform="translate(1040.521 654.47)">
+      <path id="Path_872" data-name="Path 872" d="M20.889,6H14.8a.8.8,0,0,0-.8.8v3.334h6.889Z" transform="translate(-5.407 0)" fill="#169154"/>
+      <path id="Path_873" data-name="Path 873" d="M14,33.054v3.308a.8.8,0,0,0,.8.8h6.088V33.054Z" transform="translate(-5.407 -14.629)" fill="#18482a"/>
+      <path id="Path_874" data-name="Path 874" d="M14,15h6.889v4.134H14Z" transform="translate(-5.407 -4.868)" fill="#0c8045"/>
+      <path id="Path_875" data-name="Path 875" d="M14,24h6.889v4.156H14Z" transform="translate(-5.407 -9.736)" fill="#17472a"/>
+      <g id="Group_1168" data-name="Group 1168" transform="translate(15.481 6)">
+        <path id="Path_876" data-name="Path 876" d="M35.088,6H29v4.135h6.889V6.8A.8.8,0,0,0,35.088,6Z" transform="translate(-29 -6)" fill="#29c27f"/>
+        <path id="Path_877" data-name="Path 877" d="M29,33.054v4.108h6.088a.8.8,0,0,0,.8-.8V33.054H29Z" transform="translate(-29 -20.629)" fill="#27663f"/>
+        <path id="Path_878" data-name="Path 878" d="M29,15h6.889v4.134H29Z" transform="translate(-29 -10.868)" fill="#19ac65"/>
+        <path id="Path_879" data-name="Path 879" d="M29,24h6.889v4.156H29Z" transform="translate(-29 -15.736)" fill="#129652"/>
+      </g>
+      <path id="Path_880" data-name="Path 880" d="M12.413,23.185H4.772A.772.772,0,0,1,4,22.413V14.772A.772.772,0,0,1,4.772,14h7.641a.772.772,0,0,1,.772.772v7.641A.772.772,0,0,1,12.413,23.185Z" transform="translate(0 -4.326)" fill="#0c7238"/>
+      <path id="Path_881" data-name="Path 881" d="M9.655,19h1.1l.889,1.724L12.58,19H13.6l-1.41,2.3,1.443,2.3h-1.08l-.969-1.8-.965,1.8h-1.1l1.466-2.3Z" transform="translate(-2.988 -7.03)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

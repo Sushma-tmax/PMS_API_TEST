@@ -1,0 +1,14 @@
+input[type=range] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+    background: rgb(211, 210, 210); 
+    height: 3px;
+ 
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-color: rgb(236, 62, 62);
+    height: 100px;
+    width: 2px;
+  }
+  

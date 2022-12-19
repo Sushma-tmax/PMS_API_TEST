@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="11.285" height="0.84" viewBox="0 0 11.285 0.84">
+  <defs>
+    <clipPath id="clip">
+      <use xlink:href="#fill"/>
+    </clipPath>
+  </defs>
+  <g id="minus" transform="translate(0 0.84) rotate(-90)" fill="#008e97" stroke="#008e97" stroke-width="1">
+    <rect id="fill" width="0.84" height="11.285" stroke="none"/>
+    <path d="M0,0.5h0.83984375M0.5,0v11.28515625M0.83984375,10.78515625h-0.83984375M0.33984375,11.28515625v-11.28515625" fill="none" clip-path="url(#clip)"/>
+  </g>
+</svg>
