@@ -87,7 +87,7 @@ const postImage = asyncHandler(async (req: Request, res: Response) => {
     const blobName = newspicname
     //   var blobName = res.data.value[0].fields.blobName;
     //  var blobName = "Home.png"
-    //       var filePath = "src/controllers/assets/Home.png";
+    //       var filePath = "src/controllers/assets/Home.png";r
     //       const containerClient = blobServiceClient.getContainerClient(containerName);
     //       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 

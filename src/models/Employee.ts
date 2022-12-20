@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose'
+import {Schema, model} from 'mongoose'
 import bcrypt from 'bcryptjs'
-import Template, { TemplateSchema } from "./Template";
-import { string } from 'joi';
+import Template, {TemplateSchema} from "./Template";
+import {string} from 'joi';
 
 
 export interface Employee {
@@ -66,6 +66,9 @@ const EmployeeSchema = new Schema({
     email: {
         type: String,
     },
+    profile_image_url: {
+        type: String
+    },
     appraiser: String,
     mobile: {
         type: String,
@@ -125,13 +128,13 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false,
         },
-       employee_status: {
+        employee_status: {
             type: String,
             default: 'not-started'
         },
         attachments: [{
-            url: { type: String},
-            objective_description : {type: String},
+            url: {type: String},
+            objective_description: {type: String},
             name: {type: String}
         }],
 
@@ -168,11 +171,14 @@ const EmployeeSchema = new Schema({
                     type: String,
                     default: ""
                 },
-                employee_comments :{
-                    type:String
+                employee_comments: {
+                    type: String
                 }
             }],
         }],
+        sub_section: {
+            type: String
+        },
         objective_description: [{
             name: {
                 type: Schema.Types.ObjectId,
@@ -230,9 +236,9 @@ const EmployeeSchema = new Schema({
     },
 
     default_role: {
-        type:String
+        type: String
     },
-    current_role : {
+    current_role: {
         type: String
     },
 
@@ -355,7 +361,7 @@ const EmployeeSchema = new Schema({
         }],
 
         potential: {
-            type : Boolean,            
+            type: Boolean,
         },
 
         rating: [{
@@ -371,7 +377,7 @@ const EmployeeSchema = new Schema({
                 ref: 'FeedBackQuestionaire'
             },
             value: {
-                type:String
+                type: String
             }
         }],
     },
@@ -380,14 +386,14 @@ const EmployeeSchema = new Schema({
         rejection_count: Number,
         confirmed: Boolean,
 
-        comments : {
+        comments: {
             type: String,
             default: "",
         },
 
         attachments: [{
-           url: { type: String},
-            objective_description : {type: String},
+            url: {type: String},
+            objective_description: {type: String},
             name: {type: String}
         }],
         appraiser_status: {
@@ -442,7 +448,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            remarks : {
+            remarks: {
                 type: String,
             },
             rating_rejected: {
@@ -485,7 +491,7 @@ const EmployeeSchema = new Schema({
                 ref: 'FeedBackQuestionaire'
             },
             value: {
-                type:String
+                type: String
             }
 
         }],
@@ -524,7 +530,7 @@ const EmployeeSchema = new Schema({
             },
             sort_value: Number
         }],
-       
+
         appraiser_overall_feedback: {
             type: String,
             default: ''
@@ -571,15 +577,15 @@ const EmployeeSchema = new Schema({
                     type: String,
                     default: ""
                 },
-                employee_comments :{
-                    type:String
+                employee_comments: {
+                    type: String
                 }
             }],
             employee_comments: {
                 type: String,
                 default: ""
             },
-           
+
         }],
     },
 
@@ -617,8 +623,8 @@ const EmployeeSchema = new Schema({
         confirmed: Boolean,
 
         attachments: [{
-            url: { type: String},
-            objective_description : {type: String},
+            url: {type: String},
+            objective_description: {type: String},
             name: {type: String}
         }],
 
@@ -771,7 +777,7 @@ const EmployeeSchema = new Schema({
             sort_value: Number
 
         }],
-        
+
 
         area_of_improvement: [{
             value: {
@@ -807,11 +813,18 @@ const EmployeeSchema = new Schema({
         confirmed: Boolean,
 
         attachments: [{
-            url: { type: String},
-            objective_description : {type: String},
+            url: {type: String},
+            objective_description: {type: String},
+            name: {type: String}
+        }],
+
+
+        meetingNotesAttachments: [{
+            url: { type: String},           
             name: {type: String}
         }],
         
+
         comments: {
             type: String,
         },
@@ -821,6 +834,10 @@ const EmployeeSchema = new Schema({
             default: false
         },
         normalizer_overall_feedback: {
+            type: String,
+            default: ''
+        },
+        normalizer_meeting_notes: {
             type: String,
             default: ''
         },
@@ -960,7 +977,7 @@ const EmployeeSchema = new Schema({
                 default: ""
             },
         }],
-        
+
 
         area_of_improvement: [{
             value: {
