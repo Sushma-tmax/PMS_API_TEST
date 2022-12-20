@@ -16,6 +16,10 @@ jobs:
         with:
           node-version: '16.x'
       - run: |
+          cd client-pms 
+          npm i 
+          npm run build 
+          cd ..
           npm install node-schedule --save
           npm install lodash --save
           sudo npm i
