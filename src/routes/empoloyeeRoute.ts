@@ -41,7 +41,8 @@ import {
     getEmployeeTemplate, getReviewerEmployee,
     removeAppraiserAttachments,removeAppraiserAttachmentsOverview, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
     appraiserDashboard,
-    attachmentsAppraiserOverview
+    attachmentsAppraiserOverview,
+    meetingNotesAttachmentsNormalizer
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -99,9 +100,10 @@ router.patch('/delete/reviewer-attachments/:id', removeReviewerAttachments)
 
 
 router.patch('/reviewer-attachments/:id', attachmentsReviewer)
+router.patch('/upload/meeting-notes-attachments-normalizer/:id',meetingNotesAttachmentsNormalizer)
 router.patch('/normalizer-attachments/:id', attachmentsNormalizer)
 router.patch('/employee-attachments/:id', attachmentsEmployee)
-router.patch(   '/calculate/ratings', calculateRatings)
+router.patch('/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
 
 
