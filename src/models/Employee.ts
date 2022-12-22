@@ -123,6 +123,17 @@ const EmployeeSchema = new Schema({
     manager_code: String,
     manager_name: String,
 
+    previous_appraisal: Schema.Types.Mixed,
+
+    appraiser_code: String,
+    appraiser_name: String,
+    reviewer_code: String,
+    reviewer_name: String,
+    normalizer_code:String,
+    normalizer_name: String,
+    
+
+
     employee: {
         employee_agree: {
             type: Boolean,
@@ -403,6 +414,8 @@ const EmployeeSchema = new Schema({
         appraisal_acceptance: {
             type: Boolean,
         },
+
+
 
         status: {
             type: String,

@@ -121,9 +121,9 @@ const createAppraisalCalender = asyncHandler(async (req: Request, res: Response)
 
 const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {employee} = req.body
+    const { employee } = req.body
     const data = employee
     console.log(data)
 
@@ -131,33 +131,33 @@ const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: R
 
     const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
         {
-        $push: {
-            position: {$each:  employee},
-        }
-    },{  new: true}
+            $push: {
+                position: { $each: employee },
+            }
+        }, { new: true }
     )
-    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 
 })
 
 const removePositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id} = req.params
+    const { id } = req.params
 
-    const {employee} = req.body
-    const data = employee.map((j:any) => j.name)
+    const { employee } = req.body
+    const data = employee.map((j: any) => j.name)
     console.log(data)
 
 
     const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
         {
-        $pull: {
-            position: { "name":  {$in: data}},
-        }
-    },{  new: true,multi:true}
+            $pull: {
+                position: { "name": { $in: data } },
+            }
+        }, { new: true, multi: true }
     )
-    res.status(StatusCodes.OK).json({"message": updatedCalendar});
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 })
 
@@ -230,9 +230,9 @@ const updateAppraisalCalender = asyncHandler(async (req: Request, res: Response)
             calendar: calendarID,
             template
         }, {
-            new: true,
-            runValidators: true,
-        });
+        new: true,
+        runValidators: true,
+    });
 
     if (!calender) {
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -271,7 +271,7 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
     // const appraisalinCurrentCalendar = await  AppraisalCalender.find({})
 
     const { template, calendar, position } = await AppraisalCalender.findById(req.params.id);
-    const {_id: templateId } = template;
+    const { _id: templateId } = template;
     // const news  = new mongoose.Types.ObjectId(calender)
     const getIdFromRating = (arr: any) => {
         return arr.map((item: any) => {
@@ -293,12 +293,12 @@ const startAppraisal = asyncHandler(async (req: Request, res: Response) => {
     });
     console.log(templateId)
     // template.forEach(templateId => {
-    updateTemplateForPositions(templateId, calendar, ratingScale, req, res,position)
+    updateTemplateForPositions(templateId, calendar, ratingScale, req, res, position)
     // })
 
 })
 
-const updateTemplateForPositions = async (template, calendar, ratingScale, req, res,position) => {
+const updateTemplateForPositions = async (template, calendar, ratingScale, req, res, position) => {
 
     const { weightage, training_recommendation, other_recommendation, feedback_questionnaire, potential } = await Template.findById(template);
     console.log(position, "position", template)
@@ -419,9 +419,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     )
 
 
-const checkEmployeeStatus  = await Employee.find({ _id: { $in: getName(position) } ,"appraisal.appraisal.status": 'progress'} )
+    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(position) }, "appraisal.appraisal.status": 'progress' })
 
-    if(checkEmployeeStatus.length > 0) {
+    if (checkEmployeeStatus.length > 0) {
         res.status(StatusCodes.BAD_REQUEST).json({
             // success: true,
             // data: position,
@@ -491,7 +491,7 @@ const checkEmployeeStatus  = await Employee.find({ _id: { $in: getName(position)
                     area_of_improvement: [],
                     attachments: []
                 },
-                employee : {}
+                employee: {}
             },
 
         },
@@ -624,18 +624,26 @@ let year = date_time.getFullYear();
 
 const today_date = year + "-" + month + "-" + date
 
-export const job = schedule.scheduleJob('* * * * *', async ()   =>  {
+export const job = schedule.scheduleJob('* * * * *', async () => {
 
     //get current appraisal calendar then check there dates  and match it
     //if current data = end data then change the status
 
     // const appraisalCalen = await AppraisalCalender
 
-    const getTodayCalendars = await Calender.find({end_date: today_date}, '_id')
+    const getTodayCalendars = await Calender.find({ end_date: today_date }, '_id')
 
-    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}})
+    const getAppraislaCalendar = await AppraisalCalender.find({ calendar: { $in: getTodayCalendars } })
 
-    const updateStatus  = await AppraisalCalender.updateMany({calendar: {$in: getTodayCalendars}},{status: "completed"})
+    const updateStatus = await AppraisalCalender.updateMany({ calendar: { $in: getTodayCalendars } }, { status: "completed" })
+
+    // const getAppraisal = await AppraisalCalender.findById({_id: "63a15b5e1ed678e5e7db8d05"})
+    // console.log(getAppraisal.position.map((k:any) => k.name), 'workeddddd')
+
+    // const getEmployee = await  Employee.find({_id: {$in:  getAppraisal.position.map((k:any) => k.name)}})
+
+    // console.log(getEmployee)
+
 
 
 
@@ -643,10 +651,27 @@ export const job = schedule.scheduleJob('* * * * *', async ()   =>  {
 });
 const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res: Response) => {
 
-    const getTodayCalendars = await Calender.find({star_date:  {$gte: year}}, '_id')
+    const getTodayCalendars = await Calender.find({ star_date: { $gte: year } }, '_id')
 
 
-    const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).select('createdAt,calendar,template').sort({ createdAt: -1 }).populate('calendar').populate('template');
+    // const getAppraislaCalendar  = await AppraisalCalender.find({calendar: {$in: getTodayCalendars}}).select('createdAt,calendar,template').sort({ createdAt: -1 }).populate('calendar').populate('template');
+    const getAppraislaCalendar = await AppraisalCalender.aggregate([
+        // { $match: { calendar: { $in: getTodayCalendars } } },
+        {
+            $project: {
+                createdAt:1,
+                calendar:1,
+                template:1,
+                positionCount: { $cond: { if: { $isArray: "$position" }, then: { $size: "$position" }, else: 0} }
+            }
+        },
+        {
+            $sort: { "createdAt": -1 }
+        },
+
+ ])
+
+ const  getAppraisalCalendarData = await AppraisalCalender.populate(getAppraislaCalendar,[{path:"calendar"},{path:"template"}])
 
 
     res.status(StatusCodes.OK).json({
@@ -661,15 +686,15 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
 
 const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, res: Response) => {
 
-    const getAppraisalCalendar  = await AppraisalCalender.find({calendar:req.params.id})
+    const getAppraisalCalendar = await AppraisalCalender.find({ calendar: req.params.id })
 
-    const checkIfEmpty = getAppraisalCalendar.map((j:any) => {
-       if (j.position.length <= 0)  {
-           // throw  new Error(`Appraisal Calendar Doesn't have employee Mapped`)
-           res.status(StatusCodes.BAD_REQUEST).json({message: "Appraisal Calendar Doesn't have employee Mapped"});
-       }
+    const checkIfEmpty = getAppraisalCalendar.map((j: any) => {
+        if (j.position.length <= 0) {
+            // throw  new Error(`Appraisal Calendar Doesn't have employee Mapped`)
+            res.status(StatusCodes.BAD_REQUEST).json({ message: "Appraisal Calendar Doesn't have employee Mapped" });
+        }
     })
-    res.status(StatusCodes.OK).json({message: "OK"});
+    res.status(StatusCodes.OK).json({ message: "OK" });
 
 })
 
