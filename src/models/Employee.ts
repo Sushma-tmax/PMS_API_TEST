@@ -414,8 +414,11 @@ const EmployeeSchema = new Schema({
         appraisal_acceptance: {
             type: Boolean,
         },
-
-
+        
+        pa_status:{
+            type:String,
+            default:"-"
+        },
 
         status: {
             type: String,
