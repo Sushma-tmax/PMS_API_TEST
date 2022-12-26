@@ -32,33 +32,34 @@ const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
 
     // console.log(id, '`````````````````````````````````````````````````')
-    // const data = await Employee.find().select('_id')
+    const data = await Employee.find({position_long_description:"Draftsman - SO"}).select('appraisal.status, manager_code,position_long_description')
 
-        const employee = await Employee.updateMany({ manager_code: "918"}, {
-            $set: {
-                // "employee": [],
-                // "appraisal_template": [],
-                // "appraisal.attachments": [],
-                // "reviewer": [],
-                // "normalizer": [],
-                // "attachments": [],
-                // reviewerIsChecked: false,
-                //             reviewerIsDisabled: true,
-                //             normalizerIsChecked: false,
-                //              normalizerIsDisabled: true,
-                //              appraiserIsDisabled: true,
-                //            appraiserIsChecked: false,
-                // calendar: ''
-                appraiser_code: "918",
-                appraiser_name: "Cristiana Colesnicenco",
-                reviewer_code: "1654",
-                reviewer_name: "Shirlie Lozano Santiago"
-            }
-
-        })
+        // const employee = await Employee.updateMany({ manager_code: "918"}, {
+        //     $set: {
+        //         // "employee": [],
+        //         // "appraisal_template": [],
+        //         // "appraisal.attachments": [],
+        //         // "reviewer": [],
+        //         // "normalizer": [],
+        //         // "attachments": [],
+        //         // reviewerIsChecked: false,
+        //         //             reviewerIsDisabled: true,
+        //         //             normalizerIsChecked: false,
+        //         //              normalizerIsDisabled: true,
+        //         //              appraiserIsDisabled: true,
+        //         //            appraiserIsChecked: false,
+        //         // calendar: ''
+        //         appraiser_code: "918",
+        //         appraiser_name: "Cristiana Colesnicenco",
+        //         reviewer_code: "1654",
+        //         reviewer_name: "Shirlie Lozano Santiago"
+        //     }
+        //
+        // })
 
     res.status(StatusCodes.OK).json({
-        "message": employee,
+        "message": data,
+        count: data.length
 
         // data: data.map((j:any) => j._id)
     });
@@ -948,6 +949,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.normalizer_status": 'accepted',
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
+                "appraisal.pa_status" : "Pending with Employee"
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
@@ -969,7 +971,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-
+                "appraisal.pa_status": "Pending with Normalizer",
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
@@ -1690,6 +1692,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
+                "appraisal.pa_status":"-",
                 "appraisal.comments": comments,
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": 'completed',
@@ -1733,7 +1736,8 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
             "appraisal.appraiser_status": 'appraiser-rejected-employee',
-            "employee.employee_status": "pending"
+            "employee.employee_status": "pending",
+            "appraisal.pa_status": "Pending with Employee"
         }
     })
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
@@ -1749,6 +1753,7 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
         $set: {
             "appraisal.status": 'completed',
+            "appraisal.pa_status":"-",
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
