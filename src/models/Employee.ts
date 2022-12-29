@@ -1,7 +1,7 @@
-import {Schema, model} from 'mongoose'
+import { Schema, model } from 'mongoose'
 import bcrypt from 'bcryptjs'
-import Template, {TemplateSchema} from "./Template";
-import {string} from 'joi';
+import Template, { TemplateSchema } from "./Template";
+import { string } from 'joi';
 
 
 export interface Employee {
@@ -129,9 +129,9 @@ const EmployeeSchema = new Schema({
     appraiser_name: String,
     reviewer_code: String,
     reviewer_name: String,
-    normalizer_code:String,
+    normalizer_code: String,
     normalizer_name: String,
-    
+
 
 
     employee: {
@@ -144,9 +144,9 @@ const EmployeeSchema = new Schema({
             default: 'not-started'
         },
         attachments: [{
-            url: {type: String},
-            objective_description: {type: String},
-            name: {type: String}
+            url: { type: String },
+            objective_description: { type: String },
+            name: { type: String }
         }],
 
         employee_rating: {
@@ -403,9 +403,9 @@ const EmployeeSchema = new Schema({
         },
 
         attachments: [{
-            url: {type: String},
-            objective_description: {type: String},
-            name: {type: String}
+            url: { type: String },
+            objective_description: { type: String },
+            name: { type: String }
         }],
         appraiser_status: {
             type: String,
@@ -414,10 +414,10 @@ const EmployeeSchema = new Schema({
         appraisal_acceptance: {
             type: Boolean,
         },
-        
-        pa_status:{
-            type:String,
-            default:"-"
+
+        pa_status: {
+            type: String,
+            default: "-"
         },
 
         status: {
@@ -605,6 +605,82 @@ const EmployeeSchema = new Schema({
         }],
     },
 
+    appraisal_previous_submission: {
+
+        appraiser_status: {
+            type: String,
+            default: 'pending'
+        },
+        pa_status: {
+            type: String,
+            default: "-"
+        },
+        status: {
+            type: String,
+            default: "not started"
+        },
+        appraiser_rating: {
+            type: Number,
+            default: 0
+        },
+        objective_description: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: "ObjectiveDescription",
+                required: true
+            },
+            value: {
+                type: Number,
+            },
+            attachments: {
+                type: String,
+            },
+            ratings: {
+                type: Schema.Types.ObjectId,
+                ref: "RatingScaleDescription",
+            },
+            remarks: {
+                type: String,
+            },
+            rating_rejected: {
+                type: Boolean,
+                default: false
+            },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
+            rating_value: {
+                type: Number,
+            },
+            comments: {
+                type: String,
+            },
+            rating_comments: {
+                type: String,
+            },
+            level_1_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_2_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_3_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_4_isChecked: {
+                type: Boolean,
+                default: false
+            },
+        }],
+        potential: {
+            type: String
+        },
+    },
+
     // "specific_actions": [{
     //     "value": "test1",
     //     "value": "test2",
@@ -634,14 +710,15 @@ const EmployeeSchema = new Schema({
         type: Boolean,
         default: true
     },
+
     reviewer: {
         rejection_count: Number,
         confirmed: Boolean,
 
         attachments: [{
-            url: {type: String},
-            objective_description: {type: String},
-            name: {type: String}
+            url: { type: String },
+            objective_description: { type: String },
+            name: { type: String }
         }],
 
         isChecked: {
@@ -824,22 +901,89 @@ const EmployeeSchema = new Schema({
         }],
     },
 
+   reviewer_previous_submission: {
+
+        reviewer_status: {
+            type: String,
+            default: 'pending'
+        },
+       
+        reviewer_rating: {
+            type: Number,
+            default: 0
+        },
+        objective_description: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: "ObjectiveDescription",
+                required: true
+            },
+            value: {
+                type: Number,
+            },
+            attachments: {
+                type: String,
+            },
+            ratings: {
+                type: Schema.Types.ObjectId,
+                ref: "RatingScaleDescription",
+            },
+            remarks: {
+                type: String,
+            },
+            rating_rejected: {
+                type: Boolean,
+                default: false
+            },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
+            rating_value: {
+                type: Number,
+            },
+            comments: {
+                type: String,
+            },
+            rating_comments: {
+                type: String,
+            },
+            level_1_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_2_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_3_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_4_isChecked: {
+                type: Boolean,
+                default: false
+            },
+        }],
+ 
+    },
+
     normalizer: {
         rejection_count: Number,
         confirmed: Boolean,
 
         attachments: [{
-            url: {type: String},
-            objective_description: {type: String},
-            name: {type: String}
+            url: { type: String },
+            objective_description: { type: String },
+            name: { type: String }
         }],
 
 
         meetingNotesAttachments: [{
-            url: { type: String},           
-            name: {type: String}
+            url: { type: String },
+            name: { type: String }
         }],
-        
+
 
         comments: {
             type: String,

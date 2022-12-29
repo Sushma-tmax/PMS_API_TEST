@@ -1098,6 +1098,8 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
                     "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.reviewer_rating" : appraisal.appraiser_rating,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.feedback_questions": appraisal.feedback_questions,
