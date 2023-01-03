@@ -239,6 +239,73 @@ const EmployeeSchema = new Schema({
         }],
     },
 
+    employee_previous_submission: {
+
+        employee_status: {
+            type: String,
+            default: 'pending'
+        },
+       
+        employee_rating: {
+            type: Number,
+            default: 0
+        },
+        objective_description: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: "ObjectiveDescription",
+                required: true
+            },
+            value: {
+                type: Number,
+            },
+            attachments: {
+                type: String,
+            },
+            ratings: {
+                type: Schema.Types.ObjectId,
+                ref: "RatingScaleDescription",
+            },
+            remarks: {
+                type: String,
+            },
+            rating_rejected: {
+                type: Boolean,
+                default: false
+            },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
+            rating_value: {
+                type: Number,
+            },
+            comments: {
+                type: String,
+            },
+            rating_comments: {
+                type: String,
+            },
+            level_1_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_2_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_3_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_4_isChecked: {
+                type: Boolean,
+                default: false
+            },
+        }],
+ 
+    },
+
     roles: {
         appraiser: Boolean,
         reviewer: Boolean,
@@ -1152,7 +1219,74 @@ const EmployeeSchema = new Schema({
             }],
         }],
 
-    }
+    },
+
+    normalizer_previous_submission: {
+
+        normalizer_status: {
+            type: String,
+            default: 'pending'
+        },
+       
+        normalizer_rating: {
+            type: Number,
+            default: 0
+        },
+        objective_description: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: "ObjectiveDescription",
+                required: true
+            },
+            value: {
+                type: Number,
+            },
+            attachments: {
+                type: String,
+            },
+            ratings: {
+                type: Schema.Types.ObjectId,
+                ref: "RatingScaleDescription",
+            },
+            remarks: {
+                type: String,
+            },
+            rating_rejected: {
+                type: Boolean,
+                default: false
+            },
+            action_performed: {
+                type: Boolean,
+                default: false
+            },
+            rating_value: {
+                type: Number,
+            },
+            comments: {
+                type: String,
+            },
+            rating_comments: {
+                type: String,
+            },
+            level_1_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_2_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_3_isChecked: {
+                type: Boolean,
+                default: false
+            },
+            level_4_isChecked: {
+                type: Boolean,
+                default: false
+            },
+        }],
+ 
+    },
 
 })
 
