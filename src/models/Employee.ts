@@ -211,7 +211,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
-            Reason_for_rating_rejected: {
+            rejection_reason: {
                 type: String,
             },
             rating_value: {
@@ -280,7 +280,7 @@ const EmployeeSchema = new Schema({
             rating_value: {
                 type: Number,
             },
-            comments: {
+            rejection_reason: {
                 type: String,
             },
             rating_comments: {
@@ -338,7 +338,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
-            Reason_for_rating_rejected: {
+            rejection_reason: {
                 type: String,
             },
             rating_value: {
@@ -469,6 +469,26 @@ const EmployeeSchema = new Schema({
             default: "",
         },
 
+        show_appraiser: {
+            type: Boolean,
+            default: false,
+        },
+
+        show_reviewer: {
+            type: Boolean,
+            default: false,
+        },
+
+        show_normalizer: {
+            type: Boolean,
+            default: false,
+        },
+
+        show_employee: {
+            type: Boolean,
+            default: false,
+        },      
+
         attachments: [{
             url: { type: String },
             objective_description: { type: String },
@@ -531,7 +551,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            remarks: {
+            rejection_reason: {
                 type: String,
             },
             rating_rejected: {
@@ -706,7 +726,7 @@ const EmployeeSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: "RatingScaleDescription",
             },
-            remarks: {
+            rejection_reason: {
                 type: String,
             },
             rating_rejected: {
@@ -867,7 +887,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
-            reason_for_rejection: {
+            rejection_reason: {
                 type: String
             },
             comments: {
@@ -1009,7 +1029,7 @@ const EmployeeSchema = new Schema({
             rating_value: {
                 type: Number,
             },
-            comments: {
+            rejection_reason: {
                 type: String,
             },
             rating_comments: {
@@ -1129,7 +1149,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
-            comments: {
+            rejection_reason: {
                 type: String,
             },
             rating_comments: {
@@ -1262,7 +1282,7 @@ const EmployeeSchema = new Schema({
             rating_value: {
                 type: Number,
             },
-            comments: {
+            rejection_reason: {
                 type: String,
             },
             rating_comments: {
