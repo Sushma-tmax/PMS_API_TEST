@@ -624,6 +624,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
     const {
         ratings,
         comments,
+        rejection_reason,
         rating_value,
         rating_rejected,
         action_performed,
@@ -650,6 +651,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
             $set: {
                 "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "appraisal.objective_description.$[description].comments": comments,
+                "appraisal.objective_description.$[description].rejection_reason": rejection_reason,
                 "appraisal.objective_description.$[description].rating_value": rating_value,
                 "appraisal.objective_description.$[description].rating_comments": rating_comments,
                 // "appraisal.appraiser_status": 'draft'
@@ -724,6 +726,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         ratings,
         rating_comments,
         rating_rejected,
+        rejection_reason,
         action_performed,
         reason_for_rejection,
         rating_value,
@@ -747,6 +750,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
             $set: {
                 "reviewer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "reviewer.objective_description.$[description].rating_comments": rating_comments,
+                "reviewer.objective_description.$[description].rejection_reason" : rejection_reason,
                 "reviewer.objective_description.$[description].rating_value": rating_value,
                 "reviewer.objective_description.$[description].rating_rejected": rating_rejected,
                 "reviewer.objective_description.$[description].action_performed": action_performed,
@@ -777,6 +781,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
         ratings,
         comments,
         rating_comments,
+        rejection_reason,
         rating_value,
         rating_rejected,
         action_performed,
@@ -799,6 +804,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
             $set: {
                 "normalizer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "normalizer.objective_description.$[description].rating_comments": rating_comments,
+                "normalizer.objective_description.$[description].rejection_reason" :rejection_reason,
                 "normalizer.objective_description.$[description].rating_value": rating_value,
                 "normalizer.objective_description.$[description].comments": comments,
                 // "normalizer.objective_description.$[description].rating_rejected": true,
