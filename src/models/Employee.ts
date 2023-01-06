@@ -1084,6 +1084,9 @@ const EmployeeSchema = new Schema({
             type: String,
             default: ''
         },
+        reason_for_rejection: {
+            type: String
+        },
         normalizer_meeting_notes: {
             type: String,
             default: ''

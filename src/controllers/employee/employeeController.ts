@@ -14,9 +14,11 @@ const getRatingsfromObjectiveDescription = (data: any) => {
     return data?.map((k: any) => {
         return {
             // ratings: k.ratings,
-            // rating_rejected: false,
+            rating_rejected: false,
+          
             // rating_comments: "",
-            // comments: ""
+            comments: k.comments,
+           
             name: k.name,
             value: k.value,
             ratings: k.ratings,
@@ -780,11 +782,14 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
     const {
         ratings,
         comments,
+       
+       
         rating_comments,
         rejection_reason,
         rating_value,
         rating_rejected,
         action_performed,
+        reason_for_rejection,
         objective_description_name,
         objective_description,
         value
@@ -804,6 +809,7 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
             $set: {
                 "normalizer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "normalizer.objective_description.$[description].rating_comments": rating_comments,
+                "normalizer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "normalizer.objective_description.$[description].rejection_reason" :rejection_reason,
                 "normalizer.objective_description.$[description].rating_value": rating_value,
                 "normalizer.objective_description.$[description].comments": comments,
@@ -835,6 +841,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
     const {
         ratings,
         comments,
+        rejection_reason,
         rating_rejected,
         action_performed,
         objective_description_name,
@@ -843,6 +850,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
     console.log(ratings,
         comments,
+        rejection_reason,
         objective_description_name,
         objective_description, id)
 
@@ -860,6 +868,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
             $set: {
                 "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
                 "employee.objective_description.$[description].comments": comments,
+                "employee.objective_description.$[description].rejection_reason": rejection_reason,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
                 "employee.objective_description.$[description].action_performed": action_performed,
 
@@ -950,7 +959,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
                 "normalizer.feedback_questions": appraisal.feedback_questions,
-                // "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
                 "normalizer.normalizer_acceptance": true,
