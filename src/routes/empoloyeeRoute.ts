@@ -42,7 +42,11 @@ import {
     removeAppraiserAttachments,removeAppraiserAttachmentsOverview, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
     appraiserDashboard,
     attachmentsAppraiserOverview,
-    meetingNotesAttachmentsNormalizer
+    meetingNotesAttachmentsNormalizer,
+    acceptNormalizerGradeException,
+    acceptEmployeeGradeException,
+    rejectionAttachmentsAppraiser,
+    removeRejectionAppraiserAttachments
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -66,6 +70,8 @@ router.patch('/reject-normalizer-values/:id',rejectedNormalizerValues )
  router.patch('/accept-reviewer', acceptReviewer)
  router.patch('/accept-reviewer-rating',acceptReviewerRatings)
 router.patch('/accept-normalizer', acceptNormalizer)
+router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeException)
+router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
 router.patch('/reject-reviewer-values/:id', rejectedReviewerValues)
 router.patch('/appraiser-accept-reviewer/:id', acceptReviewerRejectedAppraiser)
 router.patch('/appraiser-accept-normalizer/:id', acceptNormalizerRejectedAppraiser)
@@ -91,7 +97,9 @@ router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
 router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)
 router.patch('/appraiser-attachments/:id', attachmentsAppraiser)
 router.patch('/appraiser-attachments-overview/:id', attachmentsAppraiserOverview)
+router.patch('/appraiser-attachments-rejection/:id', rejectionAttachmentsAppraiser)
 router.patch('/delete/appraiser-attachments/:id', removeAppraiserAttachments)
+router.patch('/delete/appraiser-attachments-rejection/:id', removeRejectionAppraiserAttachments)
 router.patch('/delete/appraiser-attachments-overview/:id', removeAppraiserAttachmentsOverview)
 router.patch('/delete/employee-attachments/:id', removeEmployeeAttachments)
 router.patch('/delete/normalizer-attachments/:id', removeNormalizerAttachments)

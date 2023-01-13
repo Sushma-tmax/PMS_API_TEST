@@ -1,10 +1,11 @@
 import asyncHandler from "../../middleware/asyncHandler";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import Ratings from "../../models/Ratings/Ratings";
 import RatingScaleDescription from "../../models/Ratings/RatingScaleDescription";
 import AppraisalCalender from "../../models/AppraisalCalender";
-import {StatusCodes} from "http-status-codes";
-
+import { StatusCodes } from "http-status-codes";
+import { ObjectID } from "mongodb"
+// var ObjectID = require()
 const createRatings = asyncHandler(async (req: Request, res: Response) => {
     const newRating = await Ratings.create(req.body);
     res.status(201).json({
@@ -17,7 +18,7 @@ const createRatings = asyncHandler(async (req: Request, res: Response) => {
 
 
 const getAllRatings = asyncHandler(async (req: Request, res: Response) => {
-    const ratings = await Ratings.find().sort({createdAt: -1});
+    const ratings = await Ratings.find().sort({ createdAt: -1 });
     res.status(200).json({
         success: true,
         data: ratings
@@ -74,21 +75,21 @@ const createRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
     const [rating] = req.body
     const rat = req.body
 
-    const mapped = rat.map((j:any) => j.rating)
+    const mapped = rat.map((j: any) => j.rating)
 
-    const newRatingScaleDescription = await RatingScaleDescription.find({rating: {$in: mapped }})
+    const newRatingScaleDescription = await RatingScaleDescription.find({ rating: { $in: mapped } })
 
-    if(newRatingScaleDescription.length > 0) {
-        const temp  = newRatingScaleDescription.map((j:any) => j.rating)
+    if (newRatingScaleDescription.length > 0) {
+        const temp = newRatingScaleDescription.map((j: any) => j.rating)
 
         res.status(400).json({
             success: false,
-            message: "Rating" + " " + temp.toString() + " Already exist" ,
+            message: "Rating" + " " + temp.toString() + " Already exist",
             data: rating,
             body: newRatingScaleDescription
         });
-    } else  if (newRatingScaleDescription.length === 0) {
-        const newRatingScaleDescriptiondone  = await RatingScaleDescription.insertMany(req.body);
+    } else if (newRatingScaleDescription.length === 0) {
+        const newRatingScaleDescriptiondone = await RatingScaleDescription.insertMany(req.body);
 
         res.status(201).json({
             success: true,
@@ -125,20 +126,27 @@ const getRatingScaleDescription = asyncHandler(async (req: Request, res: Respons
 const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
 
 
-    const {rating} = req.body  
+    const { rating } = req.body
+    const _id = new ObjectID(req.params.id)
+    const newRatingScaleDescription = await RatingScaleDescription.find({
+        $and: [
+            { rating: rating },
+            { '_id': { $ne: _id } }
+        ]
+    })
+    console.log("newRatingScaleDescription", newRatingScaleDescription)
+    if (newRatingScaleDescription.length > 0) {
+        const temp = newRatingScaleDescription.map((j: any) => j.rating)
 
-    const newRatingScaleDescription = await RatingScaleDescription.find({rating:rating })
+        res.status(400).json({
+            success: false,
+            message: "Rating" + " " + temp.toString() + " already exist",
 
-    if(newRatingScaleDescription.length > 0) {
-        const temp  = newRatingScaleDescription.map((j:any) => j.rating)
-
-        // res.status(400).json({
-        //     success: false,
-        //     message: "Rating" + " " + temp.toString() + " Already exist" ,
-
-        //     body: newRatingScaleDescription
-        // });
-    } else  if (newRatingScaleDescription.length === 0) {
+            body: newRatingScaleDescription
+        });
+    }
+    //  else  if (newRatingScaleDescription.length === 0)
+    else if (newRatingScaleDescription.length  === 0) {
         const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
@@ -149,15 +157,16 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
             body: ratingScaleDescription
         });
     }
-    const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
 
-    res.status(200).json({
-        success: true,
-        body: ratingScaleDescription
-    });
+    // const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
+    //     new: true,
+    //     runValidators: true
+    // });
+
+    // res.status(200).json({
+    //     success: true,
+    //     body: ratingScaleDescription
+    // });
     // const ratingScaleDescription = await RatingScaleDescription.findByIdAndUpdate(req.params.id, req.body, {
     //     new: true,
     //     runValidators: true
@@ -176,7 +185,7 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
 
 const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
 
-    const ifExist = await AppraisalCalender.exists({"rating.name": req.params.id})
+    const ifExist = await AppraisalCalender.exists({ "rating.name": req.params.id })
 
     if (ifExist) {
         return res.status(StatusCodes.BAD_REQUEST).json({
@@ -185,7 +194,7 @@ const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
         });
     }
 
-    if(!ifExist) {
+    if (!ifExist) {
         const ratingScaleDescription = await RatingScaleDescription.findByIdAndDelete(req.params.id);
 
         if (!ratingScaleDescription) {

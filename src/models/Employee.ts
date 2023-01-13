@@ -143,6 +143,12 @@ const EmployeeSchema = new Schema({
             type: String,
             default: 'not-started'
         },
+
+        isGradeException: {
+            type: Boolean,
+            default: false
+        },
+        
         attachments: [{
             url: { type: String },
             objective_description: { type: String },
@@ -494,6 +500,13 @@ const EmployeeSchema = new Schema({
             objective_description: { type: String },
             name: { type: String }
         }],
+
+        rejection_attachments: [{
+            url: { type: String },
+            objective_description: { type: String },
+            name: { type: String }
+        }],
+      
         appraiser_status: {
             type: String,
             default: 'pending'
