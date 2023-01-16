@@ -148,6 +148,11 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
+
+        isExcluded: {
+            type: Boolean,
+            default: false
+        },
         
         attachments: [{
             url: { type: String },

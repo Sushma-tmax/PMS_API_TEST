@@ -2326,6 +2326,23 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
     });
 })
 
+const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+    
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        {
+            $set: {
+                "employee.isExcluded": true, 
+            }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
 
 
 
@@ -2381,8 +2398,10 @@ export {
     removeReviewerAttachments,
     appraiserDashboard,
     meetingNotesAttachmentsNormalizer,
-    acceptNormalizerGradeException,
+    acceptNormalizerGradeException,   
     acceptEmployeeGradeException,
+    acceptEmployeeExcluded,
     rejectionAttachmentsAppraiser,
-    removeRejectionAppraiserAttachments
+    removeRejectionAppraiserAttachments,  
+
 }

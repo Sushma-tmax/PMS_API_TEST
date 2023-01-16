@@ -84,7 +84,7 @@ const createRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
 
         res.status(400).json({
             success: false,
-            message: "Rating" + " " + temp.toString() + " Already exist",
+            message: "Rating" + " " + temp.toString() + " already exist",
             data: rating,
             body: newRatingScaleDescription
         });

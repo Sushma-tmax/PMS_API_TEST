@@ -46,7 +46,8 @@ import {
     acceptNormalizerGradeException,
     acceptEmployeeGradeException,
     rejectionAttachmentsAppraiser,
-    removeRejectionAppraiserAttachments
+    removeRejectionAppraiserAttachments,
+    acceptEmployeeExcluded
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -72,6 +73,7 @@ router.patch('/reject-normalizer-values/:id',rejectedNormalizerValues )
 router.patch('/accept-normalizer', acceptNormalizer)
 router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeException)
 router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
+router.patch('/accept-employee-Excluded', acceptEmployeeExcluded)
 router.patch('/reject-reviewer-values/:id', rejectedReviewerValues)
 router.patch('/appraiser-accept-reviewer/:id', acceptReviewerRejectedAppraiser)
 router.patch('/appraiser-accept-normalizer/:id', acceptNormalizerRejectedAppraiser)
