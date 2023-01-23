@@ -419,7 +419,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     )
 
 
-    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(position) }, "appraisal.appraisal.status": 'progress' })
+    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(position) }, "appraisal.status": 'in-progress' })
 
     if (checkEmployeeStatus.length > 0) {
         res.status(StatusCodes.BAD_REQUEST).json({
@@ -541,8 +541,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     res.status(StatusCodes.OK).json({
         // success: true,
         // data: position,
-        // appraisal,
-        // position,
+        appraisal,
+        position,
         data: weightage.objective_description,
         employee,
         calendar,
@@ -733,7 +733,7 @@ const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, re
             res.status(StatusCodes.BAD_REQUEST).json({ message: "Appraisal Calendar Doesn't have employee Mapped" });
         }
     })
-    res.status(StatusCodes.OK).json({ message: "OK" });
+    res.status(StatusCodes.OK).json({ message: "OK" ,data:checkIfEmpty});
 
 })
 

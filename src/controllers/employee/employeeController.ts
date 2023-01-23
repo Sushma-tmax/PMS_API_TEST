@@ -30,6 +30,16 @@ const getRatingsfromObjectiveDescription = (data: any) => {
     })
 }
 
+
+const getRatingRejectedfromObjectiveDescription = (data: any) => {
+    return data?.map((k: any) => {
+        return {          
+            rating_rejected: false,           
+        }
+    })
+}
+
+
 const employeeUpdateMany = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
 
@@ -749,7 +759,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         objective_description_name,
         objective_description,
         value,
-        comments
+        comments,
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -1831,8 +1841,8 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
-            "employee.objective_description": normalizer.objective_description,
-            "employee.employee_rating": normalizer.normalizer_rating,
+            // "employee.objective_description": normalizer.objective_description,
+            // "employee.employee_rating": normalizer.normalizer_rating,
             "normalizer.normalizer_status": "re-normalized",
         }
     })
@@ -2343,6 +2353,246 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
     });
 })
 
+// appraiser accepts reviewer's rating 
+const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const {
+        ratings,
+        comments,
+        rejection_reason,
+        rating_value,
+        rating_rejected,
+        action_performed,
+        objective_group,
+        objective_type,
+        objective_description_name,
+        objective_description,
+        rating_comments,
+        reviewer_objective_description,
+        value,
+        remarks
+    } = req.body
+
+    const employee = await Employee.findOneAndUpdate({
+        "_id": new mongoose.Types.ObjectId(id),
+
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "appraisal.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
+            }
+        },
+       
+    },
+        {
+            $set: {
+                "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
+                "appraisal.objective_description.$[description].comments": comments,
+                "appraisal.objective_description.$[description].rejection_reason": rejection_reason,
+                "appraisal.objective_description.$[description].rating_value": rating_value,
+                "appraisal.objective_description.$[description].rating_comments": rating_comments,
+                // "appraisal.appraiser_status": 'draft'
+                "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
+                "appraisal.objective_description.$[description].action_performed": action_performed,
+                "appraisal.objective_description.$[description].remarks": remarks,
+                "reviewer.objective_description": reviewer_objective_description,
+            }
+        },
+        {
+
+            arrayFilters: [
+                {
+                    'description._id': new mongoose.Types.ObjectId(objective_description)
+                },
+            ]
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+// reviewer accepts appraiser's rating
+const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const {
+        ratings,
+        rating_comments,
+        rating_rejected,
+        rejection_reason,
+        action_performed,
+        reason_for_rejection,
+        rating_value,
+        objective_description_name,
+        objective_description,
+        value,
+        comments,
+        appraiser_objective_description
+    } = req.body
+
+    const employee = await Employee.findOneAndUpdate({
+        "_id": new mongoose.Types.ObjectId(id),
+
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "reviewer.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
+            }
+        }
+    },
+        {
+            $set: {
+                "reviewer.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
+                "reviewer.objective_description.$[description].rating_comments": rating_comments,
+                "reviewer.objective_description.$[description].rejection_reason": rejection_reason,
+                "reviewer.objective_description.$[description].rating_value": rating_value,
+                "reviewer.objective_description.$[description].rating_rejected": rating_rejected,
+                "reviewer.objective_description.$[description].action_performed": action_performed,
+                "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
+                "reviewer.objective_description.$[description].comments": comments,
+                "appraisal.objective_description" : appraiser_objective_description
+            }
+        },
+        {
+
+            arrayFilters: [
+                {
+                    'description._id': new mongoose.Types.ObjectId(objective_description)
+                },
+            ]
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+// appraiser accepts employee rating
+const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const {
+        ratings,
+        comments,
+        rejection_reason,
+        rating_value,
+        rating_rejected,
+        action_performed,
+        objective_group,
+        objective_type,
+        objective_description_name,
+        objective_description,
+        rating_comments,
+        value,
+        remarks,
+        employee_objective_description
+    } = req.body
+
+    const employee = await Employee.findOneAndUpdate({
+        "_id": new mongoose.Types.ObjectId(id),
+
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "appraisal.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
+            }
+        }
+    },
+        {
+            $set: {
+                "appraisal.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
+                "appraisal.objective_description.$[description].comments": comments,
+                "appraisal.objective_description.$[description].rejection_reason": rejection_reason,
+                "appraisal.objective_description.$[description].rating_value": rating_value,
+                "appraisal.objective_description.$[description].rating_comments": rating_comments,
+                // "appraisal.appraiser_status": 'draft'
+                "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
+                "appraisal.objective_description.$[description].action_performed": action_performed,
+
+                "appraisal.objective_description.$[description].remarks": remarks,
+                "employee.objective_description" :  employee_objective_description
+            }
+        },
+        {
+
+            arrayFilters: [
+                {
+                    'description._id': new mongoose.Types.ObjectId(objective_description)
+                },
+            ]
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+// employee accepts appraiser rating 
+const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const {
+        ratings,
+        comments,
+        rejection_reason,
+        rating_rejected,
+        action_performed,
+        objective_description_name,
+        objective_description,
+        appraiser_objective_description
+    } = req.body
+
+    console.log(ratings,
+        comments,
+        rejection_reason,
+        objective_description_name,
+        objective_description, id)
+
+    const employee = await Employee.findOneAndUpdate({
+        "_id": new mongoose.Types.ObjectId(id),
+
+        // "appraisal.objective_group._id": "6207ec6a8bfc1226d3f36fb1",
+        "employee.objective_description": {
+            $elemMatch: {
+                name: new mongoose.Types.ObjectId(objective_description_name)
+            }
+        }
+    },
+        {
+            $set: {
+                "employee.objective_description.$[description].ratings": new mongoose.Types.ObjectId(ratings),
+                "employee.objective_description.$[description].comments": comments,
+                "employee.objective_description.$[description].rejection_reason": rejection_reason,
+                "employee.objective_description.$[description].rating_rejected": rating_rejected,
+                "employee.objective_description.$[description].action_performed": action_performed,
+                "appraisal.objective_description" : appraiser_objective_description
+
+            }
+        },
+        {
+
+            arrayFilters: [
+                {
+                    'description._id': new mongoose.Types.ObjectId(objective_description)
+                },
+            ]
+        }
+    )
+
+
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+
+
 
 
 
@@ -2402,6 +2652,10 @@ export {
     acceptEmployeeGradeException,
     acceptEmployeeExcluded,
     rejectionAttachmentsAppraiser,
-    removeRejectionAppraiserAttachments,  
+    removeRejectionAppraiserAttachments, 
+    appraiserAcceptsReviewerRating,
+    reviewerAcceptsAppraiserRating,
+    appraiserAcceptsEmployeeRating,
+    employeeAcceptsAppraiserRating
 
 }

@@ -167,6 +167,9 @@ const EmployeeSchema = new Schema({
         comments: {
             type: String,
         },
+        rejection_reason:{
+            type: String,  
+        },        
         training_recommendation: [{
             name: {
                 type: Schema.Types.ObjectId,

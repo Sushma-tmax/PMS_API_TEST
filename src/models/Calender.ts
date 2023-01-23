@@ -102,7 +102,11 @@ const CalenderSchema = new Schema({
             end_date_closing: {
                 type: Date,
                 required: true,
-            },      
+            },   
+             isActive: {
+            type: Boolean,
+            default: false
+        },   
         } ,{timestamps: true})
 
         CalenderSchema.plugin(UniqueValidator)

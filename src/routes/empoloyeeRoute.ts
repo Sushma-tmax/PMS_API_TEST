@@ -47,7 +47,11 @@ import {
     acceptEmployeeGradeException,
     rejectionAttachmentsAppraiser,
     removeRejectionAppraiserAttachments,
-    acceptEmployeeExcluded
+    acceptEmployeeExcluded,
+    appraiserAcceptsReviewerRating,
+    reviewerAcceptsAppraiserRating,
+    appraiserAcceptsEmployeeRating,
+    employeeAcceptsAppraiserRating
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -94,6 +98,10 @@ router.patch('/:id', updateEmployee)
 router.get('/filter/potential/:status', filterByPotential)
 router.get('/filter/:gt/:lt', filterByRatings)
 router.patch('/accept-appraisal/:id', acceptAppraisalEmployee)
+router.patch('/appraiser-accept-reviewer-rating/:id', appraiserAcceptsReviewerRating)
+router.patch('/reviewer-accept-appraiser-rating/:id', reviewerAcceptsAppraiserRating)
+router.patch('/appraiser-accept-employee-rating/:id', appraiserAcceptsEmployeeRating)
+router.patch('/employee-accept-appraiser-rating/:id', employeeAcceptsAppraiserRating)
 router.patch('/appraiser-accept-employee/:id', appraiserAcceptsEmployee)
 router.patch('/appraiser-reject-employee/:id', appraiserRejectsEmployee)
 router.patch('/normalizer-submit-employee-rejection/:id', normalizerSubmitEmployeeRejection)

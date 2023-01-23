@@ -22,7 +22,7 @@ const router = Router()
 
 
 router.route('/filter').get(advancedResults(AppraisalCalender,'calendar'), testFilter)
-router.get('/validation/:id',appraisalCalendarEmployeeValidation )
+router.patch('/validation/:id',appraisalCalendarEmployeeValidation )
 router.get('/current-year-calendar', getAppraisalCalendarofCurrentYear)
 router.patch('/employee/:id', addPositionsToAppraisalCalendar)
 router.patch('/remove-employee/:id', removePositionsToAppraisalCalendar)
