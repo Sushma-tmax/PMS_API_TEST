@@ -148,6 +148,10 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
+        isRoleException: {
+            type: Boolean,
+            default: false
+        },
 
         isExcluded: {
             type: Boolean,
@@ -481,6 +485,11 @@ const EmployeeSchema = new Schema({
         comments: {
             type: String,
             default: "",
+        },
+
+        appraiser_rejected : {
+            type: Boolean,
+            default :false
         },
 
         show_appraiser: {

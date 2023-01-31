@@ -1821,7 +1821,8 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
         $set: {
             "appraisal.appraiser_status": 'appraiser-rejected-employee',
             "employee.employee_status": "pending",
-            "appraisal.pa_status": "Pending with Employee"
+            "appraisal.pa_status": "Pending with Employee",
+            "appraisal.appraiser_rejected" : true,
         }
     })
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
@@ -2336,6 +2337,23 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
     });
 })
 
+const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+    
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        {
+            $set: {
+                "employee.isRoleException": true, 
+            }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
 const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
 
@@ -2515,7 +2533,8 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].action_performed": action_performed,
 
                 "appraisal.objective_description.$[description].remarks": remarks,
-                "employee.objective_description" :  employee_objective_description
+                "employee.objective_description" :  employee_objective_description,
+                "appraisal.appraiser_rating":false,
             }
         },
         {
@@ -2594,6 +2613,34 @@ const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
 
 
 
+const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    const {employee_code} = req.params
+
+    const getEmployee = await Employee.find({manager_code: employee_code}).limit(5)
+    res.status(StatusCodes.OK).json({
+        getEmployee
+    });
+
+})
+
+const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    const {employee_code} = req.params
+
+    const lineManager = await Employee.find({manager_code: employee_code})
+
+    const lineManagerPlusOne = await  Employee.find({manager_code: { _id: { $in: lineManager.map((j:any) => j.employee_code) } }})
+
+    res.status(StatusCodes.OK).json({
+        lineManagerPlusOne
+    });
+
+})
+
+
+
+
 
 
 export {
@@ -2656,6 +2703,9 @@ export {
     appraiserAcceptsReviewerRating,
     reviewerAcceptsAppraiserRating,
     appraiserAcceptsEmployeeRating,
-    employeeAcceptsAppraiserRating
+    employeeAcceptsAppraiserRating,
+    acceptEmployeeRoleExceptions,
+    lineManagerEmployee,
+    lineManagerPlusOneEmployee
 
 }

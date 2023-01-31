@@ -51,8 +51,11 @@ import {
     appraiserAcceptsReviewerRating,
     reviewerAcceptsAppraiserRating,
     appraiserAcceptsEmployeeRating,
-    employeeAcceptsAppraiserRating
-
+    employeeAcceptsAppraiserRating,
+    acceptEmployeeRoleExceptions,
+    lineManagerEmployee,
+    lineManagerPlusOneEmployee
+   
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
@@ -77,6 +80,7 @@ router.patch('/reject-normalizer-values/:id',rejectedNormalizerValues )
 router.patch('/accept-normalizer', acceptNormalizer)
 router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeException)
 router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
+router.patch('/accept-employee-roleExceptions', acceptEmployeeRoleExceptions)
 router.patch('/accept-employee-Excluded', acceptEmployeeExcluded)
 router.patch('/reject-reviewer-values/:id', rejectedReviewerValues)
 router.patch('/appraiser-accept-reviewer/:id', acceptReviewerRejectedAppraiser)
@@ -123,6 +127,8 @@ router.patch('/normalizer-attachments/:id', attachmentsNormalizer)
 router.patch('/employee-attachments/:id', attachmentsEmployee)
 router.patch('/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
+router.get('/lineManagerEmployee/:employee_code', lineManagerEmployee)
+router.get('/lineManagerPlusOneEmployee/:employee_code', lineManagerPlusOneEmployee)
 
 
 

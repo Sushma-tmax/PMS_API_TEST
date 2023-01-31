@@ -1,7 +1,9 @@
 import asyncHandler from "../middleware/asyncHandler";
-import {Request, Response} from "express"
+import { Request, Response } from "express"
 import NineBox from "../models/NineBox";
-import {StatusCodes} from "http-status-codes";
+import PerformanceDefinition from "../models/PerformanceDefinition";
+import { Employee } from "../models";
+import { StatusCodes } from "http-status-codes";
 
 const createNineBox = asyncHandler(async (req: Request, res: Response) => {
 
@@ -14,17 +16,17 @@ const createNineBox = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const updateNineBox = asyncHandler(async (req: Request, res: Response) => {
-    const {potential_definitions, performance_definitions, box_9_definitions} = req.body
+    const { potential_definitions, performance_definitions, box_9_definitions } = req.body
     const nineBox = await NineBox.findByIdAndUpdate(req.params.id, {
-            $set: {
-                "potential_definitions": potential_definitions,
-                "performance_definitions": performance_definitions,
-                "box_9_definitions": box_9_definitions
-            },
-            // $push: {
-            //     "box_9_definitions": box_9_definitions
-            // }
-        }
+        $set: {
+            "potential_definitions": potential_definitions,
+            "performance_definitions": performance_definitions,
+            "box_9_definitions": box_9_definitions
+        },
+        // $push: {
+        //     "box_9_definitions": box_9_definitions
+        // }
+    }
         , {
             new: true,
             runValidators: true
@@ -36,14 +38,41 @@ const updateNineBox = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const getAllNineBox = asyncHandler(async (req: Request, res: Response) => {
-    const nineBox = await NineBox.find({}).sort({createdAt: -1})
+    const nineBox = await NineBox.find({}).sort({ createdAt: -1 })
     res.status(StatusCodes.OK).json({
         data: nineBox
     });
 
 })
+
+// to get talent category of the employee
+const getTalentCategory = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params
+    const { overall_rating, potential } = req.body
+    console.log("overall_rating", overall_rating)
+    // const performance = await PerformanceDefinition.find()
+    const performance = await PerformanceDefinition.findOne({
+        "from": { $lte: overall_rating },
+        "to": { $gte: overall_rating }
+    })
+    const nineBoxValue  = await NineBox.findOne({
+        "box_9_definitions.performance_level": performance.category,
+        "box_9_definitions.potential_level": potential,
+    })
+    let boxdefinitions:any[] = nineBoxValue.box_9_definitions
+    let definitionValue = boxdefinitions.find(item => {
+        return ((item.performance_level == performance.category) && (item.potential_level == potential))
+    })
+    res.status(StatusCodes.OK).json({
+        data: definitionValue
+    });
+
+})
+
+
 export {
     createNineBox,
     updateNineBox,
-    getAllNineBox
+    getAllNineBox,
+    getTalentCategory
 }
