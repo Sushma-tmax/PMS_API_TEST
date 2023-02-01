@@ -7,6 +7,6 @@ const router = Router()
 router.get('/',getAllNineBox)
 router.post("/", createNineBox);
 router.patch('/:id', updateNineBox);
-router.get('/talent-category',getTalentCategory);
+router.get('/talent-category/:overall_rating/:potential',getTalentCategory);
 
 export default router

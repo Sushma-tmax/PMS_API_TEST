@@ -113,6 +113,9 @@ const EmployeeSchema = new Schema({
         type: String,
         // enum: ["appraiser", "normalizer", "reviewer", "self-rating"],
     },
+    talent_category: {
+        type: String,
+    },
     calendar: {
         type: Schema.Types.ObjectId,
         ref: "Calender",
