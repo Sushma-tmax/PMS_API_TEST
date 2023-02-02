@@ -1767,7 +1767,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
-    if (employee.employee_rating - normalizer.normalizer_rating <= 0.5) {
+    if (employee.employee_rating - normalizer.normalizer_rating <= 0.3) {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
@@ -1786,7 +1786,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         res.status(StatusCodes.OK).json({ "message": updatedEmployee });
     }
 
-    if (employee.employee_rating - normalizer.normalizer_rating >= 0.5) {
+    if (employee.employee_rating - normalizer.normalizer_rating >= 0.3) {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
@@ -1796,6 +1796,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
                 // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
                 "appraisal.status": 'rejected',
+                "appraisal.pa_status": "Pending with Normalizer (Employee Rejection)",
                 "normalizer.normalizer_status": "pending",
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
