@@ -33,8 +33,8 @@ const getRatingsfromObjectiveDescription = (data: any) => {
 
 const getRatingRejectedfromObjectiveDescription = (data: any) => {
     return data?.map((k: any) => {
-        return {          
-            rating_rejected: false,           
+        return {
+            rating_rejected: false,
         }
     })
 }
@@ -422,7 +422,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         }
     })
 
-  // @ts-ignore
+    // @ts-ignore
     employee?.appraisal?.rejection_attachments = employee.appraisal.rejection_attachments.map((j: any) => {
 
         return {
@@ -1072,6 +1072,84 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({
         employee
     });
+})
+
+// reviewer accepts appraiser after employee rejection
+const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.body
+    console.log(id, '`````````````````````````````````````````````````')
+
+    const { appraisal, reviewer , normalizer } = await Employee.findById(id);
+
+    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) <= 0.3) {
+        const employee = await Employee.updateMany({ _id: { $in: id } },
+            {
+                $set: {
+                    "appraisal.pa_status": "Completed",
+                    "appraisal.status" : "completed",
+                    "appraisal.show_reviewer": false,
+                    // "reviewer.objective_group": appraisal.objective_group,
+                    // "reviewer.objective_type": appraisal.objective_type,
+                    // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    // "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.training_recommendation": appraisal.training_recommendation,
+                    "reviewer.other_recommendation": appraisal.other_recommendation,
+                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                    "reviewer.feedback_questions": appraisal.feedback_questions,
+                    // "reviewer.reviewer_acceptance": true,
+                    "reviewerIsChecked": true,
+                    "reviewerIsDisabled": true,
+                    "reviewer.reviewer_status": 'accepted-employee',
+                    // "normalizerIsDisabled": false,
+                    // "normalizerIsChecked": false,
+                    // "normalizer.normalizer_status": 'pending'
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                }
+            }
+        )
+        res.status(StatusCodes.OK).json({
+            employee
+        });
+     }
+
+    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) >= 0.3) {
+        const employee = await Employee.updateMany({ _id: { $in: id } },
+            {
+                $set: {
+                    "appraisal.pa_status": "Pending with Normalizer",
+                    "appraisal.status" : "rejected",
+                    "appraisal.show_reviewer": false,
+                    "reviewer.objective_group": appraisal.objective_group,
+                    "reviewer.objective_type": appraisal.objective_type,
+                    "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.training_recommendation": appraisal.training_recommendation,
+                    "reviewer.other_recommendation": appraisal.other_recommendation,
+                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                    "reviewer.feedback_questions": appraisal.feedback_questions,
+                    "reviewer.reviewer_acceptance": true,
+                    "reviewerIsChecked": true,
+                    "reviewerIsDisabled": true,
+                    "reviewer.reviewer_status": 'accepted-employee',
+                    "normalizerIsDisabled": false,
+                    "normalizerIsChecked": false,
+                    "normalizer.normalizer_status": 'pending'
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                }
+            }
+        )
+        res.status(StatusCodes.OK).json({
+            employee
+        });
+    }
+
+   
 })
 
 const acceptReviewerRatings = asyncHandler(async (req: Request, res: Response) => {
@@ -1767,47 +1845,68 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
-    if (employee.employee_rating - normalizer.normalizer_rating <= 0.3) {
-        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-            $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.status": 'completed',
-                "appraisal.pa_status": "Completed",
-                "appraisal.comments": comments,
-                "appraisal_previous_submission.objective_description": appraisal.objective_description,
-                "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-                "normalizer.normalizer_rating": appraisal.appraiser_rating,
-                // "normalizer.normalizer_status": 'completed',
-                "normalizer.objective_description": appraisal.objective_description,
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            "appraisal.appraiser_status": 'appraiser-accepted-employee',
+            "appraisal.status": 'rejected',
+            "appraisal.pa_status": "Pending with Reviewer",
+            "appraisal.comments": comments,
+            "appraisal_previous_submission.objective_description": appraisal.objective_description,
+            "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+            "normalizer.normalizer_rating": appraisal.appraiser_rating,
+            // "normalizer.normalizer_status": 'completed',
+            "normalizer.objective_description": appraisal.objective_description,
+            "appraisal.appraiser_rejected": false,
+            "reviewer.reviewer_status": "pending",
+            "reviewerIsDisabled": false,
+            "reviewerIsChecked": false,
 
-            }
-        })
-        console.log('comppp')
-        res.status(StatusCodes.OK).json({ "message": updatedEmployee });
-    }
+        }
+    })
+    console.log('comppp')
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 
-    if (employee.employee_rating - normalizer.normalizer_rating >= 0.3) {
-        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-            $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.appraiser_rating": employee.employee_rating,
-                "appraisal.comments": comments,
-                "appraisal_previous_submission.objective_description": appraisal.objective_description,
-                "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-                // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
-                "appraisal.status": 'rejected',
-                "appraisal.pa_status": "Pending with Normalizer (Employee Rejection)",
-                "normalizer.normalizer_status": "pending",
-                "normalizerIsChecked": false,
-                "normalizerIsDisabled": false,
-            }
-        })
+    // if (employee.employee_rating - normalizer.normalizer_rating <= 0.3) {
+    //     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+    //         $set: {
+    //             "appraisal.appraiser_status": 'appraiser-accepted-employee',
+    //             "appraisal.status": 'completed',
+    //             "appraisal.pa_status": "Completed",
+    //             "appraisal.comments": comments,
+    //             "appraisal_previous_submission.objective_description": appraisal.objective_description,
+    //             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+    //             "normalizer.normalizer_rating": appraisal.appraiser_rating,
+    //             // "normalizer.normalizer_status": 'completed',
+    //             "normalizer.objective_description": appraisal.objective_description,
 
-        console.log('2nd case')
+    //         }
+    //     })
+    //     console.log('comppp')
+    //     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+    // }
 
-    }
+    // if (employee.employee_rating - normalizer.normalizer_rating >= 0.3) {
+    //     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+    //         $set: {
+    //             "appraisal.appraiser_status": 'appraiser-accepted-employee',
+    //             "appraisal.appraiser_rating": employee.employee_rating,
+    //             "appraisal.comments": comments,
+    //             "appraisal_previous_submission.objective_description": appraisal.objective_description,
+    //             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+    //             // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
+    //             "appraisal.status": 'rejected',
+    //             "appraisal.pa_status": "Pending with Normalizer (Employee Rejection)",
+    //             "normalizer.normalizer_status": "pending",
+    //             "normalizerIsChecked": false,
+    //             "normalizerIsDisabled": false,
+    //         }
+    //     })
 
-    res.status(StatusCodes.OK).json({ "message": "success" })
+    //     console.log('2nd case')
+
+    // }
+
+    // res.status(StatusCodes.OK).json({ "message": "success" })
 
 })
 
@@ -1823,7 +1922,7 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.appraiser_status": 'appraiser-rejected-employee',
             "employee.employee_status": "pending",
             "appraisal.pa_status": "Pending with Employee",
-            "appraisal.appraiser_rejected" : true,
+            "appraisal.appraiser_rejected": true,
         }
     })
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
@@ -2325,11 +2424,11 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
     const { id } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
-    
+
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isGradeException": true, 
+                "employee.isGradeException": true,
             }
         }
     )
@@ -2342,11 +2441,11 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
     const { id } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
-    
+
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isRoleException": true, 
+                "employee.isRoleException": true,
             }
         }
     )
@@ -2359,11 +2458,11 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
     const { id } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
-    
+
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isExcluded": true, 
+                "employee.isExcluded": true,
             }
         }
     )
@@ -2403,7 +2502,7 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
                 name: new mongoose.Types.ObjectId(objective_description_name)
             }
         },
-       
+
     },
         {
             $set: {
@@ -2473,7 +2572,7 @@ const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
                 "reviewer.objective_description.$[description].action_performed": action_performed,
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
-                "appraisal.objective_description" : appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description
             }
         },
         {
@@ -2534,8 +2633,8 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].action_performed": action_performed,
 
                 "appraisal.objective_description.$[description].remarks": remarks,
-                "employee.objective_description" :  employee_objective_description,
-                "appraisal.appraiser_rating":false,
+                "employee.objective_description": employee_objective_description,
+                "appraisal.appraiser_rating": false,
             }
         },
         {
@@ -2591,7 +2690,7 @@ const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
                 "employee.objective_description.$[description].rejection_reason": rejection_reason,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
                 "employee.objective_description.$[description].action_performed": action_performed,
-                "appraisal.objective_description" : appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description
 
             }
         },
@@ -2616,9 +2715,9 @@ const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
 
 const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {employee_code} = req.params
+    const { employee_code } = req.params
 
-    const getEmployee = await Employee.find({manager_code: employee_code}).limit(5)
+    const getEmployee = await Employee.find({ manager_code: employee_code }).limit(5)
     res.status(StatusCodes.OK).json({
         getEmployee
     });
@@ -2627,11 +2726,11 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const {employee_code} = req.params
+    const { employee_code } = req.params
 
-    const lineManager = await Employee.find({manager_code: employee_code})
+    const lineManager = await Employee.find({ manager_code: employee_code })
 
-    const lineManagerPlusOne = await  Employee.find({manager_code: { _id: { $in: lineManager.map((j:any) => j.employee_code) } }})
+    const lineManagerPlusOne = await Employee.find({ manager_code: { _id: { $in: lineManager.map((j: any) => j.employee_code) } } })
 
     res.status(StatusCodes.OK).json({
         lineManagerPlusOne
@@ -2696,17 +2795,18 @@ export {
     removeReviewerAttachments,
     appraiserDashboard,
     meetingNotesAttachmentsNormalizer,
-    acceptNormalizerGradeException,   
+    acceptNormalizerGradeException,
     acceptEmployeeGradeException,
     acceptEmployeeExcluded,
     rejectionAttachmentsAppraiser,
-    removeRejectionAppraiserAttachments, 
+    removeRejectionAppraiserAttachments,
     appraiserAcceptsReviewerRating,
     reviewerAcceptsAppraiserRating,
     appraiserAcceptsEmployeeRating,
     employeeAcceptsAppraiserRating,
     acceptEmployeeRoleExceptions,
     lineManagerEmployee,
-    lineManagerPlusOneEmployee
+    lineManagerPlusOneEmployee,
+    acceptReviewerEmployeeRejection
 
 }
