@@ -53,6 +53,7 @@ export interface Employee {
     LastAppraisalDate: string
     LastModifiedDate: string
     FinalRating: string
+   
 }
 
 const EmployeeSchema = new Schema({
@@ -483,7 +484,7 @@ const EmployeeSchema = new Schema({
 
     appraisal: {
         rejection_count: Number,
-        confirmed: Boolean,
+        confirmed: Boolean,       
 
         comments: {
             type: String,
@@ -591,6 +592,12 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+
+            rating_resubmitted : {
+                type: Boolean,
+                default : false
+            },
+            
             action_performed: {
                 type: Boolean,
                 default: false
