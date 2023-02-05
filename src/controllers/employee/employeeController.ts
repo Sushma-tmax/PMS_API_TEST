@@ -1932,6 +1932,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 // "normalizerIsDisabled": false,
                 "reviewerIsChecked": false,
                 "reviewerIsDisabled": false,
+                "reviewer.reviewer_status" : "pending"
             }
         })
 
@@ -2461,7 +2462,7 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isGradeException": true,
+                "isGradeException": true,
             }
         }
     )
@@ -2478,7 +2479,7 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isRoleException": true,
+                "isRoleException": true,
             }
         }
     )
@@ -2495,7 +2496,7 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "employee.isExcluded": true,
+                "isExcluded": true,
             }
         }
     )

@@ -135,6 +135,19 @@ const EmployeeSchema = new Schema({
     reviewer_name: String,
     normalizer_code: String,
     normalizer_name: String,
+    isGradeException: {
+        type: Boolean,
+        default: false
+    },
+    isRoleException: {
+        type: Boolean,
+        default: false
+    },
+
+    isExcluded: {
+        type: Boolean,
+        default: false
+    },
 
 
 
@@ -146,21 +159,7 @@ const EmployeeSchema = new Schema({
         employee_status: {
             type: String,
             default: 'not-started'
-        },
-
-        isGradeException: {
-            type: Boolean,
-            default: false
-        },
-        isRoleException: {
-            type: Boolean,
-            default: false
-        },
-
-        isExcluded: {
-            type: Boolean,
-            default: false
-        },
+        },      
         
         attachments: [{
             url: { type: String },
