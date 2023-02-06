@@ -1119,6 +1119,22 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
+
+        isAppraiserChecked : {
+            type: Boolean,
+            default: false
+        },
+
+        isReviewerChecked : {
+            type: Boolean,
+            default: false
+        },
+
+        isEmployeeChecked : {
+            type: Boolean,
+            default: false
+        },
+
         normalizer_overall_feedback: {
             type: String,
             default: ''
