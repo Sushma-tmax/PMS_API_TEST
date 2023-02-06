@@ -2764,10 +2764,14 @@ const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Respon
 
     const lineManager = await Employee.find({ manager_code: employee_code })
 
-    const lineManagerPlusOne = await Employee.find({ manager_code: { _id: { $in: lineManager.map((j: any) => j.employee_code) } } })
+
+    const lineManagerPlusOne = await  Employee.find({manager_code:  { $in: lineManager.map((j:any) => j.employee_code) } })
+   const Temp = lineManager.map((j:any) => j.employee_code) 
 
     res.status(StatusCodes.OK).json({
-        lineManagerPlusOne
+         lineManagerPlusOne,
+         lineManager
+        //Temp
     });
 
 })
