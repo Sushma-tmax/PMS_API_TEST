@@ -50,31 +50,31 @@ const getTalentCategory = asyncHandler(async (req: Request, res: Response) => {
     // const { id } = req.params
     const { overall_rating, potential } = req.params;
     // console.log("overall_rating", overall_rating)
-   
+
     if (potential == "false") {
         res.status(StatusCodes.OK).json({
             data: ""
-        }); 
+        });
     }
-    // console.log("overall_rating", overall_rating)
+    console.log("overall_rating", overall_rating, potential)
     // const performance = await PerformanceDefinition.find()
     const performance = await PerformanceDefinition.findOne({
         "from": { $lte: overall_rating },
         "to": { $gte: overall_rating }
     })
+
     const nineBoxValue = await NineBox.findOne({
         "box_9_definitions.performance_level": performance.category,
         "box_9_definitions.potential_level": potential,
     })
-    let boxdefinitions: any[] = nineBoxValue.box_9_definitions
-    let definitionValue = boxdefinitions.find(item => {
-        return ((item.performance_level == performance.category) && (item.potential_level == potential))
-    })
-   
-    res.status(StatusCodes.OK).json({
-        data: definitionValue.title
+    let boxdefinitions : any[] = nineBoxValue.box_9_definitions
+    let definitionValue = boxdefinitions?.find(item => {  
+        console.log(item,'itemssss')     
+        return ((item?.performance_level == performance?.category) && (item?.potential_level == potential))
+    })  
 
-        // data: overall_rating
+    res.status(StatusCodes.OK).json({
+        data: definitionValue?.title      
     });
 
 })
