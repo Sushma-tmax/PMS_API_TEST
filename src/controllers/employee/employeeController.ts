@@ -15,7 +15,8 @@ const getRatingsfromObjectiveDescription = (data: any) => {
         return {
             // ratings: k.ratings,
             rating_rejected: false,
-
+            rating_resubmitted : false,
+            rating_accepted : false,
             // rating_comments: "",
             comments: k.comments,
 
@@ -653,6 +654,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         rejection_reason,
         rating_value,
         rating_rejected,
+        reviewer_objective_description,
         action_performed,
         objective_group,
         objective_type,
@@ -686,6 +688,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].rating_resubmitted": rating_resubmitted,
                 "appraisal.objective_description.$[description].remarks": remarks,
+                "reviewer.objective_description" : reviewer_objective_description,
             }
         },
         {
@@ -761,6 +764,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         objective_description,
         value,
         comments,
+        appraiser_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -783,7 +787,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].action_performed": action_performed,
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
-
+                "appraisal.objective_description": appraiser_objective_description
             }
         },
         {
@@ -1904,6 +1908,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.status": 'completed',
                 "appraisal.pa_status": "Completed",
                 "appraisal.comments": comments,
+                "appraisal.appraiser_rejected" : false,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
@@ -1926,6 +1931,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
                 // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
                 "appraisal.status": 'rejected',
+                "appraisal.appraiser_rejected" : false,
                 "appraisal.pa_status": "Pending with Reviewer",
                 // "normalizer.normalizer_status": "pending",
                 // "normalizerIsChecked": false,
@@ -2516,6 +2522,7 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
         rejection_reason,
         rating_value,
         rating_rejected,
+        rating_accepted,
         action_performed,
         objective_group,
         objective_type,
@@ -2547,6 +2554,7 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].rating_comments": rating_comments,
                 // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
+                "appraisal.objective_description.$[description].rating_accepted": rating_accepted,
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].remarks": remarks,
                 "reviewer.objective_description": reviewer_objective_description,
