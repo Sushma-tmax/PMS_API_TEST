@@ -143,14 +143,18 @@ const EmployeeSchema = new Schema({
         type: Boolean,
         default: false
     },
-
+    isCEORole: {
+        type: Boolean,
+        default: false
+    },
+    isLeavers: {
+        type: Boolean,
+        default: false
+    },
     isExcluded: {
         type: Boolean,
         default: false
     },
-
-
-
     employee: {
         employee_agree: {
             type: Boolean,
@@ -1120,6 +1124,11 @@ const EmployeeSchema = new Schema({
             type: String,
         },
 
+        normalizer_rejected : {
+            type: Boolean,
+            default: false
+        },
+
         isChecked: {
             type: Boolean,
             default: false
@@ -1208,6 +1217,12 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+
+            rating_resubmitted : {
+                type: Boolean,
+                default: false  
+            },
+            
             action_performed: {
                 type: Boolean,
                 default: false
