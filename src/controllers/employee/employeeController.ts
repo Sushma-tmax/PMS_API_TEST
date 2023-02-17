@@ -1052,7 +1052,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
 
 // const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const { id , appraisal_objective_description } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal } = await Employee.findById(id);
@@ -1065,6 +1065,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                 "appraisal.objective_description": appraisal_objective_description,
                 // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
