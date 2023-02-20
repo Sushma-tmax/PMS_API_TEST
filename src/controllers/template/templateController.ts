@@ -217,6 +217,7 @@ const updateTemplate = asyncHandler(async (req: Request, res: Response) => {
         req.body,
         {
             new: true,
+            returnOriginal: false,
             runValidators: true
         });
 
