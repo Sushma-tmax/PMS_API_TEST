@@ -1887,7 +1887,7 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments } = req.body
+    const { comments , previousRating } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -1921,6 +1921,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.comments": comments,
                 "appraisal.appraiser_rejected": false,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
+                "appraisal_previous_rating.objective_description": previousRating,
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
                 "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": 'completed',
@@ -1940,6 +1941,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.comments": comments,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+                "appraisal_previous_rating.objective_description": previousRating,
                 // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
                 "appraisal.status": 'rejected',
                 "appraisal.appraiser_rejected": false,

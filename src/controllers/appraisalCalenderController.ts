@@ -309,7 +309,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
             }
         })
     }
-
+    const filterExceptions = position?.filter((i:any) => {
+         return i.isExcluded === false && i.isLeavers === false && i.isCEORole === false
+    })
     const getName = (arr: any) => {
         return arr.map((e: any) => e.name)
     }
@@ -419,7 +421,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     )
 
 
-    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(position) }, "appraisal.status": 'in-progress' })
+    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(filterExceptions) }, "appraisal.status": 'in-progress' })
 
     if (checkEmployeeStatus.length > 0) {
         res.status(StatusCodes.BAD_REQUEST).json({
@@ -432,7 +434,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
 
     }
 
-    const employee = await Employee.updateMany({ _id: { $in: getName(position) } },
+    const employee = await Employee.updateMany({ _id: { $in: getName(filterExceptions) } },
         {
             $set: {
                 appraisal_template: appraisal,
