@@ -1102,6 +1102,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                 "appraisal.pa_status": "Pending with Normalizer",
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
+                "appraisal.appraiser_rejected" : false, 
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(reviewer.objective_description),
@@ -2089,7 +2090,7 @@ const meetingNotesAttachmentsNormalizer = asyncHandler(async (req: Request, res:
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "normalizer.meetingNotesAttachments": attachments,
         }
     })
@@ -2332,7 +2333,21 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
         getEmployeefromAppraisalCalendar
     });
 })
-
+//Length of unmapped employees
+const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Response) => {
+    const appraisalCalendar = await AppraisalCalender.find({ calendar: req.params.id })
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j: any) => {
+        const data = j.position.map((k: any) => k.name.toString())
+        return data
+    }).flat()
+    const getEmployee = await Employee.find({})
+    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
+    console.log(getEmployeefromAppraisalCalendar)
+    res.status(StatusCodes.OK).json({
+        data: myArray,
+        getEmployeefromAppraisalCalendar
+    });
+})
 const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {
     const emp = await Employee.findById({ _id: req.params.id })
     // console.log(emp.legal_full_name, 'emppp')
@@ -2882,6 +2897,7 @@ export {
     employeeAppraisalClose,
     statusBasedCount,
     getUnMappedEmployee,
+    getUnMappedEmployeeLength,
     getEmployeeTemplate,
     getReviewerEmployee,
     removeAppraiserAttachments,

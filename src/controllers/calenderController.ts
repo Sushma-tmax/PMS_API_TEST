@@ -15,7 +15,7 @@ function ISODate(end_date: any): any {
 const createCalender = asyncHandler(async (req: Request, res: Response) => {
 
     const calender = await Calender.insertMany(req.body);
-
+console.log("calendar",calender)
     res.status(StatusCodes.CREATED).json({
         success: true,
         data: calender,

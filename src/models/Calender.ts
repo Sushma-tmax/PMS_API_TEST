@@ -57,11 +57,11 @@ const CalenderSchema = new Schema({
         
             start_date_F2FMeeting: {
                 type: Date,
-                required: true,
+                required: false,
             },
             end_date_F2FMeeting: {
                 type: Date,
-                required: true,
+                required: false,
             },
         
         
