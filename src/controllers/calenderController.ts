@@ -62,7 +62,7 @@ const getAllCalenders = asyncHandler(async (req: Request, res: Response) => {
 })
 const getAllActiveCalenders = asyncHandler(async (req: Request, res: Response) => {
 
-    const calenders = await (await Calender.find({isActive:false}).sort({ createdAt: -1 }));
+    const calenders = await (await Calender.find({status:"live"}).sort({ createdAt: -1 }));
 
     res.status(StatusCodes.OK).json({
         success: true,

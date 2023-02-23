@@ -2342,12 +2342,16 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
         const data = j.position.map((k: any) => k.name.toString())
         return data
     }).flat()
-    const getEmployee = await Employee.find({})
+    const getEmployee = await Employee.find({
+        // "isCEORole":false,
+        // "isLeavers":false,
+        // "isExcluded":false,
+    })
     const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
     console.log(getEmployeefromAppraisalCalendar)
     res.status(StatusCodes.OK).json({
         data: myArray,
-        getEmployeefromAppraisalCalendar
+        getEmployee
     });
 })
 const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {

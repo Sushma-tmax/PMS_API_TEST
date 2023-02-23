@@ -107,6 +107,14 @@ const CalenderSchema = new Schema({
             type: Boolean,
             default: false
         },   
+        status:{
+            type: String,
+            default : "draft"
+        },
+        calendar_type:{
+            type: String,
+            default : "Mid Year"
+        }
         } ,{timestamps: true})
 
         CalenderSchema.plugin(UniqueValidator)
