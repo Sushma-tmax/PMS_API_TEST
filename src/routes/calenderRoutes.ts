@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {deleteCalender,getCalenderById,updateCalender,getAllCalenders,createCalender} from "../controllers/calenderController";
+import {deleteCalender,getCalenderById,updateCalender,getAllCalenders,createCalender,getAllActiveCalenders} from "../controllers/calenderController";
 
 const router = Router()
 
@@ -9,6 +9,6 @@ router.get('/:id',getCalenderById)
 router.post('/',createCalender)
 router.patch('/:id',updateCalender)
 router.delete('/:id',deleteCalender)
-
+router.get('//',getAllActiveCalenders)
 
 export default router

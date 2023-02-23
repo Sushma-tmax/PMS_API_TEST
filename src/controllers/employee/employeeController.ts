@@ -1005,7 +1005,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
                 "appraisal.pa_status": "Pending with Employee",
-                "appraisal_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer.rejection_count" : 0
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
@@ -1090,6 +1090,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
         employee
     });
 })
+
 
 // reviewer accepts appraiser after employee rejection
 const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
@@ -1956,12 +1957,12 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "reviewer.reviewer_status": "pending"
             }
         })
-
+        res.status(StatusCodes.OK).json({ "message": previousRating})
         console.log('2nd case')
 
     }
 
-    res.status(StatusCodes.OK).json({ "message": "success" })
+    
 
 })
 
@@ -2922,6 +2923,6 @@ export {
     acceptEmployeeLeavers,
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
-    acceptReviewerEmployeeRejection
+    acceptReviewerEmployeeRejection,
 
 }
