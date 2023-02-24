@@ -2351,7 +2351,7 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
     console.log(getEmployeefromAppraisalCalendar)
     res.status(StatusCodes.OK).json({
         data: myArray,
-        getEmployee
+        // getEmployee
     });
 })
 const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {

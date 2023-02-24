@@ -309,9 +309,10 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
             }
         })
     }
-    const filterExceptions = position?.filter((i:any) => {
-         return i.isExcluded === false && i.isLeavers === false && i.isCEORole === false
+    const filterExceptions = position?.filter((i: any) => {
+        return i.isExcluded === false && i.isLeavers === false && i.isCEORole === false
     })
+    console.log(filterExceptions, "filterExceptionsfilterExceptions")
     const getName = (arr: any) => {
         return arr.map((e: any) => e.name)
     }
@@ -421,20 +422,25 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     )
 
 
-    const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(filterExceptions) }, "appraisal.status": 'in-progress' })
+    // const checkEmployeeStatus = await Employee.find({ _id: { $in: getName(position) }, "appraisal.status": 'in-progress' })
 
-    if (checkEmployeeStatus.length > 0) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-            // success: true,
-            // data: position,
-            // appraisal,
-            // position,
-            "message": "Employee Already Exist in appraisal"
-        });
+    // if (checkEmployeeStatus.length > 0) {
+    //     res.status(StatusCodes.BAD_REQUEST).json({
+    //         // success: true,
+    //         // data: position,
+    //         // appraisal,
+    //         // position,
+    //         "message": "Employee Already Exist in appraisal"
+    //     });
 
-    }
+    // }
 
-    const employee = await Employee.updateMany({ _id: { $in: getName(filterExceptions) } },
+    const employee = await Employee.updateMany({
+        _id: { $in: getName(position) },
+        "isLeavers": false,
+        "isExcluded": false,
+        "isCEORole": false
+    },
         {
             $set: {
                 appraisal_template: appraisal,
@@ -462,11 +468,11 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
 
                 },
 
-                appraisal_previous_submission : {
-                    appraiser_rating : 0,
-                    appraiser_status : 'pending',
-                    pa_status : 'not-started',
-                    potential : false,
+                appraisal_previous_submission: {
+                    appraiser_rating: 0,
+                    appraiser_status: 'pending',
+                    pa_status: 'not-started',
+                    potential: false,
                     status: 'not-started',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
@@ -490,9 +496,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     attachments: []
                 },
 
-                reviewer_previous_submission : {
-                    reviewer_rating : 0,
-                    reviewer_status : 'pending',                   
+                reviewer_previous_submission: {
+                    reviewer_rating: 0,
+                    reviewer_status: 'pending',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,
@@ -515,9 +521,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     attachments: []
                 },
 
-                normalizer_previous_submission : {
-                    normalizer_rating : 0,
-                    normalizer_status : 'pending',                   
+                normalizer_previous_submission: {
+                    normalizer_rating: 0,
+                    normalizer_status: 'pending',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,
@@ -525,9 +531,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
 
                 employee: {},
 
-                employee_previous_submission : {
-                    employee_rating : 0,
-                    employee_status : 'pending',                   
+                employee_previous_submission: {
+                    employee_rating: 0,
+                    employee_status: 'pending',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,
@@ -548,6 +554,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
         data: weightage.objective_description,
         employee,
         calendar,
+        filterExceptions,
         rating: ratingScale,
         // prob:probationEmployee
     });
@@ -700,19 +707,19 @@ const getAppraisalCalendarofCurrentYear = asyncHandler(async (req: Request, res:
         // { $match: { calendar: { $in: getTodayCalendars } } },
         {
             $project: {
-                createdAt:1,
-                calendar:1,
-                template:1,
-                positionCount: { $cond: { if: { $isArray: "$position" }, then: { $size: "$position" }, else: 0} }
+                createdAt: 1,
+                calendar: 1,
+                template: 1,
+                positionCount: { $cond: { if: { $isArray: "$position" }, then: { $size: "$position" }, else: 0 } }
             }
         },
         {
             $sort: { "createdAt": -1 }
         },
 
- ])
+    ])
 
- const  getAppraisalCalendarData = await AppraisalCalender.populate(getAppraislaCalendar,[{path:"calendar"},{path:"template"}])
+    const getAppraisalCalendarData = await AppraisalCalender.populate(getAppraislaCalendar, [{ path: "calendar" }, { path: "template" }])
 
 
     res.status(StatusCodes.OK).json({
@@ -735,7 +742,7 @@ const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, re
             res.status(StatusCodes.BAD_REQUEST).json({ message: "Appraisal Calendar Doesn't have employee Mapped" });
         }
     })
-    res.status(StatusCodes.OK).json({ message: "OK" ,data:checkIfEmpty});
+    res.status(StatusCodes.OK).json({ message: "OK", data: checkIfEmpty });
 
 })
 
