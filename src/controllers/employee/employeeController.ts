@@ -690,8 +690,8 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].rating_resubmitted": rating_resubmitted,
                 "appraisal.objective_description.$[description].remarks": remarks,
-                "reviewer.objective_description" : reviewer_objective_description,
-                "employee.objective_description" : employee_objective_description
+                "reviewer.objective_description": reviewer_objective_description,
+                "employee.objective_description": employee_objective_description
 
             }
         },
@@ -907,7 +907,7 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
                 "employee.objective_description.$[description].rejection_reason": rejection_reason,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
                 "employee.objective_description.$[description].action_performed": action_performed,
-                "appraisal.objective_description" : appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description
 
             }
         },
@@ -1000,13 +1000,13 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
                 "normalizer.normalizer_acceptance": true,
-                "normalizer.normalizer_rejected" : false,
+                "normalizer.normalizer_rejected": false,
                 "normalizer.normalizer_status": 'accepted',
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
                 "appraisal.pa_status": "Pending with Employee",
                 "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "reviewer.rejection_count" : 0
+                "reviewer.rejection_count": 0
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
@@ -1053,7 +1053,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
 
 // const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const { id , appraisal_objective_description } = req.body
+    const { id, appraisal_objective_description } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal } = await Employee.findById(id);
@@ -1066,7 +1066,8 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                 "appraisal.objective_description": appraisal_objective_description,
+                "appraisal.appraiser_rejected": false,
+                "appraisal.objective_description": appraisal_objective_description,
                 // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
@@ -1104,7 +1105,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                 "appraisal.pa_status": "Pending with Normalizer",
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
-                "appraisal.appraiser_rejected" : false, 
+                "appraisal.appraiser_rejected": false,
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(reviewer.objective_description),
@@ -1890,7 +1891,7 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments , previousRating } = req.body
+    const { comments, previousRating } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -1957,12 +1958,12 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "reviewer.reviewer_status": "pending"
             }
         })
-        res.status(StatusCodes.OK).json({ "message": previousRating})
+        res.status(StatusCodes.OK).json({ "message": previousRating })
         console.log('2nd case')
 
     }
 
-    
+
 
 })
 
@@ -2342,12 +2343,13 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
         const data = j.position.map((k: any) => k.name.toString())
         return data
     }).flat()
-    const getEmployee = await Employee.find({
-        // "isCEORole":false,
-        // "isLeavers":false,
-        // "isExcluded":false,
+    //const getEmployee = await Employee.find({})
+    const getEmployees = await Employee.find({
+        "isCEORole":false,
+        "isLeavers":false,
+        "isExcluded":false,
     })
-    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
+    const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
     console.log(getEmployeefromAppraisalCalendar)
     res.status(StatusCodes.OK).json({
         data: myArray,
