@@ -77,11 +77,11 @@ const CalenderSchema = new Schema({
         
             start_date_mediation: {
                 type: Date,
-                required: true,
+                required: false,
             },
             end_date_mediation: {
                 type: Date,
-                required: true,
+                required: false,
             },
         
         

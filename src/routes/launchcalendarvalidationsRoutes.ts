@@ -6,5 +6,5 @@ const router = Router()
 
 
 router.get('/ConfirmValidations',validations )
-router.get('/updateValidations/:id',updateValidations )
+router.post('/updateValidations/:id',updateValidations )
 export default router

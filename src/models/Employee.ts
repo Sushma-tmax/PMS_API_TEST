@@ -155,6 +155,10 @@ const EmployeeSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isSelected: {
+        type: Boolean,
+        default: false
+    },
     employee: {
         employee_agree: {
             type: Boolean,
