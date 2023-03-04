@@ -1005,6 +1005,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
                 "appraisal.pa_status": "Pending with Employee",
+                "appraisal.pa_rating" : appraisal.reviewer_rating,
                 "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer.rejection_count": 0
                 // "employee":{},
@@ -1062,6 +1063,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
         {
             $set: {
                 "appraisal.pa_status": "Pending with Normalizer",
+                "appraisal.pa_rating": appraisal.appraiser_rating,
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
@@ -1103,6 +1105,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         {
             $set: {
                 "appraisal.pa_status": "Pending with Normalizer",
+                "appraisal.pa_rating" : appraisal.appraiser_rating,
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
                 "appraisal.appraiser_rejected": false,
@@ -1922,6 +1925,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
                 "appraisal.pa_status": "Completed",
+                "appraisal.pa_rating" : appraisal.appraiser_rating,
                 "appraisal.comments": comments,
                 "appraisal.appraiser_rejected": false,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
@@ -1941,7 +1945,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.appraiser_rating": employee.employee_rating,
+                "appraisal.appraiser_rating": employee.employee_rating,               
                 "appraisal.comments": comments,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
@@ -1950,6 +1954,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.status": 'rejected',
                 "appraisal.appraiser_rejected": false,
                 "appraisal.pa_status": "Pending with Reviewer",
+                "appraisal.pa_rating" : appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": "pending",
                 // "normalizerIsChecked": false,
                 // "normalizerIsDisabled": false,
@@ -1996,6 +2001,7 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         $set: {
             "appraisal.status": 'completed',
             "appraisal.pa_status": "Completed",
+            "appraisal.pa_rating" : normalizer.normalizer_rating,
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
