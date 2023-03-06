@@ -69,6 +69,15 @@ const getAllActiveCalenders = asyncHandler(async (req: Request, res: Response) =
         data: calenders,
     });
 })
+const getDraftCalenders = asyncHandler(async (req: Request, res: Response) => {
+
+    const calenders = await (await Calender.find({status:"Draft"}).sort({ createdAt: -1 }));
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: calenders,
+    });
+})
 // .find(item => {  
 //     console.log(item,'itemssss')     
 //     return ((item?.performance_level == performance?.category) && (item?.potential_level == potential))
@@ -152,7 +161,8 @@ export {
     getCalenderById,
     updateCalender,
     deleteCalender,
-    getAllActiveCalenders
+    getAllActiveCalenders,
+    getDraftCalenders
 }
 
 

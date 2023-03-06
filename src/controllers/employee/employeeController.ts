@@ -2520,7 +2520,7 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
 })
 
 const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const {id} = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
@@ -2580,6 +2580,29 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
         {
             $set: {
                 "isExcluded": true,
+            }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Response) => {
+    const { id,appraiser_name,appraiser_code,reviewer_name,
+            reviewer_code,normalizer_name,normalizer_code
+          } = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        {
+            $set: {
+                "appraiser_name": appraiser_name,
+                "appraiser_code": appraiser_code,
+                "reviewer_name": reviewer_name,
+                "reviewer_code": reviewer_code,
+                "normalizer_name": normalizer_name,
+                "normalizer_code": normalizer_code,
             }
         }
     )
@@ -2936,5 +2959,6 @@ export {
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
+    acceptEmployeeNamesChange
 
 }

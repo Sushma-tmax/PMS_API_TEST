@@ -48,6 +48,7 @@ import {
     rejectionAttachmentsAppraiser,
     removeRejectionAppraiserAttachments,
     acceptEmployeeExcluded,
+    acceptEmployeeNamesChange,
     appraiserAcceptsReviewerRating,
     reviewerAcceptsAppraiserRating,
     appraiserAcceptsEmployeeRating,
@@ -88,6 +89,8 @@ router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
 router.patch('/accept-employee-roleExceptions', acceptEmployeeRoleExceptions)
 router.patch('/accept-employee-CEORole',acceptEmployeeCEORole)
 router.patch('/accept-employee-Excluded', acceptEmployeeExcluded)
+router.patch('/accept-Employee-Names-Change', acceptEmployeeNamesChange)
+
 router.patch('/accept-employee-Leavers', acceptEmployeeLeavers)
 router.patch('/reject-reviewer-values/:id', rejectedReviewerValues)
 router.patch('/appraiser-accept-reviewer/:id', acceptReviewerRejectedAppraiser)
