@@ -141,6 +141,12 @@ const EmployeeSchema = new Schema({
     reviewer_name: String,
     normalizer_code: String,
     normalizer_name: String,
+    master_appraiser_code: String,
+    master_appraiser_name: String,
+    master_reviewer_code: String,
+    master_reviewer_name: String,
+    master_normalizer_code: String,
+    master_normalizer_name: String,
     isGradeException: {
         type: Boolean,
         default: false

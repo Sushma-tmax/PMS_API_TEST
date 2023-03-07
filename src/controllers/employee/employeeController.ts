@@ -2520,16 +2520,24 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
 })
 
 const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
+    const {id,masterAppraiserCode,masterAppraiserName} = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
     const employee = await Employee.updateMany({ _id: { $in: id } },
-        {
+        [{
             $set: {
                 "isRoleException": true,
+                "master_appraiser_code":"$appraiser_code",
+                "master_appraiser_name": "$appraiser_name",
+                "master_reviewer_code": "$reviewer_code",
+                "master_reviewer_name": "$reviewer_name",
+                "master_normalizer_code": "$normalizer_code",
+                "master_normalizer_name": "$normalizer_name",
+              
             }
-        }
+          
+        }]
     )
     res.status(StatusCodes.OK).json({
         employee
