@@ -11,7 +11,8 @@ import {
     addPositionsToAppraisalCalendar,
     removePositionsToAppraisalCalendar,
     getAppraisalCalendarofCurrentYear,
-    appraisalCalendarEmployeeValidation
+    appraisalCalendarEmployeeValidation,
+    getAppraisalCalendarForTemplate
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -35,6 +36,7 @@ router.get('/:id', getAppraisalCalenderById)
 router.post('/', createAppraisalCalender)
 // router.post('/employee/:id', addPositionsToAppraisalCalendar)
 router.delete('/:id', deleteAppraisalCalender)
+router.post('/calendar-by-template',getAppraisalCalendarForTemplate)
 
 
 

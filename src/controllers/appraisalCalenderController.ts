@@ -183,6 +183,20 @@ const getRecentAppraisalCalender = asyncHandler(async (req: Request, res: Respon
     });
 })
 
+
+const getAppraisalCalendarForTemplate = asyncHandler(async (req: Request, res: Response) => {
+    const { templateId } = req.body
+    const calenders = await AppraisalCalender.find({
+        status: "Draft",
+        template: templateId
+    }).sort({ updatedAt: -1 }).count();
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: calenders
+    });
+})
+
 const getAppraisalCalenderById = asyncHandler(async (req: Request, res: Response) => {
 
     const calender = await AppraisalCalender.findById(req.params.id);
@@ -762,5 +776,6 @@ export {
     addPositionsToAppraisalCalendar,
     removePositionsToAppraisalCalendar,
     getAppraisalCalendarofCurrentYear,
-    appraisalCalendarEmployeeValidation
+    appraisalCalendarEmployeeValidation,
+    getAppraisalCalendarForTemplate
 }
