@@ -148,6 +148,11 @@ const TemplateSchema = new Schema({
         default: ''
     },
 
+    template_active_status: {
+        type: Boolean,
+        default: false
+    },
+
 },
     { timestamps: true }
 );

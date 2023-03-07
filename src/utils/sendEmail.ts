@@ -10,8 +10,8 @@ const sendEmail = async ({ to, subject, html }) => {
         host: 'smtp.office365.com',
         port: 587,
         auth: {
-            user: 'user01@tskco.co.in',
-            pass: 'Surya@7117'
+            user: 'user02@tskco.co.in',
+            pass: 'User@#$987'
         }
     });
 
@@ -24,7 +24,7 @@ const sendEmail = async ({ to, subject, html }) => {
 //   })
 
     return await transporter.sendMail({
-        from: '"PMS" <user01@tskco.co.in>', // sender address
+        from: '"PMS" <user02@tskco.co.in>', // sender address
         to, // list of receivers
         subject, // Subject line
         html, // html body

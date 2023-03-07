@@ -189,11 +189,11 @@ const getAppraisalCalendarForTemplate = asyncHandler(async (req: Request, res: R
     const calenders = await AppraisalCalender.find({
         status: "Draft",
         template: templateId
-    }).sort({ updatedAt: -1 }).count();
+    }).sort({ updatedAt: -1 }).count();  
 
     res.status(StatusCodes.OK).json({
         success: true,
-        data: calenders
+        data: calenders      
     });
 })
 

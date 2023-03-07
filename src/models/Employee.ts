@@ -79,6 +79,9 @@ const EmployeeSchema = new Schema({
         type: String,
 
     },
+    section: {
+      type: String,
+    },
     division: {
         type: String,
 
@@ -92,7 +95,10 @@ const EmployeeSchema = new Schema({
     date_of_joining: {
         type: Date,
     },
-    position: {
+    // service_date: {
+    //
+    // },
+    position_code: {
         type: String,
     },
     line_manager_1: {
