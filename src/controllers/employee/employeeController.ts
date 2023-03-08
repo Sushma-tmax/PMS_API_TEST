@@ -2249,6 +2249,37 @@ const getEmployeeTemplate = asyncHandler(async (req: Request, res: Response) => 
 
 })
 
+const getAllMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+    // const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
+    const appraisalCalendar = await AppraisalCalender.find({ status: "Draft" })
+
+    const getEmployeefromAppraisalCalendar = appraisalCalendar.map((calendar: any) => {
+        const data = calendar.position.map((k: any) => k.name.toString())
+        return data
+    }).flat()
+
+    // const getEmployee = await Employee.find({})
+
+    // const employeeId = getEmployee?.map(k => k._id.toString())
+
+    // const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString()))
+
+    // const newArray = _.difference(getEmployee.map((j: any) => j._id.toString()), getEmployeefromAppraisalCalendar)
+
+    // console.log(getEmployeefromAppraisalCalendar)
+
+
+    res.status(StatusCodes.OK).json({
+        // getEmployeefromAppraisalCalendar,
+        //   newArray,
+        //     employeeId
+        //     getEmployee,
+        // data: myArray,
+        getEmployeefromAppraisalCalendar
+    });
+})
+
 const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     // const appraisalCalendar = await AppraisalCalender.find({calendar:req.params.id})
@@ -2967,6 +2998,7 @@ export {
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
-    acceptEmployeeNamesChange
+    acceptEmployeeNamesChange,
+    getAllMappedEmployee
 
 }

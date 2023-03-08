@@ -59,7 +59,8 @@ import {
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
-    getUnMappedEmployeeLength
+    getUnMappedEmployeeLength,
+    getAllMappedEmployee
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
@@ -68,6 +69,7 @@ const router = Router()
 // @ts-ignore
 router.get('/unmapped-data/:id', getUnMappedEmployee)
 router.get('/unmapped-data-length/:id', getUnMappedEmployeeLength)
+router.get('/mappedEmployees', getAllMappedEmployee)
 router.get('/filters/employee-with-template', getEmployeeTemplate)
 router.get('/status-count', statusBasedCount)
 router.route('/employee-filter').get(advancedResults(Employee,"calendar"), testFilter)
