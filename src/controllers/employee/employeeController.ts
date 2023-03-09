@@ -1020,7 +1020,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
 
 const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const { id , talentCategory} = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1043,6 +1043,8 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer.normalizer_status": 'normalizer-accepted',
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
+                "appraisal.pa_rating" : appraisal.reviewer_rating,
+                "talent_category" : talentCategory
             }
         }
     )
@@ -1894,7 +1896,7 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments, previousRating } = req.body
+    const { comments, previousRating , talentCategory } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -1927,6 +1929,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.pa_status": "Completed",
                 "appraisal.pa_rating" : appraisal.appraiser_rating,
                 "appraisal.comments": comments,
+                "talent_category" :  talentCategory,
                 "appraisal.appraiser_rejected": false,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_rating.objective_description": previousRating,
