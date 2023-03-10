@@ -133,7 +133,301 @@ const EmployeeSchema = new Schema({
     manager_code: String,
     manager_name: String,
 
-    previous_appraisal: Schema.Types.Mixed,
+    previous_appraisal: {
+        rating: Number,
+        calendar: {
+            type: Schema.Types.ObjectId,
+            ref: "Calender",
+        },
+        appraiser_code:String,
+        reviewer_code:String,
+        normalizer_code:String,
+        section:String,
+        sub_section: String,
+        division: String,
+        manager_code:String,
+        employee_code:String,
+        appraisal: {
+            rejection_count: Number,
+            confirmed: Boolean,
+
+            comments: {
+                type: String,
+                default: "",
+            },
+
+            appraiser_rejected : {
+                type: Boolean,
+                default :false
+            },
+
+            show_appraiser: {
+                type: Boolean,
+                default: false,
+            },
+
+            show_reviewer: {
+                type: Boolean,
+                default: false,
+            },
+
+            show_normalizer: {
+                type: Boolean,
+                default: false,
+            },
+
+            show_employee: {
+                type: Boolean,
+                default: false,
+            },
+
+            attachments: [{
+                url: { type: String },
+                objective_description: { type: String },
+                name: { type: String }
+            }],
+
+            rejection_attachments: [{
+                url: { type: String },
+                objective_description: { type: String },
+                name: { type: String }
+            }],
+
+            appraiser_status: {
+                type: String,
+                default: 'pending'
+            },
+            appraisal_acceptance: {
+                type: Boolean,
+            },
+
+            pa_status: {
+                type: String,
+                default: "-"
+            },
+
+            status: {
+                type: String,
+                default: "not started"
+            },
+            appraiser_rating: {
+                type: Number,
+                default: 0
+            },
+            objective_group: [{
+                name: {
+                    type: String,
+                },
+                value: {
+                    type: Number,
+                },
+            }],
+            objective_type: [{
+                name: {
+                    type: String,
+                },
+                value: {
+                    type: Number,
+                },
+            }],
+            objective_description: [{
+                name: {
+                    type: String,
+                },
+                value: {
+                    type: Number,
+                },
+                attachments: {
+                    type: String,
+                },
+                ratings: {
+                    type:Number,
+                },
+                rejection_reason: {
+                    type: String,
+                },
+                rating_rejected: {
+                    type: Boolean,
+                    default: false
+                },
+                action_performed: {
+                    type: Boolean,
+                    default: false
+                },
+                rating_value: {
+                    type: Number,
+                },
+                comments: {
+                    type: String,
+                },
+                rating_comments: {
+                    type: String,
+                },
+                level_1_isChecked: {
+                    type: Boolean,
+                    default: false
+                },
+                level_2_isChecked: {
+                    type: Boolean,
+                    default: false
+                },
+                level_3_isChecked: {
+                    type: Boolean,
+                    default: false
+                },
+                level_4_isChecked: {
+                    type: Boolean,
+                    default: false
+                },
+                description: {
+                    type: String,
+                    //unique: true,
+                    // uniqueCaseInsensitive: true
+                },
+                objectiveTitle : {
+                    type: String,
+                    unique: true,
+                    uniqueCaseInsensitive: true
+                },
+                level_1: {
+                    level_definition: {
+                        type:String,
+
+
+                    },
+                    behavioral_objective: [{
+                        type:String
+                    }],
+                },
+                level_2: {
+                    level_definition: {
+                        type:String,
+
+                    },
+                    behavioral_objective: [{
+                        type:String
+                    }],
+                },
+                level_3: {
+                    level_definition: {
+                        type:String,
+
+                    },
+                    behavioral_objective: [{
+                        type:String
+                    }],
+                },
+                level_4: {
+                    level_definition: {
+                        type:String,
+                    },
+                    behavioral_objective: [{
+                        type:String
+                    }],
+                },
+            }],
+            feedback_questionnaire: [{
+                name: {
+                    type: String,
+                },
+                value: {
+                    type: String
+                }
+
+            }],
+            training_recommendation: [{
+                name: {
+                    type: String,
+                },
+                training_name: {
+                    type: String,
+                },
+                justification: {
+                    type: String,
+                },
+                comments: {
+                    type: String,
+                    default: ''
+                },
+                employee_comments: {
+                    type: String,
+                    default: ''
+                },
+            }],
+            other_recommendation: [{
+                name: {
+                    type: String,
+                },
+                isChecked: {
+                    type: Boolean,
+                    default: false
+                },
+                comments: {
+                    type: String,
+                    default: ''
+                },
+                sort_value: Number
+            }],
+
+            appraiser_overall_feedback: {
+                type: String,
+                default: ''
+            },
+
+            other_recommendation_comments: {
+                type: String,
+                default: ''
+            },
+            feedback_questions_comments: {
+                type: String,
+                default: ''
+            },
+            area_of_improvement_comments: {
+                type: String,
+                default: ''
+            },
+            training_recommendation_comments: {
+                type: String,
+                default: ''
+            },
+
+            potential: {
+                type: String
+            },
+            feedback_questions: [{
+                name: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'FeedBackQuestionaire'
+                },
+                value: {
+                    type: String,
+                    default: ""
+                },
+            }],
+
+            area_of_improvement: [{
+                value: {
+                    type: String,
+                    default: ""
+                },
+                specific_actions: [{
+                    value: {
+                        type: String,
+                        default: ""
+                    },
+                    employee_comments: {
+                        type: String
+                    }
+                }],
+                employee_comments: {
+                    type: String,
+                    default: ""
+                },
+
+            }],
+        }
+
+    },
 
     appraiser_code: String,
     appraiser_name: String,

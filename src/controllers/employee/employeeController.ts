@@ -2929,6 +2929,49 @@ const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Respon
 })
 
 
+const previousAppraisal = asyncHandler(async (req: Request, res: Response) => {
+
+
+    const {id} = req.params
+    const {objective_group,objective_type,objective_description,training_recommendation,other_recommendation,appraiser_overall_feedback,potential} = req.body
+
+    const employee = await Employee.findById(id)
+
+    const emp = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            previous_appraisal: {
+                rating:  employee.normalizer.normalizer_rating,
+                calendar: employee.calendar,
+                appraiser_code:employee.appraiser_code,
+                reviewer_code: employee.reviewer_code,
+                normalizer_code: employee.normalizer_code,
+                section: employee.section,
+                sub_section: employee.sub_section,
+                division: employee.division,
+                manager_code: employee.manager_code,
+                employee_code: employee.employee_code,
+                "appraisal.objective_group": objective_group,
+                "appraisal.objective_type": objective_type,
+                "appraisal.objective_description": objective_description,
+                "appraisal.training_recommendation": training_recommendation,
+                "appraisal.other_recommendation": other_recommendation,
+                "appraisal.appraiser_overall_feedback": appraiser_overall_feedback,
+                "appraisal.potential": potential,
+
+            }
+        },
+        new: true
+    })
+
+    res.status(StatusCodes.OK).json({
+        emp
+    });
+
+
+})
+
+
+
 
 
 

@@ -19,8 +19,10 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 
+
     const { data } = req.body
     console.log(data, "data")
+
     const employee = await Employee.bulkWrite([
         data.map((employee: any) => {
             return ({
@@ -45,7 +47,7 @@ const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
                             // work_location: employee.work_location
                         }
                     },
-                    upsert: true
+                    // upsert: true
                 }
             })
         })
