@@ -50,6 +50,15 @@ console.log("calendar",calender)
 
 
 })
+const getAllPACalenders = asyncHandler(async (req: Request, res: Response) => {
+
+    const calenders = await Calender.find({status:{$in: ["Live", "Closed"]}}).sort({ createdAt: -1 });
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: calenders,
+    });
+})
 
 const getAllCalenders = asyncHandler(async (req: Request, res: Response) => {
 
@@ -71,7 +80,7 @@ const getAllActiveCalenders = asyncHandler(async (req: Request, res: Response) =
 })
 const getDraftCalenders = asyncHandler(async (req: Request, res: Response) => {
 
-    const calenders = await (await Calender.find({status:"Draft"}).sort({ createdAt: -1 }));
+    const calenders = await Calender.find({status:"Draft"}).sort({ createdAt: -1 });
 
     res.status(StatusCodes.OK).json({
         success: true,
@@ -162,7 +171,8 @@ export {
     updateCalender,
     deleteCalender,
     getAllActiveCalenders,
-    getDraftCalenders
+    getDraftCalenders,
+    getAllPACalenders
 }
 
 
