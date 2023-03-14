@@ -8,6 +8,7 @@ import { getImage } from "../azureImageStorage";
 import AppraisalCalender from "../../models/AppraisalCalender";
 import _ from "lodash";
 import template from "../../models/Template";
+import PreviousAppraisal from "../../models/PreviousAppraisal";
 
 
 const getRatingsfromObjectiveDescription = (data: any) => {
@@ -2589,6 +2590,8 @@ const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) =
         {
             $set: {
                 "isCEORole": true,
+                "isGradeException": false,
+                "isRoleException": false,
             }
         }
     )
@@ -2607,6 +2610,8 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
         {
             $set: {
                 "isLeavers": true,
+                "isGradeException": false,
+                "isRoleException": false,
             }
         }
     )
@@ -2624,6 +2629,8 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
         {
             $set: {
                 "isExcluded": true,
+                "isGradeException": false,
+                "isRoleException": false,
             }
         }
     )
@@ -2940,7 +2947,7 @@ const previousAppraisal = asyncHandler(async (req: Request, res: Response) => {
     const employee = await Employee.findById(id)
 
     const emp = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             previous_appraisal: {
                 rating:  employee.normalizer.normalizer_rating,
                 calendar: employee.calendar,
@@ -2968,13 +2975,66 @@ const previousAppraisal = asyncHandler(async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({
         emp
     });
-
-
 })
 
 
 
 
+/*
+populating 9 box based on calendar selected
+
+
+
+for 9 box we need employee and rating
+so we need ratings
+
+create a query to get the previous rating
+
+
+how to populate employee based on the calendar selected
+
+filter employee based on calendar
+
+
+ */
+
+
+const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
+
+    // const { employee_code } = req.params
+
+    // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
+
+    const getEmployeesinAppraisal = await Employee.find({calendar:"63f7a9bb72a021d4cebb3ea3"})
+    const  previousAppraisal = await PreviousAppraisal.insertMany({getEmployeesinAppraisal})
+    // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
+    // const Temp = lineManager.map((j: any) => j.employee_code)
+
+    res.status(StatusCodes.OK).json({
+        // lineManagerPlusOne,
+        // lineManager
+        //Temp
+        previousAppraisal
+    });
+
+})
+
+
+// const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
+//
+//     const {id} = req.body
+//
+//     const getEmployeesinAppraisal = await Employee.find({first_name:  "Kokab Hussain"})
+//
+//     // const  previousAppraisal = await PreviousAppraisal.insertMany({getEmployeesinAppraisal})
+//
+//     res.status(StatusCodes.CREATED).json({
+//         success: true,
+//         getEmployeesinAppraisal,
+//         // previousAppraisal
+//     })
+//
+// })
 
 
 
@@ -3047,6 +3107,10 @@ export {
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
     acceptEmployeeNamesChange,
-    getAllMappedEmployee
+
+    addEmployeestoPrevioisAppraisal,
+
+    getAllMappedEmployee,
+
 
 }

@@ -1,62 +1,7 @@
-import { Schema, model } from 'mongoose'
-import bcrypt from 'bcryptjs'
-import Template, { TemplateSchema } from "./Template";
-import { string } from 'joi';
+import { model, Schema } from "mongoose";
 
+const PreviousAppraisal = new Schema({
 
-export interface Employee {
-    EmployeeCode: string
-    EmployeeName: string
-    EmployeePosition: string
-    EmployeeEmail: string
-    EmployeeMobile: string
-    EmployeeDepartment: string
-    EmployeeSection: string
-    EmployeeSubSection: string
-    EmployeeAppraiserName: string
-    EmployeeLineManagerName: string
-    EmployeeReviewerName: string
-    EmployeePAStatus: string
-    EmployeePerformanceLevel: string
-    EmployeePotentialLevel: string
-    EmployeeNineBoxGridClassification: string
-    EmployeeWorkLocation: string
-    EmployeeAppraiserRating: string
-    EmployeeNormalizerRating: string
-    EmployeeReviewerRating: string
-    EmployeeAppraiserOverallFeedback: string
-    EmployeeAppraiserJustification: string
-    EmployeeRecommendedAction: string
-    EmployeeAppraiserRecommendationRemarks: string
-    EmployeeAreasofImprovement: string
-    EmployeeKeyStrengthsandQualities: string
-    EmployeeAppraiserTrainingRecommendation: string
-    EmployeeReviewerOverallFeedback: string
-    EmployeeReviewerJustification: string
-    EmployeeReviewerRecommendationRemarks: string
-    EmployeeNormalizerJustification: string
-    EmployeeNormalizerOverallFeedback: string
-    EmployeeNormalizerRecommendationRemarks: string
-    EmployeeSelfRating: string
-
-    EmployeePreviousRating: string
-    EmployeeAppraiserCode: string
-    EmployeeReviewerCode: string
-    EmployeeNormalizerCode: string
-    EmployeeLineManagerCode: string
-    EmployeeNormalizerName: string
-    EmployeeLineManagerPosition: string
-    EmployeeDivision: string
-    EmployeePassword: string
-    EmployeeGrade: string
-    EmployeeDateofJoining: Date
-    LastAppraisalDate: string
-    LastModifiedDate: string
-    FinalRating: string
-   
-}
-
-const EmployeeSchema = new Schema({
     employee_code: {
         type: String,
     },
@@ -80,7 +25,7 @@ const EmployeeSchema = new Schema({
 
     },
     section: {
-      type: String,
+        type: String,
     },
     division: {
         type: String,
@@ -435,12 +380,6 @@ const EmployeeSchema = new Schema({
     reviewer_name: String,
     normalizer_code: String,
     normalizer_name: String,
-    master_appraiser_code: String,
-    master_appraiser_name: String,
-    master_reviewer_code: String,
-    master_reviewer_name: String,
-    master_normalizer_code: String,
-    master_normalizer_name: String,
     isGradeException: {
         type: Boolean,
         default: false
@@ -473,8 +412,8 @@ const EmployeeSchema = new Schema({
         employee_status: {
             type: String,
             default: 'not-started'
-        },      
-        
+        },
+
         attachments: [{
             url: { type: String },
             objective_description: { type: String },
@@ -489,8 +428,8 @@ const EmployeeSchema = new Schema({
             type: String,
         },
         rejection_reason:{
-            type: String,  
-        },        
+            type: String,
+        },
         training_recommendation: [{
             name: {
                 type: Schema.Types.ObjectId,
@@ -580,7 +519,7 @@ const EmployeeSchema = new Schema({
             type: String,
             default: 'pending'
         },
-       
+
         employee_rating: {
             type: Number,
             default: 0
@@ -638,7 +577,7 @@ const EmployeeSchema = new Schema({
                 default: false
             },
         }],
- 
+
     },
 
     roles: {
@@ -797,7 +736,7 @@ const EmployeeSchema = new Schema({
 
     appraisal: {
         rejection_count: Number,
-        confirmed: Boolean,       
+        confirmed: Boolean,
 
         comments: {
             type: String,
@@ -827,7 +766,7 @@ const EmployeeSchema = new Schema({
         show_employee: {
             type: Boolean,
             default: false,
-        },      
+        },
 
         attachments: [{
             url: { type: String },
@@ -840,7 +779,7 @@ const EmployeeSchema = new Schema({
             objective_description: { type: String },
             name: { type: String }
         }],
-      
+
         appraiser_status: {
             type: String,
             default: 'pending'
@@ -920,7 +859,7 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default : false
             },
-            
+
             action_performed: {
                 type: Boolean,
                 default: false
@@ -1428,13 +1367,13 @@ const EmployeeSchema = new Schema({
         }],
     },
 
-   reviewer_previous_submission: {
+    reviewer_previous_submission: {
 
         reviewer_status: {
             type: String,
             default: 'pending'
         },
-       
+
         reviewer_rating: {
             type: Number,
             default: 0
@@ -1492,7 +1431,7 @@ const EmployeeSchema = new Schema({
                 default: false
             },
         }],
- 
+
     },
 
     normalizer: {
@@ -1612,9 +1551,9 @@ const EmployeeSchema = new Schema({
 
             rating_resubmitted : {
                 type: Boolean,
-                default: false  
+                default: false
             },
-            
+
             action_performed: {
                 type: Boolean,
                 default: false
@@ -1717,7 +1656,7 @@ const EmployeeSchema = new Schema({
             type: String,
             default: 'pending'
         },
-       
+
         normalizer_rating: {
             type: Number,
             default: 0
@@ -1775,9 +1714,9 @@ const EmployeeSchema = new Schema({
                 default: false
             },
         }],
- 
+
     },
 
 })
 
-export default model('Employee', EmployeeSchema)
+export default model("PreviousAppraisal", PreviousAppraisal)

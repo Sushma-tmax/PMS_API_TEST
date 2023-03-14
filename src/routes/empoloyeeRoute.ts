@@ -30,16 +30,24 @@ import {
     employeeUpdateMany,
     appraiserAcceptsEmployee,
     appraiserRejectsEmployee,
-    normalizerSubmitEmployeeRejection, attachmentsAppraiser,
+    normalizerSubmitEmployeeRejection,
+    attachmentsAppraiser,
     calculateRatings,
     attachmentsReviewer,
     attachmentsNormalizer,
     attachmentsEmployee,
-    filterEmployeeByManagerCode, employeeAppraisalClose,
+    filterEmployeeByManagerCode,
+    employeeAppraisalClose,
     statusBasedCount,
     getUnMappedEmployee,
-    getEmployeeTemplate, getReviewerEmployee,
-    removeAppraiserAttachments,removeAppraiserAttachmentsOverview, removeEmployeeAttachments, removeNormalizerAttachments, removeReviewerAttachments, acceptReviewerRatings,
+    getEmployeeTemplate,
+    getReviewerEmployee,
+    removeAppraiserAttachments,
+    removeAppraiserAttachmentsOverview,
+    removeEmployeeAttachments,
+    removeNormalizerAttachments,
+    removeReviewerAttachments,
+    acceptReviewerRatings,
     appraiserDashboard,
     attachmentsAppraiserOverview,
     meetingNotesAttachmentsNormalizer,
@@ -60,13 +68,17 @@ import {
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
     getUnMappedEmployeeLength,
-    getAllMappedEmployee
+    addEmployeestoPrevioisAppraisal,
+    getAllMappedEmployee,
+
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
+
+router.post('/prevvvvv',addEmployeestoPrevioisAppraisal)
 router.get('/unmapped-data/:id', getUnMappedEmployee)
 router.get('/unmapped-data-length/:id', getUnMappedEmployeeLength)
 router.get('/mappedEmployees', getAllMappedEmployee)
