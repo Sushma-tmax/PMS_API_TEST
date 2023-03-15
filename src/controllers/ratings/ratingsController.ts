@@ -5,6 +5,7 @@ import RatingScaleDescription from "../../models/Ratings/RatingScaleDescription"
 import AppraisalCalender from "../../models/AppraisalCalender";
 import { StatusCodes } from "http-status-codes";
 import { ObjectID } from "mongodb"
+import Calender from "../../models/Calender";
 // var ObjectID = require()
 const createRatings = asyncHandler(async (req: Request, res: Response) => {
     const newRating = await Ratings.create(req.body);
@@ -185,16 +186,10 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
 
 const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
 
-    const ifExist = await AppraisalCalender.exists({ "rating.name": req.params.id })
+    // const ifExist = await AppraisalCalender.exists({ "rating.name": req.params.id })
+    const calendar = await AppraisalCalender.findOne({ "rating.name": req.params.id })
 
-    if (ifExist) {
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            success: false,
-            error: "This Rating Scale is used in the performance appraisal and cannot be deleted."
-        });
-    }
-
-    if (!ifExist) {
+    if (!calendar) {
         const ratingScaleDescription = await RatingScaleDescription.findByIdAndDelete(req.params.id);
 
         if (!ratingScaleDescription) {
@@ -203,16 +198,20 @@ const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
                 error: 'RatingScaleDescription not found'
             });
         }
-
-    }
-
-
-
+    }   
+   
+    if (calendar) {
+        const calendarName = await Calender.findOne(calendar.calendar)  
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            error: `This item is mapped to ${calendarName?.name} and cannot be deleted.`
+        });
+    }  
 
     res.status(200).json({
         success: true,
         data: {},
-        ifExist
+        calendar       
     });
 })
 

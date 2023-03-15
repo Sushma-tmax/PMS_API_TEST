@@ -285,17 +285,18 @@ const deleteObjectiveDescription = asyncHandler(async (req: Request, res: Respon
     const {id: objectiveDescriptionId} = req.params;
 
 
-    const ifExist = await Template.exists({"weightage.objective_description.name":  req.params.id})
+    // const ifExist = await Template.exists({"weightage.objective_description.name":  req.params.id})
+    const templateName = await Template.findOne({"weightage.objective_description.name":  req.params.id})
 
 
-    if (ifExist) {
+    if (templateName) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Objective Description is Used In Appraisal."
+            error: `This item is mapped to ${templateName.name} and a calendar and cannot be deleted.`
         });
     }
 
-    if(!ifExist) {
+    if(!templateName) {
         const objectiveDescription = await ObjectiveDescription.findOneAndDelete({_id: objectiveDescriptionId});
         if (!objectiveDescription) {
             return res.status(StatusCodes.NOT_FOUND).json({

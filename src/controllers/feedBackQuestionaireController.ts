@@ -60,12 +60,13 @@ const updateFeedBackQuestionarie = asyncHandler(async (req: Request, res: Respon
 const deleteFeedBackQuestionarie = asyncHandler(async (req: Request, res: Response) => {
     const feedBackQuestionaire = await FeedBackQuestionarie.findById(req.params.id);
 
-    const ifExist = await Template.exists({"feedback_questionnaire.name": req.params.id})
+    // const ifExist = await Template.exists({"feedback_questionnaire.name": req.params.id})
+    const templateName : any = await Template.findOne({"feedback_questionnaire.name": req.params.id})
 
-    if (ifExist) {
+    if (templateName) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "This Feedback Questionnaire is used in the performance appraisal and cannot be deleted."
+            error:  `This item is mapped to ${templateName.name} and a calendar and cannot be deleted.`
         });
     }
 

@@ -65,16 +65,16 @@ const updateTrainingRecommendation = asyncHandler(async (req: Request, res: Resp
 
 const deleteTrainingRecommendation = asyncHandler(async (req: Request, res: Response) => {
 
-    const ifExist = await Template.exists({"training_recommendation.name": req.params.id})
-
-    if (ifExist) {
+    // const ifExist = await Template.exists({"training_recommendation.name": req.params.id})
+    const templateName : any = await Template.findOne({"training_recommendation.name": req.params.id})
+    if (templateName) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "Training Recommendation is Used In Appraisal."
+            error: `This item is mapped to  ${templateName.name} and a calendar and cannot be deleted.`
         });
     }
 
-    if (!ifExist) {
+    if (!templateName) {
         const trainingRecommendation = await TrainingRecommendation.findByIdAndDelete(req.params.id);
     }
 
@@ -152,16 +152,17 @@ const deleteOtherRecommendation = asyncHandler(async (req: Request, res: Respons
     const otherRecommendation = await OtherRecommendation.findById(req.params.id);
 
 
-    const ifExist = await Template.exists({"other_recommendation.name": req.params.id})
+    // const ifExist = await Template.exists({"other_recommendation.name": req.params.id})
+    const templateName : any = await Template.findOne({"other_recommendation.name": req.params.id})
 
-    if (ifExist) {
+    if (templateName) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "This Recommendation is used in the performance appraisal and cannot be deleted."
+            error: `This item is mapped to ${templateName.name} and a calendar and cannot be deleted.`
         });
     }
 
-    if (!ifExist) {
+    if (!templateName) {
         const trainingRecommendation = await TrainingRecommendation.findByIdAndDelete(req.params.id);
     }
 

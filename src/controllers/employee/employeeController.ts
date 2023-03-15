@@ -3001,11 +3001,20 @@ filter employee based on calendar
 
 const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    // const { employee_code } = req.params
+    const { data } = req.body
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 
     const getEmployeesinAppraisal = await Employee.find({calendar:"63f7a9bb72a021d4cebb3ea3"})
+    let employeeData = getEmployeesinAppraisal.map((emp:any)=>{
+        return {
+            "employee_code":emp.employee_code,
+            "legal_full_name":emp.legal_full_name,
+            "position_long_description":emp.position_long_description,
+            "grade":emp.grade,
+
+        }
+    })
     const  previousAppraisal = await PreviousAppraisal.insertMany({getEmployeesinAppraisal})
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)
