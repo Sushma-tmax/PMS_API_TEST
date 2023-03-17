@@ -11,7 +11,7 @@ const sendEmail = async ({ to, subject, html }) => {
         port: 587,
         auth: {
             user: 'do-not-replyemail@taqeef.com',
-            pass: 'Koy81569'
+            pass: 'Nah19349'
         }
     });
 

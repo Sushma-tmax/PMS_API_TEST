@@ -5,12 +5,13 @@ const router = Router()
 
 router.get('/draftCalendar',getDraftCalenders)
 router.get('/pacalendars',getAllPACalenders)
+router.get('/active',getAllActiveCalenders)
 router.get('/',getAllCalenders)
 router.get('/:id',getCalenderById)
 router.post('/',createCalender)
 router.patch('/:id',updateCalender)
 router.delete('/:id',deleteCalender)
-router.get('//',getAllActiveCalenders)
+
 
 
 export default router
