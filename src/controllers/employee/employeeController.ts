@@ -120,6 +120,99 @@ const createEmployee = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
+
+    const { status } = req.params
+
+    let employees: any
+
+
+    if (status === 'all') {
+        employees = await Employee.find()
+    } else {
+        employees = await Employee.find({ "calendar": status })
+            .populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'objective_group.name',
+                }
+            }).populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'objective_type.name',
+                }
+            })
+            .populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'objective_description.name'
+                }
+            })
+            .populate({
+                path: 'appraisal.objective_description',
+                populate: {
+                    path: 'objective_description.ratings'
+                }
+            }).populate('appraisal.other_recommendation')
+            .populate('appraisal.training_recommendation')
+            .select('-appraisal_template -reviewer -appraisal_previous_submission -employee_previous_submission -normalizer_previous_submission -reviewer_previous_submission -appraisal_previous_rating ')
+
+    }
+    // employees.populate('calendar')
+    // employees.populate({
+    //             path: 'appraisal',
+    //             populate: {
+    //                 path: 'objective_group.name',
+    //             }
+    //         }).populate({
+    //             path: 'appraisal',
+    //             populate: {
+    //                 path: 'objective_type.name',
+    //             }
+    //         })
+    // .populate({
+    //             path: 'appraisal',
+    //             populate: {
+    //                 path: 'objective_description.name'
+    //             }
+    //         })
+    //         .populate({
+    //             path: 'appraisal.objective_type',
+    //             populate: {
+    //                 path: 'objective_description.ratings'
+    //             }
+    //         }).populate('appraisal.other_recommendation')
+    //         .populate('appraisal.training_recommendation')
+    // employees.populate({
+    //     path: 'appraisal',
+    //     populate: {
+    //         path: 'objective_group.name',
+    //     }
+    // }).populate({
+    //     path: 'appraisal',
+    //     populate: {
+    //         path: 'objective_type.name',
+    //     }
+    // }).populate({
+    //     path: 'appraisal',
+    //     populate: {
+    //         path: 'objective_description.name'
+    //     }
+    // }).populate({
+    //     path: 'appraisal',
+    //     populate: {
+    //         path: 'objective_description.ratings'
+    //     }
+    // }).populate('appraisal.other_recommendation')
+    //     .populate('appraisal.training_recommendation')
+
+
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: employees,
+    });
+})
 
 const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
 
@@ -794,7 +887,7 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
                 "appraisal.objective_description": appraiser_objective_description,
-                "reviewer.reviewer_overall_feedback" : reviewerOverallFeedComments
+                "reviewer.reviewer_overall_feedback": reviewerOverallFeedComments
             }
         },
         {
@@ -1008,7 +1101,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
                 "appraisal.pa_status": "Pending with Employee",
-                "appraisal.pa_rating" : appraisal.reviewer_rating,
+                "appraisal.pa_rating": appraisal.reviewer_rating,
                 "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer.rejection_count": 0
                 // "employee":{},
@@ -1023,7 +1116,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
 
 const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Response) => {
-    const { id , talentCategory} = req.body
+    const { id, talentCategory } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1046,8 +1139,8 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer.normalizer_status": 'normalizer-accepted',
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
-                "appraisal.pa_rating" : appraisal.reviewer_rating,
-                "talent_category" : talentCategory
+                "appraisal.pa_rating": appraisal.reviewer_rating,
+                "talent_category": talentCategory
             }
         }
     )
@@ -1083,6 +1176,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.other_recommendation": appraisal.other_recommendation,
                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
                 "reviewer.feedback_questions": appraisal.feedback_questions,
+               "reviewer.reviewer_overall_feedback" : "",
                 "reviewer.reviewer_acceptance": true,
                 "reviewerIsChecked": true,
                 "reviewerIsDisabled": true,
@@ -1110,7 +1204,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         {
             $set: {
                 "appraisal.pa_status": "Pending with Normalizer",
-                "appraisal.pa_rating" : appraisal.appraiser_rating,
+                "appraisal.pa_rating": appraisal.appraiser_rating,
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
                 "appraisal.appraiser_rejected": false,
@@ -1124,13 +1218,15 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                 "reviewer.other_recommendation": appraisal.other_recommendation,
                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
                 "reviewer.feedback_questions": appraisal.feedback_questions,
+                "reviewer.reviewer_overall_feedback" : "",
                 "reviewer.reviewer_acceptance": true,
                 "reviewerIsChecked": true,
                 "reviewerIsDisabled": true,
                 "reviewer.reviewer_status": 'accepted',
                 "normalizerIsDisabled": false,
                 "normalizerIsChecked": false,
-                "normalizer.normalizer_status": 'pending'
+                "normalizer.normalizer_status": 'pending',
+                "normalizer.normalizer_rating": appraisal.appraiser_rating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
             }
         }
@@ -1899,7 +1995,7 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments, previousRating , talentCategory } = req.body
+    const { comments, previousRating, talentCategory } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -1930,9 +2026,9 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
                 "appraisal.status": 'completed',
                 "appraisal.pa_status": "Completed",
-                "appraisal.pa_rating" : appraisal.appraiser_rating,
+                "appraisal.pa_rating": appraisal.appraiser_rating,
                 "appraisal.comments": comments,
-                "talent_category" :  talentCategory,
+                "talent_category": talentCategory,
                 "appraisal.appraiser_rejected": false,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_rating.objective_description": previousRating,
@@ -1951,7 +2047,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         const updatedEmployee = await Employee.findByIdAndUpdate(id, {
             $set: {
                 "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.appraiser_rating": employee.employee_rating,               
+                "appraisal.appraiser_rating": employee.employee_rating,
                 "appraisal.comments": comments,
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
@@ -1960,7 +2056,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
                 "appraisal.status": 'rejected',
                 "appraisal.appraiser_rejected": false,
                 "appraisal.pa_status": "Pending with Reviewer",
-                "appraisal.pa_rating" : appraisal.appraiser_rating,
+                "appraisal.pa_rating": appraisal.appraiser_rating,
                 // "normalizer.normalizer_status": "pending",
                 // "normalizerIsChecked": false,
                 // "normalizerIsDisabled": false,
@@ -2007,7 +2103,7 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         $set: {
             "appraisal.status": 'completed',
             "appraisal.pa_status": "Completed",
-            "appraisal.pa_rating" : normalizer.normalizer_rating,
+            "appraisal.pa_rating": normalizer.normalizer_rating,
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
@@ -2388,9 +2484,9 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
     }).flat()
     //const getEmployee = await Employee.find({})
     const getEmployees = await Employee.find({
-        "isCEORole":false,
-        "isLeavers":false,
-        "isExcluded":false,
+        "isCEORole": false,
+        "isLeavers": false,
+        "isExcluded": false,
     })
     const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
     console.log(getEmployeefromAppraisalCalendar)
@@ -2557,7 +2653,7 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
 })
 
 const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Response) => {
-    const {id,masterAppraiserCode,masterAppraiserName} = req.body
+    const { id, masterAppraiserCode, masterAppraiserName } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
@@ -2565,15 +2661,15 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
         [{
             $set: {
                 "isRoleException": true,
-                "master_appraiser_code":"$appraiser_code",
+                "master_appraiser_code": "$appraiser_code",
                 "master_appraiser_name": "$appraiser_name",
                 "master_reviewer_code": "$reviewer_code",
                 "master_reviewer_name": "$reviewer_name",
                 "master_normalizer_code": "$normalizer_code",
                 "master_normalizer_name": "$normalizer_name",
-              
+
             }
-          
+
         }]
     )
     res.status(StatusCodes.OK).json({
@@ -2639,9 +2735,9 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
     });
 })
 const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Response) => {
-    const { id,appraiser_name,appraiser_code,reviewer_name,
-            reviewer_code,normalizer_name,normalizer_code
-          } = req.body
+    const { id, appraiser_name, appraiser_code, reviewer_name,
+        reviewer_code, normalizer_name, normalizer_code
+    } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
@@ -2941,17 +3037,17 @@ const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Respon
 const previousAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
 
-    const {id} = req.params
-    const {objective_group,objective_type,objective_description,training_recommendation,other_recommendation,appraiser_overall_feedback,potential} = req.body
+    const { id } = req.params
+    const { objective_group, objective_type, objective_description, training_recommendation, other_recommendation, appraiser_overall_feedback, potential } = req.body
 
     const employee = await Employee.findById(id)
 
     const emp = await Employee.findByIdAndUpdate(id, {
         $push: {
             previous_appraisal: {
-                rating:  employee.normalizer.normalizer_rating,
+                rating: employee.normalizer.normalizer_rating,
                 calendar: employee.calendar,
-                appraiser_code:employee.appraiser_code,
+                appraiser_code: employee.appraiser_code,
                 reviewer_code: employee.reviewer_code,
                 normalizer_code: employee.normalizer_code,
                 section: employee.section,
@@ -3001,21 +3097,12 @@ filter employee based on calendar
 
 const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    const { data } = req.body
+    // const { employee_code } = req.params
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 
-    const getEmployeesinAppraisal = await Employee.find({calendar:"63f7a9bb72a021d4cebb3ea3"})
-    let employeeData = getEmployeesinAppraisal.map((emp:any)=>{
-        return {
-            "employee_code":emp.employee_code,
-            "legal_full_name":emp.legal_full_name,
-            "position_long_description":emp.position_long_description,
-            "grade":emp.grade,
-
-        }
-    })
-    const  previousAppraisal = await PreviousAppraisal.insertMany({getEmployeesinAppraisal})
+    const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
+    const previousAppraisal = await PreviousAppraisal.insertMany({ getEmployeesinAppraisal })
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)
 
@@ -3050,6 +3137,7 @@ const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: R
 export {
     createEmployee,
     getAllEmployees,
+    getAllPAEmployees,
     addTemplateToEmployee,
     addRating,
     appraisal,

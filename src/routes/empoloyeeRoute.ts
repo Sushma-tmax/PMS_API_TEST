@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     createEmployee,
     getAllEmployees,
+    getAllPAEmployees,
     addTemplateToEmployee,
     addRating,
     appraisal,
@@ -113,6 +114,7 @@ router.patch('/normalizer-accept-employee/:id', normalizerAcceptsEmployee)
 router.patch('/normalizer-reject-employee/:id', normalizerRejectsEmployee)
 router.patch('/employee-reject-save/:id', employeeRejectionSave)
 router.get('/filter/:status', getAllEmployees)
+router.get('/allpaemployees/:status', getAllPAEmployees)
 router.get('/:id', getEmployeeById)
 // router.get('/filter/:status', appraisalStatusFilter)
 router.post('/', createEmployee)
