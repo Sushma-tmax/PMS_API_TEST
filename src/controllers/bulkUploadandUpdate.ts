@@ -6,16 +6,22 @@ import { StatusCodes } from "http-status-codes";
 
 const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const { employee_code, changes } = req.body
+    const { data } = req.body
+
+    const {employee_code} = data
+
 
     const employee = await Employee.updateMany({ _id: { $in: employee_code } },
         {
-            changes
+            data
         },
         { upsert: true }
     )
 
 })
+
+
+
 
 const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 
@@ -59,7 +65,8 @@ const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 })
 
 export {
-    updateEmployees
+    updateEmployees,
+    updateEmployee
 }
 
 

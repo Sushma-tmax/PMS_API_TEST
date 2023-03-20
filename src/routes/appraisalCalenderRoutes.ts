@@ -12,7 +12,7 @@ import {
     removePositionsToAppraisalCalendar,
     getAppraisalCalendarofCurrentYear,
     appraisalCalendarEmployeeValidation,
-    getAppraisalCalendarForTemplate
+    getAppraisalCalendarForTemplate, appraisalCalendarClose
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -21,7 +21,7 @@ import {testFilter} from "../controllers/employee/employeeController";
 
 const router = Router()
 
-
+router.patch('/close', appraisalCalendarClose)
 router.route('/filter').get(advancedResults(AppraisalCalender,'calendar'), testFilter)
 router.patch('/validation/:id',appraisalCalendarEmployeeValidation )
 router.get('/current-year-calendar', getAppraisalCalendarofCurrentYear)

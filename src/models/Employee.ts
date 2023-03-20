@@ -465,6 +465,9 @@ const EmployeeSchema = new Schema({
         type: Boolean,
         default: false
     },
+    previous_rating: {
+      type: Number
+    },
     employee: {
         employee_agree: {
             type: Boolean,

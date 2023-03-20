@@ -3101,7 +3101,7 @@ filter employee based on calendar
 
 const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    // const { data } = req.body
+    const { data } = req.body
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 

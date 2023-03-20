@@ -9,6 +9,8 @@ import { BadRequestError } from "../errors";
 import mongoose from "mongoose";
 import RatingScaleDescription from "../models/Ratings/RatingScaleDescription";
 import schedule from 'node-schedule'
+import calender from "../models/Calender";
+import PreviousAppraisal from "../models/PreviousAppraisal";
 
 
 const validateTemplate = asyncHandler(async (req: Request, res: Response) => {
@@ -761,8 +763,37 @@ const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, re
 })
 
 
+const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) => {
 
+    const {calendar_id, appraisal_calendar_id}  =  req.body
 
+    const calendar = await Calender.findByIdAndUpdate(calendar_id, {status: "Closed"} )
+
+    const appraisalCalendar = await AppraisalCalender.findByIdAndUpdate(appraisal_calendar_id, {status: "Closed"} )
+
+    const employeeFromCalendar  = await AppraisalCalender.find({_id: appraisal_calendar_id})
+    const employee = employeeFromCalendar.map((data:any) => {
+        return data.position.map((k: any) => k.name.toString())
+    }).flat()
+
+    const emp = await Employee.find()
+// @ts-ignore
+//     const {normalizer} = emp
+//     const updateEmployee = await  Employee.updateMany({emp}, {
+//         $set: {
+//             "previous_rating": normalizer.normalizer_rating
+//         }
+//     })
+    const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
+
+    res.status(StatusCodes.OK).json({
+        calendar,
+        appraisalCalendar,
+        // updateEmployee,
+        addEmployeetoPreviousAppraisal
+    })
+
+})
 
 export {
     createAppraisalCalender,
@@ -777,5 +808,6 @@ export {
     removePositionsToAppraisalCalendar,
     getAppraisalCalendarofCurrentYear,
     appraisalCalendarEmployeeValidation,
-    getAppraisalCalendarForTemplate
+    getAppraisalCalendarForTemplate,
+    appraisalCalendarClose
 }
