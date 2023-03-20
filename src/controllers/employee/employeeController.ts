@@ -1200,108 +1200,112 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal, reviewer, normalizer } = await Employee.findById(id);
-    const employee = await Employee.updateMany({ _id: { $in: id } },
-        {
-            $set: {
-                "appraisal.pa_status": "Pending with Normalizer",
-                "appraisal.pa_rating": appraisal.appraiser_rating,
-                "appraisal.show_reviewer": false,
-                "reviewer.objective_group": appraisal.objective_group,
-                "appraisal.appraiser_rejected": false,
-                "reviewer.objective_type": appraisal.objective_type,
-                "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizer.objective_description": getRatingsfromObjectiveDescription(reviewer.objective_description),
-                "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.training_recommendation": appraisal.training_recommendation,
-                "reviewer.other_recommendation": appraisal.other_recommendation,
-                "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                "reviewer.feedback_questions": appraisal.feedback_questions,
-                "reviewer.reviewer_overall_feedback" : "",
-                "reviewer.reviewer_acceptance": true,
-                "reviewerIsChecked": true,
-                "reviewerIsDisabled": true,
-                "reviewer.reviewer_status": 'accepted',
-                "normalizerIsDisabled": false,
-                "normalizerIsChecked": false,
-                "normalizer.normalizer_status": 'pending',
-                "normalizer.normalizer_rating": appraisal.appraiser_rating,
-                // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    // const employee = await Employee.updateMany({ _id: { $in: id } },
+    //     {
+    //         $set: {
+    //             "appraisal.pa_status": "Pending with Normalizer",
+    //             "appraisal.pa_rating": appraisal.appraiser_rating,
+    //             "appraisal.show_reviewer": false,
+    //             "reviewer.objective_group": appraisal.objective_group,
+    //             "appraisal.appraiser_rejected": false,
+    //             "reviewer.objective_type": appraisal.objective_type,
+    //             "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+    //             "normalizer.objective_description": getRatingsfromObjectiveDescription(reviewer.objective_description),
+    //             "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+    //             "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
+    //             "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //             "reviewer.training_recommendation": appraisal.training_recommendation,
+    //             "reviewer.other_recommendation": appraisal.other_recommendation,
+    //             "reviewer.area_of_improvement": appraisal.area_of_improvement,
+    //             "reviewer.feedback_questions": appraisal.feedback_questions,
+    //             "reviewer.reviewer_overall_feedback" : "",
+    //             "reviewer.reviewer_acceptance": true,
+    //             "reviewerIsChecked": true,
+    //             "reviewerIsDisabled": true,
+    //             "reviewer.reviewer_status": 'accepted',
+    //             "normalizerIsDisabled": false,
+    //             "normalizerIsChecked": false,
+    //             "normalizer.normalizer_status": 'pending',
+    //             "normalizer.normalizer_rating": appraisal.appraiser_rating,
+    //             // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+    //         }
+    //     }
+    // )
+    // res.status(StatusCodes.OK).json({
+    //     employee
+    // });
+
+    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) <= 0.3) {
+        const employee = await Employee.updateMany({ _id: { $in: id } },
+            {
+                $set: {
+                    "appraisal.pa_status": "Completed",
+                    "appraisal.status" : "completed",
+                    "appraisal.show_reviewer": false,
+                    "appraisal.pa_rating": appraisal.appraiser_rating,
+                    // "reviewer.objective_group": appraisal.objective_group,
+                    // "reviewer.objective_type": appraisal.objective_type,
+                    // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    // "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    "normalizer.nomalizer_rating": appraisal.appraiser_rating,
+                    "reviewer.training_recommendation": appraisal.training_recommendation,
+                    "reviewer.other_recommendation": appraisal.other_recommendation,
+                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                    "reviewer.feedback_questions": appraisal.feedback_questions,
+                    // "reviewer.reviewer_acceptance": true,
+                    "reviewerIsChecked": true,
+                    "reviewerIsDisabled": true,
+                    "reviewer.reviewer_status": 'accepted-employee',
+                    // "normalizerIsDisabled": false,
+                    // "normalizerIsChecked": false,
+                    // "normalizer.normalizer_status": 'pending'
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                }
             }
-        }
-    )
-    res.status(StatusCodes.OK).json({
-        employee
-    });
+        )
+        res.status(StatusCodes.OK).json({
+            employee
+        });
+     }
 
-    // if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) <= 0.3) {
-    //     const employee = await Employee.updateMany({ _id: { $in: id } },
-    //         {
-    //             $set: {
-    //                 "appraisal.pa_status": "Completed",
-    //                 "appraisal.status" : "completed",
-    //                 "appraisal.show_reviewer": false,
-    //                 // "reviewer.objective_group": appraisal.objective_group,
-    //                 // "reviewer.objective_type": appraisal.objective_type,
-    //                 // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 // "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-    //                 "reviewer.reviewer_rating": appraisal.appraiser_rating,
-    //                 "reviewer.training_recommendation": appraisal.training_recommendation,
-    //                 "reviewer.other_recommendation": appraisal.other_recommendation,
-    //                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
-    //                 "reviewer.feedback_questions": appraisal.feedback_questions,
-    //                 // "reviewer.reviewer_acceptance": true,
-    //                 "reviewerIsChecked": true,
-    //                 "reviewerIsDisabled": true,
-    //                 "reviewer.reviewer_status": 'accepted-employee',
-    //                 // "normalizerIsDisabled": false,
-    //                 // "normalizerIsChecked": false,
-    //                 // "normalizer.normalizer_status": 'pending'
-    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-    //             }
-    //         }
-    //     )
-    //     res.status(StatusCodes.OK).json({
-    //         employee
-    //     });
-    //  }
-
-    // if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) >= 0.3) {
-    //     const employee = await Employee.updateMany({ _id: { $in: id } },
-    //         {
-    //             $set: {
-    //                 "appraisal.pa_status": "Pending with Normalizer",
-    //                 "appraisal.status" : "rejected",
-    //                 "appraisal.show_reviewer": false,
-    //                 "reviewer.objective_group": appraisal.objective_group,
-    //                 "reviewer.objective_type": appraisal.objective_type,
-    //                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-    //                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-    //                 "reviewer.reviewer_rating": appraisal.appraiser_rating,
-    //                 "reviewer.training_recommendation": appraisal.training_recommendation,
-    //                 "reviewer.other_recommendation": appraisal.other_recommendation,
-    //                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
-    //                 "reviewer.feedback_questions": appraisal.feedback_questions,
-    //                 "reviewer.reviewer_acceptance": true,
-    //                 "reviewerIsChecked": true,
-    //                 "reviewerIsDisabled": true,
-    //                 "reviewer.reviewer_status": 'accepted-employee',
-    //                 "normalizerIsDisabled": false,
-    //                 "normalizerIsChecked": false,
-    //                 "normalizer.normalizer_status": 'pending'
-    //                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-    //             }
-    //         }
-    //     )
-    //     res.status(StatusCodes.OK).json({
-    //         employee
-    //     });
-    // }
+    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) >= 0.3) {
+        const employee = await Employee.updateMany({ _id: { $in: id } },
+            {
+                $set: {
+                    "appraisal.pa_status": "Pending with Normalizer",
+                    "appraisal.pa_rating": appraisal.appraiser_rating,
+                    "appraisal.status" : "rejected",
+                    "appraisal.show_reviewer": false,
+                    "reviewer.objective_group": appraisal.objective_group,
+                    "reviewer.objective_type": appraisal.objective_type,
+                    "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                    "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    "normalizer.normalizer_rating": appraisal.appraiser_rating,
+                    "reviewer.training_recommendation": appraisal.training_recommendation,
+                    "reviewer.other_recommendation": appraisal.other_recommendation,
+                    "reviewer.area_of_improvement": appraisal.area_of_improvement,
+                    "reviewer.feedback_questions": appraisal.feedback_questions,
+                    "reviewer.reviewer_acceptance": true,
+                    "reviewerIsChecked": true,
+                    "reviewerIsDisabled": true,
+                    "reviewer.reviewer_status": 'accepted-employee',
+                    "normalizerIsDisabled": false,
+                    "normalizerIsChecked": false,
+                    "normalizer.normalizer_status": 'pending'
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                }
+            }
+        )
+        res.status(StatusCodes.OK).json({
+            employee
+        });
+    }
 
 
 })
@@ -1999,76 +2003,76 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
-    // const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-    //     $set: {
-    //         "appraisal.appraiser_status": 'appraiser-accepted-employee',
-    //         "appraisal.status": 'rejected',
-    //         "appraisal.pa_status": "Pending with Reviewer",
-    //         "appraisal.comments": comments,
-    //         "appraisal_previous_submission.objective_description": appraisal.objective_description,
-    //         "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-    //         "normalizer.normalizer_rating": appraisal.appraiser_rating,
-    //         // "normalizer.normalizer_status": 'completed',
-    //         "normalizer.objective_description": appraisal.objective_description,
-    //         "appraisal.appraiser_rejected": false,
-    //         "reviewer.reviewer_status": "pending",
-    //         "reviewerIsDisabled": false,
-    //         "reviewerIsChecked": false,
+    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+        $set: {
+            "appraisal.appraiser_status": 'appraiser-accepted-employee',
+            "appraisal.status": 'rejected',
+            "appraisal.pa_status": "Pending with Reviewer",
+            "appraisal.comments": comments,
+            "appraisal_previous_submission.objective_description": appraisal.objective_description,
+            "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+            "normalizer.normalizer_rating": appraisal.appraiser_rating,
+            // "normalizer.normalizer_status": 'completed',
+            "normalizer.objective_description": appraisal.objective_description,
+            "appraisal.appraiser_rejected": false,
+            "reviewer.reviewer_status": "pending",
+            "reviewerIsDisabled": false,
+            "reviewerIsChecked": false,
 
-    //     }
-    // })
-    // console.log('comppp')
-    // res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+        }
+    })
+    console.log('comppp')
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
 
-    if (Math.abs(employee.employee_rating - normalizer.normalizer_rating) <= 0.3) {
-        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-            $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.status": 'completed',
-                "appraisal.pa_status": "Completed",
-                "appraisal.pa_rating": appraisal.appraiser_rating,
-                "appraisal.comments": comments,
-                "talent_category": talentCategory,
-                "appraisal.appraiser_rejected": false,
-                "appraisal_previous_submission.objective_description": appraisal.objective_description,
-                "appraisal_previous_rating.objective_description": previousRating,
-                "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-                "normalizer.normalizer_rating": appraisal.appraiser_rating,
-                // "normalizer.normalizer_status": 'completed',
-                "normalizer.objective_description": appraisal.objective_description,
+    // if (Math.abs(employee.employee_rating - normalizer.normalizer_rating) <= 0.3) {
+    //     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+    //         $set: {
+    //             "appraisal.appraiser_status": 'appraiser-accepted-employee',
+    //             "appraisal.status": 'completed',
+    //             "appraisal.pa_status": "Completed",
+    //             "appraisal.pa_rating": appraisal.appraiser_rating,
+    //             "appraisal.comments": comments,
+    //             "talent_category": talentCategory,
+    //             "appraisal.appraiser_rejected": false,
+    //             "appraisal_previous_submission.objective_description": appraisal.objective_description,
+    //             "appraisal_previous_rating.objective_description": previousRating,
+    //             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+    //             "normalizer.normalizer_rating": appraisal.appraiser_rating,
+    //             // "normalizer.normalizer_status": 'completed',
+    //             "normalizer.objective_description": appraisal.objective_description,
 
-            }
-        })
-        console.log('comppp')
-        res.status(StatusCodes.OK).json({ "message": updatedEmployee });
-    }
+    //         }
+    //     })
+    //     console.log('comppp')
+    //     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+    // }
 
-    if (Math.abs(employee.employee_rating - normalizer.normalizer_rating) >= 0.3) {
-        const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-            $set: {
-                "appraisal.appraiser_status": 'appraiser-accepted-employee',
-                "appraisal.appraiser_rating": employee.employee_rating,
-                "appraisal.comments": comments,
-                "appraisal_previous_submission.objective_description": appraisal.objective_description,
-                "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-                "appraisal_previous_rating.objective_description": previousRating,
-                // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
-                "appraisal.status": 'rejected',
-                "appraisal.appraiser_rejected": false,
-                "appraisal.pa_status": "Pending with Reviewer",
-                "appraisal.pa_rating": appraisal.appraiser_rating,
-                // "normalizer.normalizer_status": "pending",
-                // "normalizerIsChecked": false,
-                // "normalizerIsDisabled": false,
-                "reviewerIsChecked": false,
-                "reviewerIsDisabled": false,
-                "reviewer.reviewer_status": "pending"
-            }
-        })
-        res.status(StatusCodes.OK).json({ "message": previousRating })
-        console.log('2nd case')
+    // if (Math.abs(employee.employee_rating - normalizer.normalizer_rating) >= 0.3) {
+    //     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
+    //         $set: {
+    //             "appraisal.appraiser_status": 'appraiser-accepted-employee',
+    //             "appraisal.appraiser_rating": employee.employee_rating,
+    //             "appraisal.comments": comments,
+    //             "appraisal_previous_submission.objective_description": appraisal.objective_description,
+    //             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+    //             "appraisal_previous_rating.objective_description": previousRating,
+    //             // "appraisal.objective_description": getRatingsfromObjectiveDescription(employee.objective_description),
+    //             "appraisal.status": 'rejected',
+    //             "appraisal.appraiser_rejected": false,
+    //             "appraisal.pa_status": "Pending with Reviewer",
+    //             "appraisal.pa_rating": appraisal.appraiser_rating,
+    //             // "normalizer.normalizer_status": "pending",
+    //             // "normalizerIsChecked": false,
+    //             // "normalizerIsDisabled": false,
+    //             "reviewerIsChecked": false,
+    //             "reviewerIsDisabled": false,
+    //             "reviewer.reviewer_status": "pending"
+    //         }
+    //     })
+    //     res.status(StatusCodes.OK).json({ "message": previousRating })
+    //     console.log('2nd case')
 
-    }
+    // }
 
 
 
@@ -3097,12 +3101,12 @@ filter employee based on calendar
 
 const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
 
-    // const { employee_code } = req.params
+    // const { data } = req.body
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 
     const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
-    const previousAppraisal = await PreviousAppraisal.insertMany({ getEmployeesinAppraisal })
+    const previousAppraisal = await PreviousAppraisal.insertMany( data )
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)
 

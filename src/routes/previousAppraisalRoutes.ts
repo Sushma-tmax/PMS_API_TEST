@@ -4,7 +4,7 @@ import {addEmployeestoPrevioisAppraisal} from "../controllers/previousAppraisalC
 
 const router = Router()
 
-router.post('/get', addEmployeestoPrevioisAppraisal)
+router.post('/', addEmployeestoPrevioisAppraisal)
 
 
 export default router
