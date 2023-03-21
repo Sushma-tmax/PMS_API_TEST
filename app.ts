@@ -19,18 +19,22 @@ import appraisalCalenderRoutes  from './src/routes/appraisalCalenderRoutes'
 import ratingValidation from './src/routes/ratingValidationRoutes'
 import nineBoxRoute from "./src/routes/nineBoxRoute";
 import azureImagesRoutes from './src/routes/azureImagesRoutes'
-
+import dashboardColorRoutes from "./src/routes/dashboardColorRoutes";
+import launchcalendarvalidationsRoutes from "./src/routes/launchcalendarvalidationsRoutes";
 
 import { queryGraphApi } from './src/queryGraphAPI'
 import asyncHandler from "./src/middleware/asyncHandler";
 import {Request, Response} from "express";
+import emailRoutes from "./src/routes/emailRoutes";
+import bulkApiRoutes from "./src/routes/bulkApiRoutes";
+import previousAppraisalRoutes from "./src/routes/previousAppraisalRoutes";
+
 
 
 
 
 const app = express();
 // const port = 5000;
-
 
 //serve client-pms/build from express
 // app.get('/', (req, res) => {
@@ -49,14 +53,14 @@ dotenv.config({path: __dirname + '/.env'});
 
 
 
- //connectDB('mongodb+srv://austy:oezUKzp7vEDAnDLM@cluster0.mzmcv.mongodb.net/PMS?retryWrites=true&w=majority');
+ connectDB('mongodb+srv://austy:oezUKzp7vEDAnDLM@cluster0.mzmcv.mongodb.net/PMS?retryWrites=true&w=majority');
 
 // connectDB('mongodb://127.0.0.1:27017/pms');
 
- connectDB('mongodb+srv://augustya:brOlGGq5fjj5EL5z@cluster0.22mx4.mongodb.net/PMS?retryWrites=true&w=majority');
+// connectDB('mongodb+srv://augustya:brOlGGq5fjj5EL5z@cluster0.22mx4.mongodb.net/PMS?retryWrites=true&w=majority');
 
 
-//connectDB('mongodb+srv://pms:yGMXa8yrjjnjydFc@cluster0.axzjq.mongodb.net/PMS?retryWrites=true&w=majority');
+// connectDB('mongodb+srv://pms:yGMXa8yrjjnjydFc@cluster0.axzjq.mongodb.net/PMS?retryWrites=true&w=majority');
 console.log(process.env.MONGO_URI);
 
 
@@ -70,7 +74,8 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan())
 
 }
-
+app.use('/api/v1/email', emailRoutes)
+app.use('/api/v1/previous-appraisal', previousAppraisalRoutes)
 app.use('/api/v1/auth', userRouter);
 app.use('/api/v1/objective', objectiveRoute)
 app.use('/api/v1/employee', employeeRoute)
@@ -84,8 +89,9 @@ app.use('/api/v1/appraisal-calender', appraisalCalenderRoutes)
 app.use('/api/v1/rating-validation', ratingValidation)
 app.use('/api/v1/ninebox', nineBoxRoute)
 app.use('/api/v1/azure-images',azureImagesRoutes)
-
-
+app.use('/api/v1/color', dashboardColorRoutes)
+app.use('/api/v1/validations',launchcalendarvalidationsRoutes)
+app.use('/api/v1/bulk', bulkApiRoutes)
 const graphAPIQuery = asyncHandler(async (req: Request, res: Response) => {
 
     const {site, list,email} = req.body
@@ -97,6 +103,8 @@ const graphAPIQuery = asyncHandler(async (req: Request, res: Response) => {
     // const sharePointSite = await queryGraphAxpi(`/sites/${site}/lists/${list}/items?$expand=fields`);
     res.json(sharePointSite)
 })
+
+
 
 
 app.get('/test', (req, res) => {
