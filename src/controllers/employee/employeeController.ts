@@ -1999,7 +1999,10 @@ const normalizerAcceptsEmployee = asyncHandler(async (req: Request, res: Respons
 const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments, previousRating, talentCategory } = req.body
+    const { comments,
+         previousRating,
+          talentCategory ,
+          employeeObjectiveDescription} = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -2014,10 +2017,12 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "normalizer.normalizer_rating": appraisal.appraiser_rating,
             // "normalizer.normalizer_status": 'completed',
             "normalizer.objective_description": appraisal.objective_description,
+            "employee.objective_description": employeeObjectiveDescription,
             "appraisal.appraiser_rejected": false,
             "reviewer.reviewer_status": "pending",
             "reviewerIsDisabled": false,
             "reviewerIsChecked": false,
+            "employee.employee_status" : "accepted",
 
         }
     })
