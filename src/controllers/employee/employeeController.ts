@@ -498,6 +498,31 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         .populate('normalizer.feedback_questions.name')
         .populate('appraisal_template.feedback_questionnaire.name')
         .populate('calendar')
+        .populate({
+            path: 'current_rating',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'current_rating',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'current_rating',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'current_rating',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
 
     const fun = (test: any) => {
         return "www.google.com" + test
@@ -759,7 +784,10 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         value,
         remarks,
         rating_resubmitted,
-        employee_objective_description
+        employee_objective_description,
+        pa_status,
+        appraiser_status,
+        current_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -779,13 +807,15 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.objective_description.$[description].rejection_reason": rejection_reason,
                 "appraisal.objective_description.$[description].rating_value": rating_value,
                 "appraisal.objective_description.$[description].rating_comments": rating_comments,
-                // "appraisal.appraiser_status": 'draft'
                 "appraisal.objective_description.$[description].rating_rejected": rating_rejected,
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].rating_resubmitted": rating_resubmitted,
                 "appraisal.objective_description.$[description].remarks": remarks,
                 "reviewer.objective_description": reviewer_objective_description,
-                "employee.objective_description": employee_objective_description
+                "employee.objective_description": employee_objective_description,
+                "appraisal.appraiser_status": appraiser_status,
+                "appraisal.pa_status" : pa_status,
+                "current_rating.objective_description" : current_objective_description,
 
             }
         },
@@ -863,7 +893,10 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
         value,
         comments,
         appraiser_objective_description,
-        reviewerOverallFeedComments
+        reviewerOverallFeedComments,
+        current_objective_description,
+        reviewer_status,
+        pa_status
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -887,7 +920,10 @@ const reviewerRejection = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
                 "appraisal.objective_description": appraiser_objective_description,
-                "reviewer.reviewer_overall_feedback": reviewerOverallFeedComments
+                "reviewer.reviewer_overall_feedback": reviewerOverallFeedComments,
+                "current_rating.objective_description": current_objective_description,
+                "reviewer.reviewer_status": reviewer_status,
+                "appraisal.pa_status": pa_status,
             }
         },
         {
@@ -922,7 +958,10 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
         objective_description_name,
         objective_description,
         rating_resubmitted,
-        value
+        value,
+        pa_status,
+        normalizer_status,
+        current_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -947,6 +986,9 @@ const normalizerRejection = asyncHandler(async (req: Request, res: Response) => 
                 "normalizer.objective_description.$[description].rating_rejected": rating_rejected,
                 "normalizer.objective_description.$[description].rating_resubmitted": rating_resubmitted,
                 "normalizer.objective_description.$[description].action_performed": action_performed,
+                "appraisal.pa_status" : pa_status,
+                "normalizer.normalizer_status" : normalizer_status, 
+                "current_rating.objective_description" : current_objective_description
 
             }
         },
@@ -977,7 +1019,11 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
         action_performed,
         objective_description_name,
         objective_description,
-        appraiser_objective_description
+        appraiser_objective_description,
+        pa_status,
+        employee_status,
+        current_objective_description
+
     } = req.body
 
     console.log(ratings,
@@ -1003,7 +1049,11 @@ const employeeRejection = asyncHandler(async (req: Request, res: Response) => {
                 "employee.objective_description.$[description].rejection_reason": rejection_reason,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
                 "employee.objective_description.$[description].action_performed": action_performed,
-                "appraisal.objective_description": appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description,
+                "appraisal.pa_status" : pa_status,
+                "employee.employee_status" : employee_status,
+                "current_rating.objective_description" : current_objective_description,
+             
 
             }
         },
@@ -1074,7 +1124,7 @@ const appraisalStatusFilter = asyncHandler(async (req: Request, res: Response) =
 
 
 const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const { id, current_overallRating } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1087,7 +1137,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
-                "normalizer.normalizer_rating": appraisal.reviewer_rating,
+                "normalizer.normalizer_rating": current_overallRating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
@@ -1101,7 +1151,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.normalizer_status": 'accepted',
                 "appraisal.status": "normalized",
                 "appraisal.pa_status": "Pending with Employee",
-                "appraisal.pa_rating": appraisal.reviewer_rating,
+                "appraisal.pa_rating": current_overallRating,
                 "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer.rejection_count": 0
                 // "employee":{},
@@ -1116,7 +1166,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
 
 const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Response) => {
-    const { id, talentCategory } = req.body
+    const { id, talentCategory, current_overallRating } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1127,7 +1177,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
-                "normalizer.normalizer_rating": appraisal.reviewer_rating,
+                "normalizer.normalizer_rating": current_overallRating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
@@ -1139,7 +1189,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer.normalizer_status": 'normalizer-accepted',
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
-                "appraisal.pa_rating": appraisal.reviewer_rating,
+                "appraisal.pa_rating": current_overallRating,
                 "talent_category": talentCategory
             }
         }
@@ -1152,7 +1202,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
 
 // const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const { id, appraisal_objective_description } = req.body
+    const { id, appraisal_objective_description, current_overallRating } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal } = await Employee.findById(id);
@@ -1161,7 +1211,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
         {
             $set: {
                 "appraisal.pa_status": "Pending with Normalizer",
-                "appraisal.pa_rating": appraisal.appraiser_rating,
+                "appraisal.pa_rating": current_overallRating,
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
@@ -1171,19 +1221,21 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                "reviewer.reviewer_rating": current_overallRating,
                 "reviewer.training_recommendation": appraisal.training_recommendation,
                 "reviewer.other_recommendation": appraisal.other_recommendation,
                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
                 "reviewer.feedback_questions": appraisal.feedback_questions,
-               "reviewer.reviewer_overall_feedback" : "",
+                "reviewer.reviewer_overall_feedback": "",
                 "reviewer.reviewer_acceptance": true,
                 "reviewerIsChecked": true,
                 "reviewerIsDisabled": true,
                 "reviewer.reviewer_status": 'accepted',
                 "normalizerIsDisabled": false,
                 "normalizerIsChecked": false,
-                "normalizer.normalizer_status": 'pending'
+                "normalizer.normalizer_status": 'pending',
+                "normalizer.normalizer_rating" : current_overallRating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
             }
         }
@@ -1196,7 +1248,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
 
 // reviewer accepts appraiser after employee rejection
 const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const { id , current_overallRating } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal, reviewer, normalizer } = await Employee.findById(id);
@@ -1240,17 +1292,18 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
             {
                 $set: {
                     "appraisal.pa_status": "Completed",
-                    "appraisal.status" : "completed",
+                    "appraisal.status": "completed",
                     "appraisal.show_reviewer": false,
-                    "appraisal.pa_rating": appraisal.appraiser_rating,
+                    "appraisal.pa_rating": current_overallRating,
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
                     // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                     "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                     // "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                     // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    "normalizer.nomalizer_rating": appraisal.appraiser_rating,
+                    // "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": current_overallRating,
+                    "normalizer.nomalizer_rating": current_overallRating,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
                     "reviewer.area_of_improvement": appraisal.area_of_improvement,
@@ -1269,15 +1322,15 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         res.status(StatusCodes.OK).json({
             employee
         });
-     }
+    }
 
     if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) >= 0.3) {
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
                     "appraisal.pa_status": "Pending with Normalizer",
-                    "appraisal.pa_rating": appraisal.appraiser_rating,
-                    "appraisal.status" : "rejected",
+                    "appraisal.pa_rating": current_overallRating,
+                    "appraisal.status": "rejected",
                     "appraisal.show_reviewer": false,
                     "reviewer.objective_group": appraisal.objective_group,
                     "reviewer.objective_type": appraisal.objective_type,
@@ -1285,8 +1338,8 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                     "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                     "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-                    "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                    "normalizer.normalizer_rating": appraisal.appraiser_rating,
+                    "reviewer.reviewer_rating": current_overallRating,
+                    "normalizer.normalizer_rating": current_overallRating,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
                     "reviewer.area_of_improvement": appraisal.area_of_improvement,
@@ -2000,9 +2053,10 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     const { id } = req.params
     const { comments,
-         previousRating,
-          talentCategory ,
-          employeeObjectiveDescription} = req.body
+        previousRating,
+        talentCategory,
+        employeeObjectiveDescription,
+        current_overallRating } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -2014,7 +2068,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.comments": comments,
             "appraisal_previous_submission.objective_description": appraisal.objective_description,
             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
-            "normalizer.normalizer_rating": appraisal.appraiser_rating,
+            // "normalizer.normalizer_rating": appraisal.appraiser_rating,
+            "normalizer.normalizer_rating": current_overallRating,
             // "normalizer.normalizer_status": 'completed',
             "normalizer.objective_description": appraisal.objective_description,
             "employee.objective_description": employeeObjectiveDescription,
@@ -2022,7 +2077,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "reviewer.reviewer_status": "pending",
             "reviewerIsDisabled": false,
             "reviewerIsChecked": false,
-            "employee.employee_status" : "accepted",
+            "employee.employee_status": "accepted",
+            "appraisal.appraiser_rating" : current_overallRating,
 
         }
     })
@@ -2104,7 +2160,7 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
 const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments } = req.body
+    const { comments, current_OverAllRating } = req.body
 
     const { employee, normalizer } = await Employee.findById(id)
 
@@ -2112,13 +2168,14 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         $set: {
             "appraisal.status": 'completed',
             "appraisal.pa_status": "Completed",
-            "appraisal.pa_rating": normalizer.normalizer_rating,
+            "appraisal.pa_rating": current_OverAllRating,
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
             // "employee.objective_description": normalizer.objective_description,
             // "employee.employee_rating": normalizer.normalizer_rating,
             "normalizer.normalizer_status": "re-normalized",
+            "normalizer.normalizer_rating" : current_OverAllRating,
         }
     })
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
@@ -2907,7 +2964,9 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
         rating_comments,
         value,
         remarks,
-        employee_objective_description
+        employee_objective_description,
+        pa_status,
+        appraiser_status
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -2935,6 +2994,8 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].remarks": remarks,
                 "employee.objective_description": employee_objective_description,
                 "appraisal.appraiser_rating": false,
+                "appraisal.pa_status" : pa_status,
+                "appraisal.appraiser_status" : appraiser_status
             }
         },
         {
@@ -3111,7 +3172,7 @@ const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: R
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 
     const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
-    const previousAppraisal = await PreviousAppraisal.insertMany( data )
+    const previousAppraisal = await PreviousAppraisal.insertMany(data)
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)
 
