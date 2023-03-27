@@ -28,8 +28,8 @@ const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: R
     const { data  } = req.body
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
-
-    const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
+console.log(data)
+    // const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
     const previousAppraisal = await PreviousAppraisal.insertMany( data )
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)

@@ -64,6 +64,13 @@ const EmployeeSchema = new Schema({
         type: String,
 
     },
+    legal_full_name: {
+        type: String,
+
+    },
+    position_long_description: {
+        type: String,
+    },
     email: {
         type: String,
     },
@@ -468,6 +475,9 @@ const EmployeeSchema = new Schema({
     previous_rating: {
       type: Number
     },
+
+
+
     employee: {
         employee_agree: {
             type: Boolean,
@@ -476,7 +486,12 @@ const EmployeeSchema = new Schema({
         employee_status: {
             type: String,
             default: 'not-started'
-        },      
+        },  
+        
+        employee_rejection : {
+            type: Boolean,
+            default: false
+        },
         
         attachments: [{
             url: { type: String },

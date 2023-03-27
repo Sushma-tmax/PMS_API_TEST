@@ -765,32 +765,36 @@ const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, re
 
 const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) => {
 
-    const {calendar_id, appraisal_calendar_id}  =  req.body
+    const {id}  =  req.body
 
-    const calendar = await Calender.findByIdAndUpdate(calendar_id, {status: "Closed"} )
+    const calendar = await Calender.findByIdAndUpdate(id, {status: "Closed", isActive: false} )
 
-    const appraisalCalendar = await AppraisalCalender.findByIdAndUpdate(appraisal_calendar_id, {status: "Closed"} )
+    const appraisalCalendar = await AppraisalCalender.updateMany({calendar: id}, {status: "Closed"} )
 
-    const employeeFromCalendar  = await AppraisalCalender.find({_id: appraisal_calendar_id})
-    const employee = employeeFromCalendar.map((data:any) => {
-        return data.position.map((k: any) => k.name.toString())
-    }).flat()
+    // const employeeFromCalendar  = await AppraisalCalender.find({_id: appraisal_calendar_id})
+    // const employee = employeeFromCalendar.map((data:any) => {
+    //     return data.position.map((k: any) => k.name.toString())
+    // }).flat()
 
-    const emp = await Employee.find()
+
 // @ts-ignore
-//     const {normalizer} = emp
-//     const updateEmployee = await  Employee.updateMany({emp}, {
-//         $set: {
-//             "previous_rating": normalizer.normalizer_rating
-//         }
-//     })
-    const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
+
+const updatePreviousRating = await Employee.collection.updateMany({}, [{
+    "$set": {
+        "previous_rating":  "$appraisal.pa_rating"
+    }
+}])
+//     const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
 
     res.status(StatusCodes.OK).json({
-        calendar,
-        appraisalCalendar,
+        // calendar,
+        // appraisalCalendar,
         // updateEmployee,
-        addEmployeetoPreviousAppraisal
+        // addEmployeetoPreviousAppraisal
+        // normalizer_rating,
+        updatePreviousRating,
+        calendar,
+        appraisalCalendar
     })
 
 })

@@ -1235,7 +1235,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizerIsDisabled": false,
                 "normalizerIsChecked": false,
                 "normalizer.normalizer_status": 'pending',
-                "normalizer.normalizer_rating" : current_overallRating,
+                // "normalizer.normalizer_rating" : current_overallRating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
             }
         }
@@ -1303,7 +1303,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
                     // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                     "reviewer.reviewer_rating": current_overallRating,
-                    "normalizer.nomalizer_rating": current_overallRating,
+                    // "normalizer.nomalizer_rating": current_overallRating,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
                     "reviewer.area_of_improvement": appraisal.area_of_improvement,
@@ -1376,7 +1376,7 @@ const acceptReviewerRatings = asyncHandler(async (req: Request, res: Response) =
                 "reviewer.objective_group": appraisal.objective_group,
                 "reviewer.objective_type": appraisal.objective_type,
                 "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "reviewer.reviewer_rating": appraisal.appraiser_rating,
+                // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                 "reviewer.training_recommendation": appraisal.training_recommendation,
                 "reviewer.other_recommendation": appraisal.other_recommendation,
                 "reviewer.area_of_improvement": appraisal.area_of_improvement,
@@ -1420,7 +1420,7 @@ const rejectedReviewerValues = asyncHandler(async (req: Request, res: Response) 
             $set: {
                 "reviewer.reviewer_acceptance": false,
                 // "reviewer.reviewer_rejected_value": value,
-                "reviewer.reviewer_status": 'draft',
+                // "reviewer.reviewer_status": 'draft',
             }
         }
     )
@@ -3171,7 +3171,7 @@ const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: R
 
     // const lineManager = await Employee.find({ _id:  "62ac2037c1c19127416aafef" })
 
-    const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
+    // const getEmployeesinAppraisal = await Employee.find({ calendar: "63f7a9bb72a021d4cebb3ea3" })
     const previousAppraisal = await PreviousAppraisal.insertMany(data)
     // const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
     // const Temp = lineManager.map((j: any) => j.employee_code)

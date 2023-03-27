@@ -9,6 +9,7 @@ const validations = asyncHandler(async (req: Request, res: Response) => {
 
     let changedvalidations : any
      changedvalidations = await launchcalendarvalidations.find()
+
     res.status(StatusCodes.OK).json({
         data: changedvalidations
     });
