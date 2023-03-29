@@ -43,4 +43,11 @@ console.log(data)
 
 })
 
-export {addEmployeestoPrevioisAppraisal}
+const getpastAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res: Response) => {
+    const employee = await PreviousAppraisal.findById(req.params.id)
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+export {addEmployeestoPrevioisAppraisal,getpastAppraisalDetailsofEmployee}
