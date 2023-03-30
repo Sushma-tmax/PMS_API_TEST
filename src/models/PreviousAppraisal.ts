@@ -161,6 +161,12 @@ const PreviousAppraisal = new Schema({
     training_recommendation: {
         type: Array,
     },
+    feedback_questions :{
+        type: Array,
+    },
+    objective_type : {
+        type: Array,
+    },
 
 })
 

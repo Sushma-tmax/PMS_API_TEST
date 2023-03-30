@@ -174,7 +174,26 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
                 populate: {
                     path: 'objective_description.ratings'
                 }
-            }).populate('appraisal.other_recommendation')
+            })
+            .populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'other_recommendation.name'
+                }
+            })
+            .populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'training_recommendation.name'
+                }
+            })
+            .populate({
+                path: 'appraisal',
+                populate: {
+                    path: 'feedback_questions.name'
+                }
+            })
+            .populate('appraisal.other_recommendation')
             .populate('appraisal.training_recommendation')
             .populate({
                 path: 'appraisal_template',
@@ -814,7 +833,8 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
         employee_objective_description,
         pa_status,
         appraiser_status,
-        current_objective_description
+        current_objective_description,
+        potential
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -843,6 +863,7 @@ const appraisal = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.appraiser_status": appraiser_status,
                 "appraisal.pa_status" : pa_status,
                 "current_rating.objective_description" : current_objective_description,
+                "appraisal.potential" : potential
 
             }
         },
@@ -2874,7 +2895,8 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
         rating_comments,
         reviewer_objective_description,
         value,
-        remarks
+        remarks,
+        potential
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -2901,6 +2923,7 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].remarks": remarks,
                 "reviewer.objective_description": reviewer_objective_description,
+                "appraisal.potential" : potential
             }
         },
         {

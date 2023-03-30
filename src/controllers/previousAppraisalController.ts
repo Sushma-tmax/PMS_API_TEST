@@ -44,7 +44,7 @@ console.log(data)
 })
 
 const getpastAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const employee = await PreviousAppraisal.findById(req.params.id)
+    const employee = await PreviousAppraisal.findById(req.params.id).populate("calendar")
     res.status(StatusCodes.OK).json({
         employee
     });
