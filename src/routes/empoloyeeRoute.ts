@@ -71,6 +71,7 @@ import {
     getUnMappedEmployeeLength,
     addEmployeestoPrevioisAppraisal,
     getAllMappedEmployee,
+    updateSubsectionForEmployees,
 
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -155,7 +156,7 @@ router.patch('/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
 router.get('/lineManagerEmployee/:employee_code', lineManagerEmployee)
 router.get('/lineManagerPlusOneEmployee/:employee_code', lineManagerPlusOneEmployee)
-
+router.post('/updateSubSection',updateSubsectionForEmployees)
 
 
 
