@@ -1336,7 +1336,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
     //     employee
     // });
 
-    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) <= 0.3) {
+    if (Math.abs(current_overallRating - normalizer.normalizer_rating) <= 0.3) {
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
@@ -1373,7 +1373,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         });
     }
 
-    if (Math.abs(reviewer.reviewer_rating - normalizer.normalizer_rating) >= 0.3) {
+    if (Math.abs(current_overallRating - normalizer.normalizer_rating) >= 0.3) {
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
@@ -2118,9 +2118,9 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal_previous_submission.objective_description": appraisal.objective_description,
             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
             // "normalizer.normalizer_rating": appraisal.appraiser_rating,
-            "normalizer.normalizer_rating": current_overallRating,
+            // "normalizer.normalizer_rating": current_overallRating,
             // "normalizer.normalizer_status": 'completed',
-            "normalizer.objective_description": appraisal.objective_description,
+            // "normalizer.objective_description": appraisal.objective_description,
             "employee.objective_description": employeeObjectiveDescription,
             "appraisal.appraiser_rejected": false,
             "reviewer.reviewer_status": "pending",
