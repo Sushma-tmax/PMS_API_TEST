@@ -479,6 +479,9 @@ const EmployeeSchema = new Schema({
 
 
     employee: {
+        one_to_one_meeting : {
+            type: Date,            
+        },
         employee_agree: {
             type: Boolean,
             default: false,
