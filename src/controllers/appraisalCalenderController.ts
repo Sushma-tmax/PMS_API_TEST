@@ -480,8 +480,11 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-                    attachments: []
+                    attachments: [],                    
 
+                },
+                current_rating : {
+                    overall_rating : 0,
                 },
 
                 appraisal_previous_submission: {

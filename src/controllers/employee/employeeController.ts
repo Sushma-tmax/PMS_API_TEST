@@ -2596,7 +2596,7 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Response) => {
     const appraisalCalendar = await AppraisalCalender.find({ calendar: req.params.id })
     const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j: any) => {
-        const data = j.position.map((k: any) => k.name.toString())
+        const data = j.position.map((k: any) => k.name?.toString())
         return data
     }).flat()
     //const getEmployee = await Employee.find({})
@@ -2605,7 +2605,7 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
         "isLeavers": false,
         "isExcluded": false,
     })
-    const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
+    const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id?.toString())).length
     console.log(getEmployeefromAppraisalCalendar)
     res.status(StatusCodes.OK).json({
         data: myArray,
