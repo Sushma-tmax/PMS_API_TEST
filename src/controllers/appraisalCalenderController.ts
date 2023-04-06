@@ -487,6 +487,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     overall_rating : 0,
                 },
 
+                appraisal_previous_rating : [] ,
+
                 appraisal_previous_submission: {
                     appraiser_rating: 0,
                     appraiser_status: 'pending',
