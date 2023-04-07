@@ -487,7 +487,12 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     overall_rating : 0,
                 },
 
-                appraisal_previous_rating : [] ,
+                appraisal_previous_rating : {
+                    overall_rating : 0 ,
+                    objective_group: weightage.objective_group,
+                    objective_type: weightage.objective_type,
+                    objective_description: weightage.objective_description,  
+                },
 
                 appraisal_previous_submission: {
                     appraiser_rating: 0,
