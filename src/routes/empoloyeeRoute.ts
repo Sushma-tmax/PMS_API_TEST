@@ -72,14 +72,14 @@ import {
     addEmployeestoPrevioisAppraisal,
     getAllMappedEmployee,
     updateSubsectionForEmployees,
-
+    removeBulkEmployeesfromRoleException
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
-
+router.patch('/remove-BulkEmployee-Roleexception', removeBulkEmployeesfromRoleException)
 router.post('/prevvvvv',addEmployeestoPrevioisAppraisal)
 router.get('/unmapped-data/:id', getUnMappedEmployee)
 router.get('/unmapped-data-length/:id', getUnMappedEmployeeLength)
@@ -157,6 +157,7 @@ router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
 router.get('/lineManagerEmployee/:employee_code', lineManagerEmployee)
 router.get('/lineManagerPlusOneEmployee/:employee_code', lineManagerPlusOneEmployee)
 router.post('/updateSubSection',updateSubsectionForEmployees)
+
 
 
 

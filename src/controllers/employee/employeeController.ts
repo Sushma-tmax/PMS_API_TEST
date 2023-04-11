@@ -2805,6 +2805,7 @@ const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) =
                 "isCEORole": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2825,6 +2826,7 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
                 "isLeavers": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2844,6 +2846,7 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
                 "isExcluded": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2871,6 +2874,24 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
         }
     )
     res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, res: Response) => {
+    const {id} = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+    console.log(id,"removeBulkEmployeesfromRoleException")
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        [{
+            $set: {
+                "isRoleException": false
+            }
+        }]
+    )
+    res.status(StatusCodes.OK).json({
+        
         employee
     });
 })
@@ -3340,6 +3361,7 @@ export {
     addEmployeestoPrevioisAppraisal,
 
     getAllMappedEmployee,
-    updateSubsectionForEmployees
+    updateSubsectionForEmployees,
+    removeBulkEmployeesfromRoleException
 
 }
