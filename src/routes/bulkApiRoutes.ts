@@ -1,5 +1,8 @@
 import { Router } from "express";
-import {updateEmployee, updateEmployees} from "../controllers/bulkUploadandUpdate";
+
+import {updateEmployee} from "../controllers/bulkUploadandUpdate";
+
+
 
 const router = Router()
 

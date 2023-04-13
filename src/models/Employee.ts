@@ -293,7 +293,7 @@ const EmployeeSchema = new Schema({
                 },
                 objectiveTitle: {
                     type: String,
-                    unique: true,
+                    // unique: true,
                     uniqueCaseInsensitive: true
                 },
                 level_1: {
