@@ -26,34 +26,40 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
     }
 
 
-    const [employee_code, legal_full_name, gender] = data
+    //Update Roles
+    const appraiserCodes = data
+        .filter((employee) => employee.appraiser_code)
+        .map((employee) => employee.employee_code);
 
-    // const {employee_code, appraiser_code,reviewer_code,normalizer_code} = data
-    //
-    // const appraiser_code_array = [... new Set([...appraiser_code])]
-    // const reviewer_code_array = [... new Set([...reviewer_code])]
-    // const normalizer_code_array = [... new Set([...normalizer_code])]
+    const reviewerCodes = data
+        .filter((employee) => employee.reviewer_code)
+        .map((employee) => employee.employee_code);
 
+    const normalizerCodes = data
+        .filter((employee) => employee.normalizer_code)
+        .map((employee) => employee.employee_code);
 
-    // const employee = await Employee.updateMany({ employee_code:  employee_code  },
-    //     {
-    //         "employee_code": employee_code,
-    //         "legal_full_name": legal_full_name,
-    //         "gender": gender
-    //
-    //     },
-    //     { upsert: true }
-    // )
+// Update roles for each employee in bulk
+    Employee.updateMany(
+        { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
+        {
+            $set: {
+                roles: {
+                    appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
+                    reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
+                    normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
+                },
+            },
+        },
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
 
-    // const employee = await Employee.create(req.body)
-
-    // res.status(StatusCodes.OK).json({
-    //     // success: true,
-    //     // data: position,
-    //     // appraisal,
-    //     // position,
-    //     data: employee
-    // })
+            console.log(`${result.nModified} employees updated successfully.`);
+        }
+    );
 
 })
 
@@ -99,6 +105,8 @@ const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 
 })
 
+
+
 export {
     updateEmployees,
     updateEmployee
@@ -106,5 +114,13 @@ export {
 
 
 /*
+There are three roles appraiser, reviewer and normalizer in the collection of employees. Every employee has a unique employee code. In every employee appraiser_code, reviewer_code, normalizer_code is there.
+we need to get the employee code of these roles and then set roles: {
+appraiser: true or false,
+reviewer: true or false,
+normalizer: true or false
+}
+getting data of employees in json format and it's in the node and mongoose
+
 
  */
