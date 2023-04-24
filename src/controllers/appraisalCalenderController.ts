@@ -480,8 +480,18 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-                    attachments: []
+                    attachments: [],                    
 
+                },
+                current_rating : {
+                    overall_rating : 0,
+                },
+
+                appraisal_previous_rating : {
+                    overall_rating : 0 ,
+                    objective_group: weightage.objective_group,
+                    objective_type: weightage.objective_type,
+                    objective_description: weightage.objective_description,  
                 },
 
                 appraisal_previous_submission: {
@@ -695,11 +705,21 @@ export const job = schedule.scheduleJob('* * * * *', async () => {
 
     // const appraisalCalen = await AppraisalCalender
 
-    const getTodayCalendars = await Calender.find({ end_date: today_date }, '_id')
+
+    const getName = (arr: any) => {
+        return arr.map((e: any) => e.name)
+    }
+
+    const getTodayCalendars = await Calender.find({ status: "Live" }, '_id')
 
     const getAppraislaCalendar = await AppraisalCalender.find({ calendar: { $in: getTodayCalendars } })
 
-    const updateStatus = await AppraisalCalender.updateMany({ calendar: { $in: getTodayCalendars } }, { status: "completed" })
+    const [position] = getAppraislaCalendar
+    console.log(position, 'position')
+
+
+    // const employee = await Employee.find({ _id: { $in: getName(position) }})
+
 
     // const getAppraisal = await AppraisalCalender.findById({_id: "63a15b5e1ed678e5e7db8d05"})
     // console.log(getAppraisal.position.map((k:any) => k.name), 'workeddddd')

@@ -293,7 +293,7 @@ const EmployeeSchema = new Schema({
                 },
                 objectiveTitle: {
                     type: String,
-                    unique: true,
+                    // unique: true,
                     uniqueCaseInsensitive: true
                 },
                 level_1: {
@@ -479,6 +479,9 @@ const EmployeeSchema = new Schema({
 
 
     employee: {
+        one_to_one_meeting : {
+            type: Date,            
+        },
         employee_agree: {
             type: Boolean,
             default: false,

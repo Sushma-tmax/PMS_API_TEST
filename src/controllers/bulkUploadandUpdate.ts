@@ -1,39 +1,80 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import asyncHandler from "../middleware/asyncHandler";
-import { Employee } from "../models";
-import { StatusCodes } from "http-status-codes";
+import {Employee} from "../models";
+import {StatusCodes} from "http-status-codes";
 
 
 const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
-    const { data } = req.body
+    const {data} = req.body
 
-    const {employee_code} = data
+    try {
+        const employees = req.body.data; // assuming the array of employees is provided in the 'employees' property of the request body
+        const bulkWriteOps = employees.map(employee => {
+            return {
+                updateOne: {
+                    filter: { employee_code: employee.employee_code },
+                    update: employee,
+                    upsert: true // if the record doesn't exist, create a new one
+                }
+            };
+        });
+        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
+        res.status(200).json({ message: 'Employees updated or added successfully',result });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 
 
-    const employee = await Employee.updateMany({ _id: { $in: employee_code } },
+    //Update Roles
+    const appraiserCodes = data
+        .filter((employee) => employee.appraiser_code)
+        .map((employee) => employee.employee_code);
+
+    const reviewerCodes = data
+        .filter((employee) => employee.reviewer_code)
+        .map((employee) => employee.employee_code);
+
+    const normalizerCodes = data
+        .filter((employee) => employee.normalizer_code)
+        .map((employee) => employee.employee_code);
+
+// Update roles for each employee in bulk
+    Employee.updateMany(
+        { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
         {
-            data
+            $set: {
+                roles: {
+                    appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
+                    reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
+                    normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
+                },
+            },
         },
-        { upsert: true }
-    )
+        (err, result) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            console.log(`${result.nModified} employees updated successfully.`);
+        }
+    );
 
 })
-
-
 
 
 const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 
 
-    const { data } = req.body
+    const {data} = req.body
     console.log(data, "data")
 
     const employee = await Employee.bulkWrite([
         data.map((employee: any) => {
             return ({
                 updateOne: {
-                    filter: { employee_code: employee.Ecode },
+                    filter: {employee_code: employee.Ecode},
                     update: {
                         $set: {
                             employee_code: employee.Ecode,
@@ -64,6 +105,8 @@ const updateEmployees = asyncHandler(async (req: Request, res: Response) => {
 
 })
 
+
+
 export {
     updateEmployees,
     updateEmployee
@@ -71,5 +114,13 @@ export {
 
 
 /*
+There are three roles appraiser, reviewer and normalizer in the collection of employees. Every employee has a unique employee code. In every employee appraiser_code, reviewer_code, normalizer_code is there.
+we need to get the employee code of these roles and then set roles: {
+appraiser: true or false,
+reviewer: true or false,
+normalizer: true or false
+}
+getting data of employees in json format and it's in the node and mongoose
+
 
  */

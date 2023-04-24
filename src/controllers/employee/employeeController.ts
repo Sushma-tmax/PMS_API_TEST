@@ -2211,7 +2211,13 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
 const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { comments, current_OverAllRating } = req.body
+    const { comments,
+         current_OverAllRating,
+         talentCategory,
+         meetingNotes,
+         normalizerComments,
+         normalizerObjDesc } = req.body   
+         console.log(talentCategory, 'talentCategory')    
 
     const { employee, normalizer } = await Employee.findById(id)
 
@@ -2223,13 +2229,21 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
             "normalizer.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
+            "normalizer.objective_description" :normalizerObjDesc,
+            "normalizer.reason_for_rejection" : normalizerComments,
+            "normalizer.normalizer_meeting_notes" : meetingNotes,
             // "employee.objective_description": normalizer.objective_description,
             // "employee.employee_rating": normalizer.normalizer_rating,
             "normalizer.normalizer_status": "re-normalized",
             "normalizer.normalizer_rating": current_OverAllRating,
+            "talent_category" : talentCategory
         }
     })
-    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+    res.status(StatusCodes.OK).json({ "message": updatedEmployee, current_OverAllRating,
+    talentCategory,
+    meetingNotes,
+    normalizerComments,
+    normalizerObjDesc });
 })
 
 const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) => {
@@ -2240,7 +2254,7 @@ const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) =>
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "appraisal.attachments": attachments,
         }
     })
@@ -2255,7 +2269,7 @@ const rejectionAttachmentsAppraiser = asyncHandler(async (req: Request, res: Res
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "appraisal.rejection_attachments": attachments,
         }
     })
@@ -2286,7 +2300,7 @@ const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => 
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "reviewer.attachments": attachments,
         }
     })
@@ -2302,7 +2316,7 @@ const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) =
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "normalizer.attachments": attachments,
         }
     })
@@ -2332,7 +2346,7 @@ const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => 
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "employee.attachments": attachments,
         }
     })
@@ -2511,7 +2525,7 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 
     const getEmployee = await Employee.find({})
 
-    const employeeId = getEmployee?.map(k => k._id.toString())
+    // const employeeId = getEmployee?.map(k => k._id.toString())
 
     const empp = [
         '62ac2037c1c19127416ab019',
@@ -2576,9 +2590,9 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 
 
-    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString()))
+    const myArray = getEmployee.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id?.toString()))
 
-    const newArray = _.difference(getEmployee.map((j: any) => j._id.toString()), getEmployeefromAppraisalCalendar)
+    // const newArray = _.difference(getEmployee.map((j: any) => j._id?.toString()), getEmployeefromAppraisalCalendar)
 
     console.log(getEmployeefromAppraisalCalendar)
 
@@ -2596,7 +2610,7 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
 const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Response) => {
     const appraisalCalendar = await AppraisalCalender.find({ calendar: req.params.id })
     const getEmployeefromAppraisalCalendar = appraisalCalendar.map((j: any) => {
-        const data = j.position.map((k: any) => k.name.toString())
+        const data = j.position.map((k: any) => k.name?.toString())
         return data
     }).flat()
     //const getEmployee = await Employee.find({})
@@ -2605,7 +2619,7 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
         "isLeavers": false,
         "isExcluded": false,
     })
-    const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id.toString())).length
+    const myArray = getEmployees.filter(ar => !getEmployeefromAppraisalCalendar.includes(ar._id?.toString())).length
     console.log(getEmployeefromAppraisalCalendar)
     res.status(StatusCodes.OK).json({
         data: myArray,
@@ -2769,6 +2783,44 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
     });
 })
 
+const updateEmployeeRoles = asyncHandler(async (req: Request, res: Response) => {
+    const { id, appraiser,reviewer,normalizer,removeAppraiser,removeReviewer,removeNormalizer } = req.body
+    console.log( id, appraiser,reviewer,normalizer,removeAppraiser,removeReviewer,removeNormalizer,"roles.appraiser")
+    // const { employee: appraisal } = await Employee.findById(id);
+    let setRolesValue = {};
+if(appraiser){
+    setRolesValue["roles.appraiser"] = true
+    }
+if(reviewer){
+    setRolesValue["roles.reviewer"] = true
+        }
+if(normalizer){
+    setRolesValue["roles.normalizer"] = true
+        }
+
+if(removeAppraiser){
+    setRolesValue["roles.appraiser"] = false
+    }
+if(removeReviewer){
+    setRolesValue["roles.reviewer"] = false
+    }
+ if(removeNormalizer){
+    setRolesValue["roles.normalizer"] = false
+   }        
+   
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        {
+            $set : setRolesValue
+            // $set: {
+            //     "roles": roles,
+            // }
+        }
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
 const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Response) => {
     const { id, masterAppraiserCode, masterAppraiserName } = req.body
 
@@ -2805,6 +2857,7 @@ const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) =
                 "isCEORole": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2825,6 +2878,7 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
                 "isLeavers": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2844,6 +2898,7 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
                 "isExcluded": true,
                 "isGradeException": false,
                 "isRoleException": false,
+                "appraisal.pa_status":"accepted",
             }
         }
     )
@@ -2871,6 +2926,24 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
         }
     )
     res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, res: Response) => {
+    const {id} = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+    console.log(id,"removeBulkEmployeesfromRoleException")
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        [{
+            $set: {
+                "isRoleException": false
+            }
+        }]
+    )
+    res.status(StatusCodes.OK).json({
+        
         employee
     });
 })
@@ -3340,6 +3413,8 @@ export {
     addEmployeestoPrevioisAppraisal,
 
     getAllMappedEmployee,
-    updateSubsectionForEmployees
+    updateSubsectionForEmployees,
+    removeBulkEmployeesfromRoleException,
+    updateEmployeeRoles
 
 }

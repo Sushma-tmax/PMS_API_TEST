@@ -1,10 +1,13 @@
 import { Router } from "express";
-import {updateEmployees} from "../controllers/bulkUploadandUpdate";
+
+import {updateEmployee} from "../controllers/bulkUploadandUpdate";
+
+
 
 const router = Router()
 
 
-router.patch('/update', updateEmployees)
+router.patch('/update', updateEmployee)
 
 
 export default router

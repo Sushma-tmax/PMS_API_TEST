@@ -50,4 +50,16 @@ const getpastAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res:
     });
 })
 
-export {addEmployeestoPrevioisAppraisal,getpastAppraisalDetailsofEmployee}
+//  to get previous appraisal of employee based on employee code and calendar Id
+const getPreviousAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res: Response) => {
+    const {employeeCode,calendarId} = req.params;  
+
+    const employeeArray = await PreviousAppraisal.find({employee_code : employeeCode , calendar: new mongoose.Types.ObjectId(calendarId)})
+    let employee = employeeArray[0]
+    console.log(employeeCode,employee,'calendardata')
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+export {addEmployeestoPrevioisAppraisal,getpastAppraisalDetailsofEmployee,getPreviousAppraisalDetailsofEmployee}
