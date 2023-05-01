@@ -64,19 +64,19 @@ const PreviousAppraisal = new Schema({
         type: String,
     },
     isCEORole: {
-        type: String,
+        type: Boolean,
     },
     isExcluded: {
-        type: String,
+        type: Boolean,
     },
     isGradeException: {
-        type: String,
+        type: Boolean,
     },
     isLeavers: {
-        type: String,
+        type: Boolean,
     },
     isRoleException: {
-        type: String,
+        type: Boolean,
     },
     area_of_improvement: {
         type: Array,
@@ -109,6 +109,9 @@ const PreviousAppraisal = new Schema({
             type: String
         },
         employee_agree: {
+            type: Boolean
+        },
+        employee_rejection:{
             type: String
         },
     },

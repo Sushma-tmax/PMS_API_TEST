@@ -2908,21 +2908,34 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
 })
 const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Response) => {
     const { id, appraiser_name, appraiser_code, reviewer_name,
-        reviewer_code, normalizer_name, normalizer_code
+        reviewer_code, normalizer_name, normalizer_code,activeCheckbox
     } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
-
+    let setValues = {};
+    if(activeCheckbox.includes("AppraiserActivation") ){
+        setValues["appraiser_name"] = appraiser_name
+        setValues["appraiser_code"] = appraiser_code
+        }
+    if(activeCheckbox.includes("reviewerActivation")){
+        setValues["reviewer_name"] = reviewer_name
+        setValues["reviewer_code"] = reviewer_code
+            }
+    if(activeCheckbox.includes("normalizerActivation")){
+        setValues["normalizer_name"] = normalizer_name
+        setValues["normalizer_code"] = normalizer_code
+            }
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
-            $set: {
-                "appraiser_name": appraiser_name,
-                "appraiser_code": appraiser_code,
-                "reviewer_name": reviewer_name,
-                "reviewer_code": reviewer_code,
-                "normalizer_name": normalizer_name,
-                "normalizer_code": normalizer_code,
-            }
+            // $set: {
+            //     "appraiser_name": appraiser_name,
+            //     "appraiser_code": appraiser_code,
+            //     "reviewer_name": reviewer_name,
+            //     "reviewer_code": reviewer_code,
+            //     "normalizer_name": normalizer_name,
+            //     "normalizer_code": normalizer_code,
+            // }
+            $set : setValues
         }
     )
     res.status(StatusCodes.OK).json({
@@ -2931,15 +2944,28 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
 })
 
 const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, res: Response) => {
-    const {id} = req.body
-
+    const {id,exception} = req.body
+    let exceptionValues = {};
     // const { employee: appraisal } = await Employee.findById(id);
     console.log(id,"removeBulkEmployeesfromRoleException")
+    if(exception == "Excluded"){
+        exceptionValues["isExcluded"] = false
+    }
+    if(exception == "RoleException"){
+        exceptionValues["isRoleException"] = false
+    }
+    if(exception == "GradeException"){
+        exceptionValues["isGradeException"] = false
+    }
+     if(exception == "CEORole"){
+        exceptionValues["isCEORole"] = false
+    }
+    if(exception == "Leavers"){
+        exceptionValues["isLeavers"] = false
+    }
     const employee = await Employee.updateMany({ _id: { $in: id } },
         [{
-            $set: {
-                "isRoleException": false
-            }
+            $set: exceptionValues
         }]
     )
     res.status(StatusCodes.OK).json({
