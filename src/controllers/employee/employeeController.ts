@@ -2254,7 +2254,7 @@ const attachmentsAppraiser = asyncHandler(async (req: Request, res: Response) =>
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "appraisal.attachments": attachments,
         }
     })
@@ -2269,7 +2269,7 @@ const rejectionAttachmentsAppraiser = asyncHandler(async (req: Request, res: Res
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "appraisal.rejection_attachments": attachments,
         }
     })
@@ -2284,7 +2284,7 @@ const attachmentsAppraiserOverview = asyncHandler(async (req: Request, res: Resp
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "appraisal.attachments": attachments,
         }
     })
@@ -2300,7 +2300,7 @@ const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => 
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "reviewer.attachments": attachments,
         }
     })
@@ -2316,7 +2316,7 @@ const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) =
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "normalizer.attachments": attachments,
         }
     })
@@ -2346,7 +2346,7 @@ const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => 
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $set: {
+        $push: {
             "employee.attachments": attachments,
         }
     })
@@ -2857,7 +2857,8 @@ const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) =
                 "isCEORole": true,
                 "isGradeException": false,
                 "isRoleException": false,
-                "appraisal.pa_status":"accepted",
+                "appraisal.pa_status":"excepted",
+                "appraisal.status":"excepted",
             }
         }
     )
@@ -2878,7 +2879,8 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
                 "isLeavers": true,
                 "isGradeException": false,
                 "isRoleException": false,
-                "appraisal.pa_status":"accepted",
+                "appraisal.status":"excepted",
+                "appraisal.pa_status":"excepted",
             }
         }
     )
@@ -2898,7 +2900,8 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
                 "isExcluded": true,
                 "isGradeException": false,
                 "isRoleException": false,
-                "appraisal.pa_status":"accepted",
+                "appraisal.pa_status":"excepted",
+                "appraisal.status":"excepted",
             }
         }
     )

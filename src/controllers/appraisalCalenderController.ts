@@ -191,11 +191,11 @@ const getAppraisalCalendarForTemplate = asyncHandler(async (req: Request, res: R
     const calenders = await AppraisalCalender.find({
         status: "Draft",
         template: templateId
-    }).sort({ updatedAt: -1 }).count();  
+    }).sort({ updatedAt: -1 }).count();
 
     res.status(StatusCodes.OK).json({
         success: true,
-        data: calenders      
+        data: calenders
     });
 })
 
@@ -450,7 +450,22 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     });
 
     // }
-
+    const exceptedEmployees = await Employee.updateMany({
+        _id: { $in: getName(position) },
+        "isLeavers": true,
+        "isExcluded": true,
+        "isCEORole": true
+    },
+        {
+            $set: {
+                calendar: new mongoose.Types.ObjectId(calendar),
+                appraisal: {
+                    appraiser_status: 'excepted',
+                    status: 'excepted',
+                }
+            }
+        },
+        { multi: true });
     const employee = await Employee.updateMany({
         _id: { $in: getName(position) },
         "isLeavers": false,
@@ -480,18 +495,18 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-                    attachments: [],                    
+                    attachments: [],
 
                 },
-                current_rating : {
-                    overall_rating : 0,
+                current_rating: {
+                    overall_rating: 0,
                 },
 
-                appraisal_previous_rating : {
-                    overall_rating : 0 ,
+                appraisal_previous_rating: {
+                    overall_rating: 0,
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
-                    objective_description: weightage.objective_description,  
+                    objective_description: weightage.objective_description,
                 },
 
                 appraisal_previous_submission: {
@@ -785,11 +800,11 @@ const appraisalCalendarEmployeeValidation = asyncHandler(async (req: Request, re
 
 const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) => {
 
-    const {id}  =  req.body
+    const { id } = req.body
 
-    const calendar = await Calender.findByIdAndUpdate(id, {status: "Closed", isActive: false} )
+    const calendar = await Calender.findByIdAndUpdate(id, { status: "Closed", isActive: false })
 
-    const appraisalCalendar = await AppraisalCalender.updateMany({calendar: id}, {status: "Closed"} )
+    const appraisalCalendar = await AppraisalCalender.updateMany({ calendar: id }, { status: "Closed" })
 
     // const employeeFromCalendar  = await AppraisalCalender.find({_id: appraisal_calendar_id})
     // const employee = employeeFromCalendar.map((data:any) => {
@@ -797,14 +812,14 @@ const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) 
     // }).flat()
 
 
-// @ts-ignore
+    // @ts-ignore
 
-const updatePreviousRating = await Employee.collection.updateMany({}, [{
-    "$set": {
-        "previous_rating":  "$appraisal.pa_rating"
-    }
-}])
-//     const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
+    const updatePreviousRating = await Employee.collection.updateMany({}, [{
+        "$set": {
+            "previous_rating": "$appraisal.pa_rating"
+        }
+    }])
+    //     const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
 
     res.status(StatusCodes.OK).json({
         // calendar,
