@@ -1604,6 +1604,10 @@ const EmployeeSchema = new Schema({
             type: String,
         },
 
+        normalized_Date : {
+            type: Date,            
+        },
+
         normalizer_rejected : {
             type: Boolean,
             default: false
