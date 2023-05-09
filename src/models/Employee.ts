@@ -137,6 +137,30 @@ const EmployeeSchema = new Schema({
     isSupervisor: {
         type: Boolean
     },
+    probation_status : {
+        type : String
+    },
+
+    function : {
+        type : String
+    },
+
+    sub_section: {
+        type: String
+    },
+
+    manager_position : {
+        type : String
+    },
+
+    work_location : {
+        type : String
+    },
+
+    service_reference_date : {
+        type : Date
+    },
+
     manager_code: String,
     manager_name: String,
 
@@ -672,6 +696,7 @@ const EmployeeSchema = new Schema({
         appraiser: Boolean,
         reviewer: Boolean,
         normalizer: Boolean,
+        pa_admin: Boolean,
         employee: Boolean
     },
 

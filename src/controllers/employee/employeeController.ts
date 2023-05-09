@@ -2786,7 +2786,7 @@ const acceptEmployeeGradeException = asyncHandler(async (req: Request, res: Resp
 })
 
 const updateEmployeeRoles = asyncHandler(async (req: Request, res: Response) => {
-    const { id, appraiser,reviewer,normalizer,removeAppraiser,removeReviewer,removeNormalizer } = req.body
+    const { id, appraiser,reviewer,normalizer,removeAppraiser,removeReviewer,removeNormalizer,PaAdmin,removePaAdmin } = req.body
     console.log( id, appraiser,reviewer,normalizer,removeAppraiser,removeReviewer,removeNormalizer,"roles.appraiser")
     // const { employee: appraisal } = await Employee.findById(id);
     let setRolesValue = {};
@@ -2799,6 +2799,9 @@ if(reviewer){
 if(normalizer){
     setRolesValue["roles.normalizer"] = true
         }
+        if(PaAdmin){
+            setRolesValue["roles.pa_admin"] = true
+                }
 
 if(removeAppraiser){
     setRolesValue["roles.appraiser"] = false
@@ -2809,7 +2812,9 @@ if(removeReviewer){
  if(removeNormalizer){
     setRolesValue["roles.normalizer"] = false
    }        
-   
+   if(removePaAdmin){
+    setRolesValue["roles.pa_admin"] = false
+        }  
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set : setRolesValue

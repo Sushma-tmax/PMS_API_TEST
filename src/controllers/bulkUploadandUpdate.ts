@@ -115,13 +115,14 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
         // mapping data to the format required to check if the fields empty
         const mappedFields = data?.map((item) => {
+            console.log(item, 'itemmCheck')
             return {
                 Ecode: item.employee_code,
                 'Employee Name': item.legal_full_name,
                 Position: item.position_long_description,
                 Grade: item.grade,
                 'Probation Status': item.probation_status,
-                // 'Supervisory Role' : item.isSupervisor != undefined ? "SP" : "N-SP",
+                'Supervisory Role' : item.isSupervisor,
                 Function: item.function,
                 'Appraiser Name': item.appraiser_name,
                 'Reviewer Name': item.reviewer_name,
@@ -130,6 +131,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 'Sub-Section': item.sub_section,
                 'Service-Date': item.service_reference_date,
                 Division: item.division,
+                "Manager Code": item.manager_code,
+                "Manager Name" : item.manager_name,
                 'Manager Position': item.manager_position,
                 'Work Location': item.work_location,
                 'Appraiser Code': item.appraiser_code,
@@ -214,6 +217,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             'Appraiser Name',
             'Reviewer Name',
             'Normalizer Name',
+            "Manager Code",
+            'Manager Name',
             'Section',
             // 'Sub-Section',
             // 'Service-Date',
@@ -223,7 +228,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             'Appraiser Code',
             'Reviewer Code',
             'Normalizer Code',
-            'Email Id'
+            // 'Email Id'
         ];
 
 
@@ -249,7 +254,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         // if there are any missing fields , it will throw error with the field names and employee code
         if (missingFields.length > 0) {
             return res.status(400).json({                           
-                     message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.<br>
+                     message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.
                  Missing fields are  ${uniqueFields.map(field => `${field}`).join(', ')}`,          
             });
         }
@@ -257,6 +262,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
         const employees = req.body.data;
         const bulkWriteOps = employees.map((employee) => {
+            console.log(employee, 'employeeeee')
             return {
                 updateOne: {
                     // filter: { employee_code: employee.Ecode },
@@ -296,6 +302,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         Employee.updateMany(
             { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
             {
+              
                 $set: {
                     roles: {
                         appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
@@ -303,6 +310,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                         normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
                     },
                 },
+               
             },
             (err, result) => {
                 if (err) {
