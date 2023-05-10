@@ -254,8 +254,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         // if there are any missing fields , it will throw error with the field names and employee code
         if (missingFields.length > 0) {
             return res.status(400).json({                           
-                     message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.
-                 Missing fields are  ${uniqueFields.map(field => `${field}`).join(', ')}`,          
+                     message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.`
+                //  Missing fields are  ${uniqueFields.map(field => `${field}`).join(', ')},          
             });
         }
 
