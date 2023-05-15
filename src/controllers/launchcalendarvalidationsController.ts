@@ -42,7 +42,7 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
 
     /* Function to check whether appraiser code , reviewer code and normalizer code exists in the employee master
        and if yes then check whether their respective names matches their respective codes */
-    const employeeData = await Employee.find({});
+    const employeeData = await Employee.find({employee_upload_flag : true});
 
     let errorMessage = "";
 
