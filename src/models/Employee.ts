@@ -472,6 +472,10 @@ const EmployeeSchema = new Schema({
     master_reviewer_name: String,
     master_normalizer_code: String,
     master_normalizer_name: String,
+    employee_upload_flag : {
+        type : Boolean,
+        default : false
+    },
     isGradeException: {
         type: Boolean,
         default: false

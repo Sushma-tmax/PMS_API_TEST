@@ -3247,23 +3247,47 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 })
 
+// const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
+
+//     const { employee_code } = req.params
+
+//     const lineManager = await Employee.find({ manager_code: employee_code })
+//     const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
+//     const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOne.map((j: any) => j.employee_code) } })
+//     const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwo.map((j: any) => j.employee_code) } })
+
+//     const Temp = lineManager.map((j: any) => j.employee_code)
+//     res.status(StatusCodes.OK).json({
+//         lineManagerPlusThree,
+//         lineManagerPlusTwo,
+//         lineManagerPlusOne,
+//         lineManager
+//         //Temp
+//     });
+
+// })
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
-
-    const { employee_code } = req.params
-
-    const lineManager = await Employee.find({ manager_code: employee_code })
-
-
-    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManager.map((j: any) => j.employee_code) } })
-    const Temp = lineManager.map((j: any) => j.employee_code)
-
+    const { employee_code } = req.params;
+  
+    const lineManager = await Employee.find({ manager_code: employee_code });
+    const lineManagerIds = lineManager.map((j: any) => j.employee_code);
+  
+    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds } });
+    const lineManagerPlusOneIds = lineManagerPlusOne.map((j: any) => j.employee_code);
+  
+    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds } });
+    const lineManagerPlusTwoIds = lineManagerPlusTwo.map((j: any) => j.employee_code);
+  
+    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds } });
+  
     res.status(StatusCodes.OK).json({
-        lineManagerPlusOne,
-        lineManager
-        //Temp
+      lineManagerPlusThree,
+      lineManagerPlusTwo,
+      lineManagerPlusOne,
+      lineManager
     });
-
-})
+  });
+  
 
 
 const previousAppraisal = asyncHandler(async (req: Request, res: Response) => {

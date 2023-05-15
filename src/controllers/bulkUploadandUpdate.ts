@@ -122,7 +122,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 Position: item.position_long_description,
                 Grade: item.grade,
                 'Probation Status': item.probation_status,
-                'Supervisory Role' : item.isSupervisor,
+                'Supervisory Role': item.isSupervisor,
                 Function: item.function,
                 'Appraiser Name': item.appraiser_name,
                 'Reviewer Name': item.reviewer_name,
@@ -132,7 +132,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 'Service-Date': item.service_reference_date,
                 Division: item.division,
                 "Manager Code": item.manager_code,
-                "Manager Name" : item.manager_name,
+                "Manager Name": item.manager_name,
                 'Manager Position': item.manager_position,
                 'Work Location': item.work_location,
                 'Appraiser Code': item.appraiser_code,
@@ -143,67 +143,67 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
         })
 
-//         const employeeData = await Employee.find({});
-     
-//         let errorMessage = "";
-        
-//         mappedFields.forEach((item: any) => {
-//           const appraiserCode = item['Appraiser Code'];
-//           const appraiserName = item['Appraiser Name'];
-//           const reviewerCode = item['Reviewer Code'];
-//           const reviewerName = item['Reviewer Name'];
-//           const normalizerCode = item['Normalizer Code'];
-//           const normalizerName = item['Normalizer Name'];
+        //         const employeeData = await Employee.find({});
+
+        //         let errorMessage = "";
+
+        //         mappedFields.forEach((item: any) => {
+        //           const appraiserCode = item['Appraiser Code'];
+        //           const appraiserName = item['Appraiser Name'];
+        //           const reviewerCode = item['Reviewer Code'];
+        //           const reviewerName = item['Reviewer Name'];
+        //           const normalizerCode = item['Normalizer Code'];
+        //           const normalizerName = item['Normalizer Name'];
 
 
-//             //  check if appraiser code / reviewer code / normalizer codes exist
-//          const employeeWithAppraiserCode = employeeData.find((employee) => employee.appraiser_code == appraiserCode)
-//          const employeeWithReviewerCode = employeeData.find((employee) => employee.reviewer_code == reviewerCode)
-//          const employeeWithNormalizerCode = employeeData.find((employee) => employee.normalizer_code == normalizerCode)
+        //             //  check if appraiser code / reviewer code / normalizer codes exist
+        //          const employeeWithAppraiserCode = employeeData.find((employee) => employee.appraiser_code == appraiserCode)
+        //          const employeeWithReviewerCode = employeeData.find((employee) => employee.reviewer_code == reviewerCode)
+        //          const employeeWithNormalizerCode = employeeData.find((employee) => employee.normalizer_code == normalizerCode)
 
-//         //  to check if appraiser code exists and if yes , then check if appraiser name is correct 
-//          if (employeeWithAppraiserCode) {
-//             const employeeAppraiserName = employeeWithAppraiserCode.appraiser_name;
-        
-//             if (employeeAppraiserName !== appraiserName) {
-//               errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${appraiserCode}'.\n`;
-//             }
-//           } else {
-//             errorMessage += `Appraiser code '${appraiserCode}' does not exist.\n`;
-//           }
+        //         //  to check if appraiser code exists and if yes , then check if appraiser name is correct 
+        //          if (employeeWithAppraiserCode) {
+        //             const employeeAppraiserName = employeeWithAppraiserCode.appraiser_name;
 
-//         //  to check if reviewer code exists and if yes , then check if reviewer name is correct 
+        //             if (employeeAppraiserName !== appraiserName) {
+        //               errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${appraiserCode}'.\n`;
+        //             }
+        //           } else {
+        //             errorMessage += `Appraiser code '${appraiserCode}' does not exist.\n`;
+        //           }
 
-//          if (employeeWithReviewerCode) {
-//             const employeeReviewerName = employeeWithReviewerCode.reviewer_name;
-        
-//             if (employeeReviewerName !== reviewerName) {
-//               errorMessage += `Reviewer name '${reviewerName}' is not correct for employee code '${reviewerCode}'.\n`;
-//             }
-//           } else {
-//             errorMessage += `Reviewer code '${reviewerCode}' does not exist.\n`;
-//           }
+        //         //  to check if reviewer code exists and if yes , then check if reviewer name is correct 
 
-//         //  to check if normalizer code exists and if yes , then check if normalizer name is correct 
+        //          if (employeeWithReviewerCode) {
+        //             const employeeReviewerName = employeeWithReviewerCode.reviewer_name;
 
-//          if (employeeWithNormalizerCode) {
-//             const employeeNormalizerName = employeeWithNormalizerCode.normalizer_name;
-        
-//             if (employeeNormalizerName !== normalizerName) {
-//               errorMessage += `Normalizer name '${normalizerName}' is not correct for employee code '${normalizerCode}'.\n`;
-//             }
-//           } else {
-//             errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
-//           }
-//         });
-        
-//         if (errorMessage !== "") {
-//           // If any of the codes do not exist in the database, throw an error with the error message
-//           return res.status(400).json({                           
-//             message: errorMessage,          
-//    });
-       
-//         } 
+        //             if (employeeReviewerName !== reviewerName) {
+        //               errorMessage += `Reviewer name '${reviewerName}' is not correct for employee code '${reviewerCode}'.\n`;
+        //             }
+        //           } else {
+        //             errorMessage += `Reviewer code '${reviewerCode}' does not exist.\n`;
+        //           }
+
+        //         //  to check if normalizer code exists and if yes , then check if normalizer name is correct 
+
+        //          if (employeeWithNormalizerCode) {
+        //             const employeeNormalizerName = employeeWithNormalizerCode.normalizer_name;
+
+        //             if (employeeNormalizerName !== normalizerName) {
+        //               errorMessage += `Normalizer name '${normalizerName}' is not correct for employee code '${normalizerCode}'.\n`;
+        //             }
+        //           } else {
+        //             errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
+        //           }
+        //         });
+
+        //         if (errorMessage !== "") {
+        //           // If any of the codes do not exist in the database, throw an error with the error message
+        //           return res.status(400).json({                           
+        //             message: errorMessage,          
+        //    });
+
+        //         } 
 
         //  required fields are the mandatory fields 
         const requiredFields = [
@@ -251,26 +251,29 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         // to remove duplicate field values
         const uniqueFields = [...new Set(missingFields)];
 
-        // if there are any missing fields , it will throw error with the field names and employee code
+        /* if there are any missing fields , it will throw error with the field names and employee code */
         if (missingFields.length > 0) {
-            return res.status(400).json({                           
-                     message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.`
-                //  Missing fields are  ${uniqueFields.map(field => `${field}`).join(', ')},          
+            return res.status(400).json({    
+                message: `Mandatory fields are missing : ${uniqueFields.map(field => `${field}`).join(', ')}.`                       
+                //      message: `Mandatory fields are missing for the employees : ${missingEmployeeCodes.map(field => `${field}  `)}.`
+                // //  Missing fields are  ${uniqueFields.map(field => `${field}`).join(', ')},                          
+                       
             });
         }
 
 
         const employees = req.body.data;
-        const bulkWriteOps = employees.map((employee) => {
-            console.log(employee, 'employeeeee')
-            return {
-                updateOne: {
-                    // filter: { employee_code: employee.Ecode },
-                    filter: { employee_code: employee.employee_code },
-                    update: employee,
-                    upsert: true,
-                },
-            };
+        const bulkWriteOps = employees.map((employee) => {          
+            if (employee.employee_upload_flag == true) {
+                return {
+                    updateOne: {
+                        // filter: { employee_code: employee.Ecode },
+                        filter: { employee_code: employee.employee_code },
+                        update: employee,
+                        upsert: true,
+                    },
+                };
+            }
         });
 
 
@@ -282,47 +285,134 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 
 
-        const appraiserCodes = data
-            .filter((employee) => employee.AppraiserCode)
-            .map((employee) => employee.Ecode);
+        // const appraiserCodes = data
+        //     .filter((employee) => employee.AppraiserCode)
+        //     .map((employee) => employee.Ecode);
 
 
 
-        const reviewerCodes = data
-            .filter((employee) => employee.ReviewerCode)
-            .map((employee) => employee.Ecode);
+        // const reviewerCodes = data
+        //     .filter((employee) => employee.ReviewerCode)
+        //     .map((employee) => employee.Ecode);
 
 
 
-        const normalizerCodes = data
-            .filter((employee) => employee.NormalizerCode)
-            .map((employee) => employee.Ecode);
+        // const normalizerCodes = data
+        //     .filter((employee) => employee.NormalizerCode)
+        //     .map((employee) => employee.Ecode);
 
 
-        Employee.updateMany(
-            { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
-            {
-              
-                $set: {
-                    roles: {
-                        appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
-                        reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
-                        normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
-                    },
+        // Employee.updateMany(
+        //     { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
+        //     {
+
+        //         $set: {
+        //             roles: {
+        //                 employee: true,
+        //                 appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
+        //                 reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
+        //                 normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
+        //             },
+        //         },
+
+        //     },
+        //     (err, result) => {
+        //         if (err) {
+        //             console.error(err);
+        //             return;
+        //         }
+
+
+
+        //         console.log(`${result.nModified} employees updated successfully.`);
+        //     }
+        // );
+       
+        /* Assigning roles as Appraiser , Reviewer or Normalizer  */
+        const appraiserCodes = data.filter(employee => employee.appraiser_code !== null)
+            .map(employee => employee.appraiser_code);
+        const reviewerCodes = data.filter(employee => employee.reviewer_code !== null)
+            .map(employee => employee.reviewer_code);
+        const normalizerCodes = data.filter(employee => employee.normalizer_code !== null)
+            .map(employee => employee.normalizer_code);
+
+        await Employee.updateMany({ employee_code: { $in: appraiserCodes } },
+            { $set: { 'roles.appraiser': true } });
+        await Employee.updateMany({ employee_code: { $in: reviewerCodes } },
+            { $set: { 'roles.reviewer': true } });
+        await Employee.updateMany({ employee_code: { $in: normalizerCodes } },
+            { $set: { 'roles.normalizer': true } });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+const clearEmployeeMasterUpdate = asyncHandler(async (req: Request, res: Response) => {
+    try {
+
+        /* Check if required fields are present in the request body */
+            
+        const employees = req.body.data;
+        const bulkWriteOps = employees.map((employee) => {
+            return {
+                updateOne: {                    
+                    filter: { employee_code: employee.employee_code },
+                    update: employee,
+                    upsert: true,
                 },
-               
-            },
-            (err, result) => {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
+            };
+        });
+
+        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
+
+        res
+            .status(200)
+            .json({ message: 'Employees updated or added successfully', result });
 
 
 
-                console.log(`${result.nModified} employees updated successfully.`);
-            }
-        );
+        // const appraiserCodes = data
+        //     .filter((employee) => employee.AppraiserCode)
+        //     .map((employee) => employee.Ecode);
+
+
+
+        // const reviewerCodes = data
+        //     .filter((employee) => employee.ReviewerCode)
+        //     .map((employee) => employee.Ecode);
+
+
+
+        // const normalizerCodes = data
+        //     .filter((employee) => employee.NormalizerCode)
+        //     .map((employee) => employee.Ecode);
+
+
+        // Employee.updateMany(
+        //     { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
+        //     {
+
+        //         $set: {
+        //             roles: {
+        //                 appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
+        //                 reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
+        //                 normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
+        //             },
+        //         },
+
+        //     },
+        //     (err, result) => {
+        //         if (err) {
+        //             console.error(err);
+        //             return;
+        //         }
+
+
+
+        //         console.log(`${result.nModified} employees updated successfully.`);
+        //     }
+        // );
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -332,7 +422,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 export {
     updateEmployees,
-    updateEmployee
+    updateEmployee,
+    clearEmployeeMasterUpdate
 }
 
 
