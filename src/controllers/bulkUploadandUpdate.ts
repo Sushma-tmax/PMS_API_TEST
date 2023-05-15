@@ -263,8 +263,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
 
         const employees = req.body.data;
-        const bulkWriteOps = employees.map((employee) => {          
-            if (employee.employee_upload_flag == true) {
+        const bulkWriteOps = employees.map((employee) => {        
+           
                 return {
                     updateOne: {
                         // filter: { employee_code: employee.Ecode },
@@ -273,7 +273,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                         upsert: true,
                     },
                 };
-            }
+            
         });
 
 
@@ -357,9 +357,9 @@ const clearEmployeeMasterUpdate = asyncHandler(async (req: Request, res: Respons
         const bulkWriteOps = employees.map((employee) => {
             return {
                 updateOne: {                    
-                    filter: { employee_code: employee.employee_code },
+                    filter: { employee_code: employee.employee_code , employee_upload_flag : true },
                     update: employee,
-                    upsert: true,
+                    upsert: false,
                 },
             };
         });
