@@ -450,11 +450,11 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
     //     });
 
     // }
+    const exceptionEmployees = position?.filter((i: any) => {
+        return i.isExcluded === true || i.isLeavers === true || i.isCEORole === true
+    })
     const exceptedEmployees = await Employee.updateMany({
-        _id: { $in: getName(position) },
-        "isLeavers": true,
-        "isExcluded": true,
-        "isCEORole": true
+        _id: { $in: getName(exceptionEmployees) },              
     },
         {
             $set: {
@@ -597,6 +597,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
         calendar,
         filterExceptions,
         rating: ratingScale,
+        exceptedEmployees
         // prob:probationEmployee
     });
 }

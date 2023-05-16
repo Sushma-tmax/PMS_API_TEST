@@ -3277,22 +3277,23 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
     const { employee_code } = req.params;
 
-    const lineManager = await Employee.find({ manager_code: employee_code });
+    const lineManager = await Employee.find({ manager_code: employee_code,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
     const lineManagerIds = lineManager.map((j: any) => j.employee_code);
 
-    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds } });
+    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds },employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
     const lineManagerPlusOneIds = lineManagerPlusOne.map((j: any) => j.employee_code);
 
-    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds } });
+    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds } ,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
     const lineManagerPlusTwoIds = lineManagerPlusTwo.map((j: any) => j.employee_code);
 
-    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds } });
+    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds } ,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
 
     res.status(StatusCodes.OK).json({
         lineManagerPlusThree,
         lineManagerPlusTwo,
         lineManagerPlusOne,
-        lineManager
+        lineManager,
+        lineManagerIds,lineManagerPlusOneIds,lineManagerPlusTwoIds
     });
 });
 
