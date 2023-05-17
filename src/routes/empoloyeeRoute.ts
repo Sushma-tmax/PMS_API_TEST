@@ -157,7 +157,7 @@ router.patch('/employee-attachments/:id', attachmentsEmployee)
 router.patch('/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
 router.get('/lineManagerEmployee/:employee_code', lineManagerEmployee)
-router.get('/lineManagerPlusOneEmployee/:employee_code', lineManagerPlusOneEmployee)
+router.get('/lineManagerPlusOneEmployee/:employee_code/:calId', lineManagerPlusOneEmployee)
 router.post('/updateSubSection',updateSubsectionForEmployees)
 
 

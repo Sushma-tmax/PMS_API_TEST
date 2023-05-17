@@ -3275,18 +3275,18 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 // })
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const { employee_code } = req.params;
-
-    const lineManager = await Employee.find({ manager_code: employee_code,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
+    const { employee_code,calId } = req.params;
+    console.log(employee_code,calId,"lineManagerPlusOneEmployeeConsoled")
+    const lineManager = await Employee.find({ manager_code: employee_code,calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
     const lineManagerIds = lineManager.map((j: any) => j.employee_code);
 
-    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds },employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
+    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
     const lineManagerPlusOneIds = lineManagerPlusOne.map((j: any) => j.employee_code);
 
-    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds } ,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
+    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
     const lineManagerPlusTwoIds = lineManagerPlusTwo.map((j: any) => j.employee_code);
 
-    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds } ,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
+    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
 
     res.status(StatusCodes.OK).json({
         lineManagerPlusThree,
