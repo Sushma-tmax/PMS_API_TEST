@@ -213,7 +213,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             'Grade',
             'Probation Status',
             // 'Supervisory Role',
-            // 'Function',
+            'Function',
             'Appraiser Name',
             'Reviewer Name',
             'Normalizer Name',
@@ -342,6 +342,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             { $set: { 'roles.reviewer': true } });
         await Employee.updateMany({ employee_code: { $in: normalizerCodes } },
             { $set: { 'roles.normalizer': true } });
+
+            console.log(Employee, 'Employeeeee')
 
     } catch (err) {
         res.status(500).json({ message: err.message });
