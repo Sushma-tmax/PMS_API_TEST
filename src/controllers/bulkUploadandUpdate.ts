@@ -212,7 +212,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             'Position',
             'Grade',
             'Probation Status',
-            // 'Supervisory Role',
+            'Supervisory Role',
             'Function',
             'Appraiser Name',
             'Reviewer Name',
