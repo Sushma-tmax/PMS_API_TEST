@@ -239,7 +239,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         mappedFields?.forEach((item) => {
             // checking only the required fields from the mappedFields which is having data in same format.
             requiredFields?.forEach((field) => {
-                if (item[field] == undefined || item[field] == null || item[field] == "")
+                if (item[field] === undefined || item[field] === null || item[field] === "")
                     // adding that field as missing field if value is undefined or empty
                     missingFields?.push(field);
                 if (field === "Ecode") {
