@@ -2610,7 +2610,7 @@ const getUnMappedEmployee = asyncHandler(async (req: Request, res: Response) => 
         // getEmployeefromAppraisalCalendar,
         //   newArray,
         //     employeeId
-        //     getEmployee,
+            getEmployee,
         data: myArray,
         getEmployeefromAppraisalCalendar
     });
