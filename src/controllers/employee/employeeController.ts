@@ -3408,6 +3408,9 @@ const updateSubsectionForEmployees = asyncHandler(async (req: Request, res: Resp
 
 })
 
+
+
+
 export {
     createEmployee,
     getAllEmployees,
@@ -3484,6 +3487,7 @@ export {
     getAllMappedEmployee,
     updateSubsectionForEmployees,
     removeBulkEmployeesfromRoleException,
-    updateEmployeeRoles
+    updateEmployeeRoles,
+ 
 
 }

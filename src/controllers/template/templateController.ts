@@ -6,6 +6,7 @@ import template from "../../models/Template";
 import mongoose from "mongoose";
 import { BadRequestError } from "../../errors";
 import AppraisalCalender from "../../models/AppraisalCalender";
+import Calender from "../../models/Calender";
 
 const createTemplate = asyncHandler(async (req: Request, res: Response) => {
     const {name} = req.body
@@ -25,14 +26,15 @@ const createTemplate = asyncHandler(async (req: Request, res: Response) => {
 
 const deleteTemplate = asyncHandler(async (req: Request, res: Response) => {
 
-
+    const calendar = await AppraisalCalender.findOne({template: req.params.id})
     const ifExist = await AppraisalCalender.exists({template: req.params.id})
+    console.log(calendar,"deleteTemplateconsole")
 
-
-    if(ifExist) {
+    if(ifExist && calendar) {
+        const calendarName = await Calender.findOne(calendar.calendar) 
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            error: "This Template is used in the performance appraisal and cannot be deleted."
+            error: `This Template  is used for ${calendarName?.name} in the performance appraisal and cannot be deleted.`
         });
     }
 
