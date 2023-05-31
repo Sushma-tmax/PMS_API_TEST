@@ -500,6 +500,17 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 },
                 current_rating: {
                     overall_rating: 0,
+                    objective_group: weightage.objective_group,
+                    objective_type: weightage.objective_type,
+                    objective_description: weightage.objective_description,
+                },
+
+
+                current_previous_submission: {
+                    overall_rating: 0,
+                    objective_group: weightage.objective_group,
+                    objective_type: weightage.objective_type,
+                    objective_description: weightage.objective_description,
                 },
 
                 appraisal_previous_rating: {

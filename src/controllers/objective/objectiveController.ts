@@ -438,6 +438,22 @@ const createObjective = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+const toggleObjectiveTitle = asyncHandler(async (req, res) => {
+    const { objectiveTitleId , objectiveTitle} = req.body;   
+      const template = await Template.findOne({
+        'weightage.objective_description.name': objectiveTitleId
+      }).sort({ updatedAt: -1 });
+    
+        res.status(StatusCodes.OK).json({
+          template,
+          success: true,
+          message: `${objectiveTitle} exists in the ${template.name}.  `
+        })       
+  });
+  
+
+
+
 
 export {
     createObjectiveGroup,
@@ -461,5 +477,6 @@ export {
     deleteObjectiveTitle,
     getAllObjectiveTitles,
     getObjectiveTitle,
-    updateObjectiveTitle
+    updateObjectiveTitle,
+    toggleObjectiveTitle
 };

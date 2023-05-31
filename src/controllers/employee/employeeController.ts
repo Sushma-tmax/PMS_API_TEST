@@ -569,6 +569,31 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
                 mode: 'ObjectiveGroup'
             }
         })
+        .populate({
+            path: 'current_previous_submission',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'current_previous_submission',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'current_previous_submission',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'current_previous_submission',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
 
     const fun = (test: any) => {
         return "www.google.com" + test
@@ -2107,7 +2132,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         previousRating,
         talentCategory,
         employeeObjectiveDescription,
-        current_overallRating } = req.body
+        current_overallRating,
+        current_previous_submission } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
 
@@ -2131,6 +2157,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "employee.employee_status": "accepted",
             "appraisal.appraiser_rating": current_overallRating,
             "appraisal_previous_rating.objective_description": previousRating,
+            "current_previous_submission.objective_description": current_previous_submission,
 
 
         }
@@ -2218,7 +2245,8 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         talentCategory,
         meetingNotes,
         normalizerComments,
-        normalizerObjDesc } = req.body
+        normalizerObjDesc,
+        current_previous_submission } = req.body
     console.log(talentCategory, 'talentCategory')
 
     const { employee, normalizer } = await Employee.findById(id)
@@ -2238,7 +2266,8 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
             // "employee.employee_rating": normalizer.normalizer_rating,
             "normalizer.normalizer_status": "re-normalized",
             "normalizer.normalizer_rating": current_OverAllRating,
-            "talent_category": talentCategory
+            "talent_category": talentCategory,
+            "current_previous_submission.objective_description": current_previous_submission,
         }
     })
     res.status(StatusCodes.OK).json({

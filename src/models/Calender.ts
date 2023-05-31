@@ -109,7 +109,7 @@ const CalenderSchema = new Schema({
         },   
         status:{
             type: String,
-            default : "draft"
+            default : "Draft"
         },
         calendar_type:{
             type: String,

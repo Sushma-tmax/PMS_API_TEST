@@ -1325,6 +1325,67 @@ const EmployeeSchema = new Schema({
         }],       
     },
 
+    current_previous_submission: {
+      
+        overall_rating: {
+             type: Number,
+             default: 0
+         },
+         objective_description: [{
+             name: {
+                 type: Schema.Types.ObjectId,
+                 ref: "ObjectiveDescription",
+                 required: true
+             },
+             value: {
+                 type: Number,
+             },
+             attachments: {
+                 type: String,
+             },
+             ratings: {
+                 type: Schema.Types.ObjectId,
+                 ref: "RatingScaleDescription",
+             },
+             rejection_reason: {
+                 type: String,
+             },
+             rating_rejected: {
+                 type: Boolean,
+                 default: false
+             },
+             action_performed: {
+                 type: Boolean,
+                 default: false
+             },
+             rating_value: {
+                 type: Number,
+             },
+             comments: {
+                 type: String,
+             },
+             rating_comments: {
+                 type: String,
+             },
+             level_1_isChecked: {
+                 type: Boolean,
+                 default: false
+             },
+             level_2_isChecked: {
+                 type: Boolean,
+                 default: false
+             },
+             level_3_isChecked: {
+                 type: Boolean,
+                 default: false
+             },
+             level_4_isChecked: {
+                 type: Boolean,
+                 default: false
+             },
+         }],       
+     },
+
     // "specific_actions": [{
     //     "value": "test1",
     //     "value": "test2",

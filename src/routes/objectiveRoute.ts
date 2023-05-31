@@ -22,6 +22,7 @@ import {
     deleteObjectiveTitle,
     createObjectiveTitle,
     updateObjectiveTitle,
+    toggleObjectiveTitle,
 
 } from "../controllers/objective/objectiveController";
 
@@ -57,7 +58,9 @@ router.get('/objective-title', getAllObjectiveTitles)
 router.get('/objective-title/:id', getObjectiveTitle)
 router.delete('/objective-title/:id', deleteObjectiveTitle)
 router.patch('/objective-title/:id', updateObjectiveTitle)
+router.post('/objective-title/toggle-objectiveTitle', toggleObjectiveTitle)
 
 
 router.post('/objective', createObjective)
+
 export default router
