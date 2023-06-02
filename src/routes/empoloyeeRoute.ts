@@ -80,6 +80,8 @@ import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
+
+router.get('/lineManagerPlusOneEmployee/:employee_code/:calId', lineManagerPlusOneEmployee)
 router.post('/updateEmployeeRoles',updateEmployeeRoles)
 router.patch('/remove-BulkEmployee-Roleexception', removeBulkEmployeesfromRoleException)
 router.post('/prevvvvv',addEmployeestoPrevioisAppraisal)
@@ -158,7 +160,6 @@ router.patch('/employee-attachments/:id', attachmentsEmployee)
 router.patch('/calculate/ratings', calculateRatings)
 router.get('/employee-manager-code/:code', filterEmployeeByManagerCode)
 router.get('/lineManagerEmployee/:employee_code', lineManagerEmployee)
-router.get('/lineManagerPlusOneEmployee/:employee_code/:calId', lineManagerPlusOneEmployee)
 router.post('/updateSubSection',updateSubsectionForEmployees)
 
 
