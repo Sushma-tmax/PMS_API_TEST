@@ -630,6 +630,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
 
     // @ts-ignore
     employee?.reviewer?.attachments = employee.reviewer.attachments.map((j: any) => {
+        console.log('removeReviewerAttachments2')
         // const at : {
         //
         // }
@@ -1278,7 +1279,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
 
 // const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
-    const { id, appraisal_objective_description, current_overallRating, current_previous_submission  } = req.body
+    const { id, appraisal_objective_description, current_overallRating, current_previous_submission } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal } = await Employee.findById(id);
@@ -1311,7 +1312,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizerIsDisabled": false,
                 "normalizerIsChecked": false,
                 "normalizer.normalizer_status": 'pending',
-                "current_previous_submission.objective_description" : current_previous_submission,
+                "current_previous_submission.objective_description": current_previous_submission,
                 // "normalizer.normalizer_rating" : current_overallRating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
             }
@@ -1325,7 +1326,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
 
 // reviewer accepts appraiser after employee rejection
 const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
-    const { id, current_overallRating, talentCategory,current_previous_submission } = req.body
+    const { id, current_overallRating, talentCategory, current_previous_submission } = req.body
     console.log(id, '`````````````````````````````````````````````````')
 
     const { appraisal, reviewer, normalizer } = await Employee.findById(id);
@@ -2321,7 +2322,7 @@ const attachmentsAppraiserOverview = asyncHandler(async (req: Request, res: Resp
     console.log(attachments)
 
     const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
+        $set: {
             "appraisal.attachments": attachments,
         }
     })
@@ -2330,19 +2331,55 @@ const attachmentsAppraiserOverview = asyncHandler(async (req: Request, res: Resp
 
 
 const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { attachments } = req.body;
 
-    const { id } = req.params
+    try {
+        // Find the employee by id
+        let employee: any = await Employee.findById(id);
 
-    const { attachments } = req.body
-    console.log(attachments)
+        if (employee) {
+            let reviewerAttachments = employee?.reviewer?.attachments;
 
-    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
-            "reviewer.attachments": attachments,
+            // Update existing attachment with the same objective description and url
+            reviewerAttachments = reviewerAttachments.map((item: any) => {
+                if (item.objective_description === attachments?.objective_description && item?.name === attachments?.url) {
+                    return attachments;
+                } else {
+                    return item;
+                }
+            });
+
+            // Check if the attachment already exists
+            const isAttachmentExist = reviewerAttachments.find((item: any) => {
+                console.log(item, attachments?.url, 'isAttachmentExist')
+                return item.objective_description === attachments.objective_description && item?.url === attachments?.url
+            });
+
+            if (!isAttachmentExist) {
+                // Push the new attachment
+                reviewerAttachments.push(attachments);
+            }
+
+            // Update the employee document
+            employee.reviewer.attachments = reviewerAttachments;
+            const updatedEmployee = await employee.save();
+
+            console.log(updatedEmployee);
+
+
+
+            // Return the updatedEmployee or any other response as needed
+            res.status(200).json({ message: "Employee attachments updated successfully", employee: updatedEmployee });
+        } else {
+            // Employee not found
+            res.status(404).json({ message: "Employee not found" });
         }
-    })
-    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
-})
+    } catch (error) {
+        // Handle the error
+        res.status(500).json({ message: "Error updating employee attachments", error: error.message });
+    }
+});
 
 
 const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) => {
@@ -2352,12 +2389,51 @@ const attachmentsNormalizer = asyncHandler(async (req: Request, res: Response) =
     const { attachments } = req.body
     console.log(attachments)
 
-    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
-            "normalizer.attachments": attachments,
+    try {
+        // Find the employee by id
+        let employee: any = await Employee.findById(id);
+
+        if (employee) {
+            let normalizerAttachments = employee?.normalizer?.attachments;
+
+            // Update existing attachment with the same objective description and url
+            normalizerAttachments = normalizerAttachments.map((item: any) => {
+                if (item.objective_description === attachments?.objective_description && item?.name === attachments?.url) {
+                    return attachments;
+                } else {
+                    return item;
+                }
+            });
+
+            // Check if the attachment already exists
+            const isAttachmentExist = normalizerAttachments.find((item: any) => {
+                console.log(item, attachments?.url, 'isAttachmentExist')
+                return item.objective_description === attachments.objective_description && item?.url === attachments?.url
+            });
+
+            if (!isAttachmentExist) {
+                // Push the new attachment
+                normalizerAttachments.push(attachments);
+            }
+
+            // Update the employee document
+            employee.normalizer.attachments = normalizerAttachments;
+            const updatedEmployee = await employee.save();
+
+            console.log(updatedEmployee);
+
+
+
+            // Return the updatedEmployee or any other response as needed
+            res.status(200).json({ message: "Employee attachments updated successfully", employee: updatedEmployee });
+        } else {
+            // Employee not found
+            res.status(404).json({ message: "Employee not found" });
         }
-    })
-    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+    } catch (error) {
+        // Handle the error
+        res.status(500).json({ message: "Error updating employee attachments", error: error.message });
+    }
 })
 
 
@@ -2382,12 +2458,51 @@ const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => 
     const { attachments } = req.body
     console.log(attachments)
 
-    const updatedEmployee = await Employee.findByIdAndUpdate(id, {
-        $push: {
-            "employee.attachments": attachments,
+    try {
+        // Find the employee by id
+        let employee: any = await Employee.findById(id);
+
+        if (employee) {
+            let employeeAttachments = employee?.employee?.attachments;
+
+            // Update existing attachment with the same objective description and url
+            employeeAttachments = employeeAttachments.map((item: any) => {
+                if (item.objective_description === attachments?.objective_description && item?.name === attachments?.url) {
+                    return attachments;
+                } else {
+                    return item;
+                }
+            });
+
+            // Check if the attachment already exists
+            const isAttachmentExist = employeeAttachments.find((item: any) => {
+                console.log(item, attachments?.url, 'isAttachmentExist')
+                return item.objective_description === attachments.objective_description && item?.url === attachments?.url
+            });
+
+            if (!isAttachmentExist) {
+                // Push the new attachment
+                employeeAttachments.push(attachments);
+            }
+
+            // Update the employee document
+            employee.employee.attachments = employeeAttachments;
+            const updatedEmployee = await employee.save();
+
+            console.log(updatedEmployee);
+
+
+
+            // Return the updatedEmployee or any other response as needed
+            res.status(200).json({ message: "Employee attachments updated successfully", employee: updatedEmployee });
+        } else {
+            // Employee not found
+            res.status(404).json({ message: "Employee not found" });
         }
-    })
-    res.status(StatusCodes.OK).json({ "message": updatedEmployee });
+    } catch (error) {
+        // Handle the error
+        res.status(500).json({ message: "Error updating employee attachments", error: error.message });
+    }
 })
 
 
@@ -2749,18 +2864,24 @@ const removeAppraiserAttachmentsOverview = asyncHandler(async (req: Request, res
 
 
 const removeReviewerAttachments = asyncHandler(async (req: Request, res: Response) => {
+  
 
     const { id } = req.params
-    const { name } = req.body
+    const { name, objective_description } = req.body
+
+    console.log('removeReviewerAttachments1', req.body)
 
     const updatedCalendar = await Employee.findByIdAndUpdate(id,
         {
             $pull: {
-                "reviewer.attachments": { "url": name },
+                "reviewer.attachments": { "url": name, "objective_description" : objective_description },
             }
         }, { new: true, multi: true }
     )
-    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+    res.status(StatusCodes.OK).json({
+        "message": updatedCalendar,
+        "request": req.body
+    });
 
 })
 
@@ -3308,25 +3429,25 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 
 // })
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const { employee_code,calId } = req.params;
-    console.log(employee_code,calId,"lineManagerPlusOneEmployeeConsoled")
-    const lineManager = await Employee.find({ manager_code: employee_code,calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
+    const { employee_code, calId } = req.params;
+    console.log(employee_code, calId, "lineManagerPlusOneEmployeeConsoled")
+    const lineManager = await Employee.find({ manager_code: employee_code, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
     const lineManagerIds = lineManager.map((j: any) => j.employee_code);
 
-    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" } });
+    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
     const lineManagerPlusOneIds = lineManagerPlusOne.map((j: any) => j.employee_code);
 
-    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
+    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
     const lineManagerPlusTwoIds = lineManagerPlusTwo.map((j: any) => j.employee_code);
 
-    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds },calendar:calId,employee_upload_flag: true,"appraisal.status": { $ne: "excepted" }});
+    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
 
     res.status(StatusCodes.OK).json({
         lineManagerPlusThree,
         lineManagerPlusTwo,
         lineManagerPlusOne,
         lineManager,
-        lineManagerIds,lineManagerPlusOneIds,lineManagerPlusTwoIds
+        lineManagerIds, lineManagerPlusOneIds, lineManagerPlusTwoIds
     });
 });
 
@@ -3521,6 +3642,6 @@ export {
     updateSubsectionForEmployees,
     removeBulkEmployeesfromRoleException,
     updateEmployeeRoles,
- 
+
 
 }
