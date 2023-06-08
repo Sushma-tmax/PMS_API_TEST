@@ -161,7 +161,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             // 'Sub-Section',
             // 'Service-Date',
             'Division',
-            // 'Manager Position',
+            'Manager Position',
             'Work Location',
             'Appraiser Code',
             'Reviewer Code',
@@ -183,7 +183,8 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                   (field === "Appraiser Name" || field === "Appraiser Code" ||
                    field === "Reviewer Name" || field === "Reviewer Code" ||
                    field === "Normalizer Name" || field === "Normalizer Code" ||
-                   field === "Manager Name" || field === "Manager Code" ))) {
+                   field === "Manager Name" || field === "Manager Code" ||
+                   field === "Manager Position" || field === "Manager Position" ))) {
                     missingFields?.push(field);
                   }
                 }

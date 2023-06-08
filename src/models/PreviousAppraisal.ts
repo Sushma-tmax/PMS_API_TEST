@@ -87,6 +87,9 @@ const PreviousAppraisal = new Schema({
     overall_rating: {
         type: Number
     },
+    rating_scale : {
+        type: Array,
+    },
     talent_category : {
         type: String,
     },

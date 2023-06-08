@@ -3167,7 +3167,8 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
         reviewer_objective_description,
         value,
         remarks,
-        potential
+        potential,
+        current_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -3194,7 +3195,8 @@ const appraiserAcceptsReviewerRating = asyncHandler(async (req: Request, res: Re
                 "appraisal.objective_description.$[description].action_performed": action_performed,
                 "appraisal.objective_description.$[description].remarks": remarks,
                 "reviewer.objective_description": reviewer_objective_description,
-                "appraisal.potential": potential
+                "appraisal.potential": potential,
+                "current_rating.objective_description" : current_objective_description
             }
         },
         {
@@ -3228,7 +3230,8 @@ const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
         objective_description,
         value,
         comments,
-        appraiser_objective_description
+        appraiser_objective_description,
+        current_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -3251,7 +3254,8 @@ const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
                 "reviewer.objective_description.$[description].action_performed": action_performed,
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
-                "appraisal.objective_description": appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description,
+                "current_rating.objective_description" : current_objective_description
             }
         },
         {
