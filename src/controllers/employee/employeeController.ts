@@ -3294,7 +3294,8 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
         remarks,
         employee_objective_description,
         pa_status,
-        appraiser_status
+        appraiser_status,
+        current_objective_description
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -3323,7 +3324,8 @@ const appraiserAcceptsEmployeeRating = asyncHandler(async (req: Request, res: Re
                 "employee.objective_description": employee_objective_description,
                 "appraisal.appraiser_rating": false,
                 "appraisal.pa_status": pa_status,
-                "appraisal.appraiser_status": appraiser_status
+                "appraisal.appraiser_status": appraiser_status,
+                "current_rating.objective_description" : current_objective_description
             }
         },
         {
@@ -3353,7 +3355,8 @@ const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
         action_performed,
         objective_description_name,
         objective_description,
-        appraiser_objective_description
+        appraiser_objective_description,
+        current_objective_description
     } = req.body
 
     console.log(ratings,
@@ -3379,7 +3382,8 @@ const employeeAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
                 "employee.objective_description.$[description].rejection_reason": rejection_reason,
                 "employee.objective_description.$[description].rating_rejected": rating_rejected,
                 "employee.objective_description.$[description].action_performed": action_performed,
-                "appraisal.objective_description": appraiser_objective_description
+                "appraisal.objective_description": appraiser_objective_description,
+                "current_rating.objective_description" : current_objective_description,
 
             }
         },
