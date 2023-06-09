@@ -73,7 +73,10 @@ import {
     getAllMappedEmployee,
     updateSubsectionForEmployees,
     removeBulkEmployeesfromRoleException,
-    updateEmployeeRoles,  
+    updateEmployeeRoles,
+    acceptReviewerBulk,
+    acceptNormalizerBulk,
+    acceptNormalizerGradeExceptionBulk,  
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
@@ -102,10 +105,13 @@ router.get('/reviewer-status/:status', appraisalStatusReviewer)
 router.get('/normalizer-status/:status', appraisalStatusNormalizer)
 router.patch('/reject-normalizer-values/:id',rejectedNormalizerValues )
  router.patch('/accept-reviewer', acceptReviewer)
+ router.patch('/accept-reviewer-bulk', acceptReviewerBulk)
  router.patch('/accept-reviewer-employeeRejection', acceptReviewerEmployeeRejection)
  router.patch('/accept-reviewer-rating',acceptReviewerRatings)
 router.patch('/accept-normalizer', acceptNormalizer)
+router.patch('/accept-normalizer-bulk', acceptNormalizerBulk)
 router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeException)
+router.patch('/accept-normalizer-grade-exception-bulk', acceptNormalizerGradeExceptionBulk)
 router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
 router.patch('/accept-employee-roleExceptions', acceptEmployeeRoleExceptions)
 router.patch('/accept-employee-CEORole',acceptEmployeeCEORole)
