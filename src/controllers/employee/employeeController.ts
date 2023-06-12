@@ -2261,7 +2261,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         employeeObjectiveDescription,
         current_overallRating,
         current_previous_submission,
-        appraisalObjectiveDescription
+        appraisalObjectiveDescription,
+        employee_previous_submission
          } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
@@ -2288,7 +2289,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.appraiser_rating": current_overallRating,
             "appraisal_previous_rating.objective_description": previousRating,
             "current_previous_submission.objective_description": current_previous_submission,
-
+            "employee_previous_submission.objective_description" : employee_previous_submission
 
         }
     })
