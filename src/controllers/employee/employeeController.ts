@@ -9,6 +9,8 @@ import AppraisalCalender from "../../models/AppraisalCalender";
 import _ from "lodash";
 import template from "../../models/Template";
 import PreviousAppraisal from "../../models/PreviousAppraisal";
+import NineBox from "../../models/NineBox";
+import PerformanceDefinition from "../../models/PerformanceDefinition";
 
 
 const getRatingsfromObjectiveDescription = (data: any) => {
@@ -711,6 +713,406 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
 })
 
 
+const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response) => {
+
+
+    const employee = await Employee.findById(req.params.id)
+        .populate({
+            path: 'appraisal',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })       
+        .populate({
+            path: 'appraisal',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'appraisal',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate('appraisal.other_recommendation.name')
+        .populate('appraisal.training_recommendation.name')
+        .populate({
+            path: 'appraisal',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
+        .populate({
+            path: 'employee.objective_description.name',
+        }).populate({
+            path: 'employee_draft.objective_description.name',
+        })
+        .populate({
+            path: 'employee',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+
+        // .populate({
+        //     path: 'appraisal',
+        //     populate: {
+        //         path: 'objective_type.name',
+        //     }
+        // }).
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        }).populate('appraisal_template.other_recommendation.name')
+        .populate('appraisal_template.training_recommendation.name')
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
+        .populate('appraisal.other_recommendation.name')
+        .populate('appraisal.feedback_questions.name')
+        .populate({
+            path: 'reviewer',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        // .populate({
+        //     path: 'appraisal',
+        //     populate: {
+        //         path: 'objective_type.name',
+        //     }
+        // }).
+        .populate({
+            path: 'reviewer',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'reviewer',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        }).populate('reviewer.other_recommendation.name')
+        .populate('reviewer.training_recommendation.name')
+        .populate({
+            path: 'reviewer',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        }).populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        // .populate({
+        //     path: 'appraisal',
+        //     populate: {
+        //         path: 'objective_type.name',
+        //     }
+        // }).
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        }).populate('appraisal_template.other_recommendation.name')
+        .populate('appraisal_template.training_recommendation.name')
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
+        .populate('reviewer.other_recommendation.name')
+        .populate('reviewer.feedback_questions.name')
+        .populate({
+            path: 'normalizer',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        // .populate({
+        //     path: 'appraisal',
+        //     populate: {
+        //         path: 'objective_type.name',
+        //     }
+        // }).
+        .populate({
+            path: 'normalizer',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'normalizer',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        }).populate('normalizer.other_recommendation.name')
+        .populate('normalizer.training_recommendation.name')
+        .populate({
+            path: 'normalizer',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        }).populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        // .populate({
+        //     path: 'appraisal',
+        //     populate: {
+        //         path: 'objective_type.name',
+        //     }
+        // }).
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        }).populate('appraisal_template.other_recommendation.name')
+        .populate('appraisal_template.training_recommendation.name')
+        .populate({
+            path: 'appraisal_template',
+            populate: {
+                path: 'objective_type.name',
+                mode: 'ObjectiveGroup'
+            }
+        })
+        .populate('normalizer.other_recommendation.name')
+        .populate('normalizer.feedback_questions.name')
+        .populate('appraisal_template.feedback_questionnaire.name')
+        .populate('calendar')
+        .populate({
+            path: 'appraisal_previous_submission',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'appraisal_previous_submission',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'appraisal_previous_submission',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'reviewer_previous_submission',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'reviewer_previous_submission',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'reviewer_previous_submission',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'normalizer_previous_submission',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'normalizer_previous_submission',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'normalizer_previous_submission',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        .populate({
+            path: 'employee_previous_submission',
+            populate: {
+                path: 'objective_group.name',
+            }
+        })
+        .populate({
+            path: 'employee_previous_submission',
+            populate: {
+                path: 'objective_description.name'
+            }
+        })
+        .populate({
+            path: 'employee_previous_submission',
+            populate: {
+                path: 'objective_description.ratings'
+            }
+        })
+        
+
+    const fun = (test: any) => {
+        return "www.google.com" + test
+
+    }
+
+    // @ts-ignore
+    employee?.appraisal?.attachments = employee.appraisal.attachments.map((j: any) => {
+
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            // url: j.url,
+            // name: j.name,
+            objective_description: j.objective_description,
+        }
+    })
+
+    // @ts-ignore
+    employee?.appraisal?.rejection_attachments = employee.appraisal.rejection_attachments.map((j: any) => {
+
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            // url: j.url,
+            // name: j.name,
+            objective_description: j.objective_description,
+        }
+    })
+
+    // @ts-ignore
+    employee?.reviewer?.attachments = employee.reviewer.attachments.map((j: any) => {
+        console.log('removeReviewerAttachments2')
+        // const at : {
+        //
+        // }
+        // console.log(getImage(j.url),'gggg')
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+
+
+    // @ts-ignore
+    employee?.normalizer?.attachments = employee.normalizer.attachments.map((j: any) => {
+        return {
+
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+
+    //@ts-ignore
+    employee?.normalizer?.meetingNotesAttachments = employee.normalizer.meetingNotesAttachments.map((j: any) => {
+        return {
+
+            url: getImage(j.url),
+            name: j.url
+
+        }
+    })
+    // @ts-ignore
+    employee?.employee?.attachments = employee.employee.attachments.map((j: any) => {
+
+        return {
+            // attachments: j.name,
+            // //@ts-ignore
+            url: getImage(j.url),
+            name: j.url,
+            objective_description: j.objective_description,
+        }
+    })
+    //@ts-ignore
+    employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
+
+
+    // const att = {
+    //     ...employee,
+    //     //@ts-ignore
+    //    attachments:  employee.appraisal.attachments.map((j: any) => {
+    //         // const at : {
+    //         //
+    //         // }
+    //         return {
+    //             attachments: j.name,
+    //             //@ts-ignore
+    //             attach: "www.google.com"
+    //         }
+    //     })
+    // }
+
+    // console.log(att.appraisal.attachments)
+
+    if (!employee) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            error: 'No employee found'
+        });
+    }
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: employee,
+        // att
+    });
+})
+
+
 const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
     // console.log(req.body, '1111111111111111111')
@@ -1241,49 +1643,6 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
-const acceptNormalizerBulk = asyncHandler(async (req: Request, res: Response) => {
-    const { id, current_overallRating, reviewerObjectiveDescription, normalized_Date, current_previous_submission } = req.body
-    console.log(id, '`````````````````````````````````````````````````')
-    const { reviewer: appraisal , current_rating } = await Employee.findById(id);
-
-    const employee = await Employee.updateMany({ _id: { $in: id } },
-        {
-            $set: {
-                "employee.employee_status": "pending",
-                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizer.objective_type": appraisal.objective_type,
-                "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
-                "normalizer.normalizer_rating": appraisal.reviewer_rating,
-                "normalizer.training_recommendation": appraisal.training_recommendation,
-                "normalizer.other_recommendation": appraisal.other_recommendation,
-                "normalizer.area_of_improvement": appraisal.area_of_improvement,
-                "normalizer.feedback_questions": appraisal.feedback_questions,
-                "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizerIsChecked": true,
-                "normalizerIsDisabled": true,
-                "normalizer.normalizer_acceptance": true,
-                "normalizer.normalizer_rejected": false,
-                "normalizer.normalizer_status": 'accepted',
-                "appraisal.normalizer_status": 'accepted',
-                "appraisal.status": "normalized",
-                "appraisal.pa_status": "Pending with Employee",
-                "appraisal.pa_rating": appraisal.reviewer_rating,
-                "appraisal_previous_rating.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "reviewer.objective_description": reviewerObjectiveDescription,
-                "reviewer.rejection_count": 0,
-                "normalizer.normalized_Date": normalized_Date,
-                "current_previous_submission.objective_description": current_rating.objective_description,
-                // "employee":{},
-                // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-            }
-        }
-    )
-    res.status(StatusCodes.OK).json({
-        employee
-    });
-})
 
 
 const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Response) => {
@@ -1320,10 +1679,34 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
     });
 })
 
+
 const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res: Response) => {
-    const { id, talentCategory, current_overallRating } = req.body
-    console.log(id, '`````````````````````````````````````````````````')
-    const { reviewer: appraisal , current_rating } = await Employee.findById(id);
+    const { id, potential, current_overallRating } = req.body    
+
+    console.log(potential, current_overallRating, 'potentialcheckkkk')
+
+    if (potential == "false") {
+        res.status(StatusCodes.OK).json({
+            data: ""
+        });
+    }
+ 
+    const performance = await PerformanceDefinition.findOne({
+        "from": { $lte: current_overallRating },
+        "to": { $gte: current_overallRating }
+    })
+
+    const nineBoxValue = await NineBox.findOne({
+        "box_9_definitions.performance_level": performance.category,
+        "box_9_definitions.potential_level": potential,
+    })
+    let boxdefinitions : any[] = nineBoxValue.box_9_definitions
+    let definitionValue = boxdefinitions?.find(item => {  
+        console.log(item,'itemssss')     
+        return ((item?.performance_level == performance?.category) && (item?.potential_level == potential))
+    })  
+
+    const { reviewer: appraisal } = await Employee.findById(id);
 
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
@@ -1332,7 +1715,7 @@ const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
-                "normalizer.normalizer_rating": appraisal.reviewer_rating,
+                "normalizer.normalizer_rating": current_overallRating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
@@ -1344,8 +1727,8 @@ const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res
                 "normalizer.normalizer_status": 'normalizer-accepted',
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
-                "appraisal.pa_rating": appraisal.reviewer_rating,
-                "talent_category": talentCategory
+                "appraisal.pa_rating": current_overallRating,
+                "talent_category": definitionValue?.title
             }
         }
     )
@@ -1377,11 +1760,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.reviewer_rating": current_overallRating,
-                "reviewer.training_recommendation": appraisal.training_recommendation,
-                "reviewer.other_recommendation": appraisal.other_recommendation,
-                "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                "reviewer.feedback_questions": appraisal.feedback_questions,
+                "reviewer.reviewer_rating": current_overallRating,              
                 "reviewer.reviewer_overall_feedback": "",
                 "reviewer.reviewer_acceptance": true,
                 "reviewerIsChecked": true,
@@ -1401,49 +1780,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
-const acceptReviewerBulk = asyncHandler(async (req: Request, res: Response) => {
-    const { id, appraisal_objective_description, current_overallRating, current_previous_submission } = req.body
-    console.log(id, '`````````````````````````````````````````````````')
 
-    const { appraisal , current_rating } = await Employee.findById(id);
-
-    const employee = await Employee.updateMany({ _id: { $in: id } },
-        {
-            $set: {
-                "appraisal.pa_status": "Pending with Normalizer",
-                "appraisal.pa_rating": appraisal.appraiser_rating,
-                "appraisal.show_reviewer": false,
-                "reviewer.objective_group": appraisal.objective_group,
-                "reviewer.objective_type": appraisal.objective_type,
-                "reviewer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
-                "appraisal.appraiser_rejected": false,
-                "appraisal.objective_description": appraisal_objective_description,
-                // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
-                "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.reviewer_rating": appraisal.appraiser_rating,
-                "reviewer.training_recommendation": appraisal.training_recommendation,
-                "reviewer.other_recommendation": appraisal.other_recommendation,
-                "reviewer.area_of_improvement": appraisal.area_of_improvement,
-                "reviewer.feedback_questions": appraisal.feedback_questions,
-                "reviewer.reviewer_overall_feedback": "",
-                "reviewer.reviewer_acceptance": true,
-                "reviewerIsChecked": true,
-                "reviewerIsDisabled": true,
-                "reviewer.reviewer_status": 'accepted',
-                "normalizerIsDisabled": false,
-                "normalizerIsChecked": false,
-                "normalizer.normalizer_status": 'pending',
-                "current_previous_submission.objective_description": current_rating.objective_description,
-                // "normalizer.normalizer_rating" : current_overallRating,
-                // "reviewer.reviewer_rating": appraisal.appraiser_rating,
-            }
-        }
-    )
-    res.status(StatusCodes.OK).json({
-        employee
-    });
-})
 
 
 // reviewer accepts appraiser after employee rejection
@@ -3775,9 +4112,8 @@ export {
     getAllMappedEmployee,
     updateSubsectionForEmployees,
     removeBulkEmployeesfromRoleException,
-    updateEmployeeRoles,
-    acceptReviewerBulk,
-    acceptNormalizerBulk,
+    updateEmployeeRoles,  
+    getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk
 
 

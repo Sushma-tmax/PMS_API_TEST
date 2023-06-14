@@ -74,8 +74,7 @@ import {
     updateSubsectionForEmployees,
     removeBulkEmployeesfromRoleException,
     updateEmployeeRoles,
-    acceptReviewerBulk,
-    acceptNormalizerBulk,
+    getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk,  
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
@@ -105,11 +104,9 @@ router.get('/reviewer-status/:status', appraisalStatusReviewer)
 router.get('/normalizer-status/:status', appraisalStatusNormalizer)
 router.patch('/reject-normalizer-values/:id',rejectedNormalizerValues )
  router.patch('/accept-reviewer', acceptReviewer)
- router.patch('/accept-reviewer-bulk', acceptReviewerBulk)
  router.patch('/accept-reviewer-employeeRejection', acceptReviewerEmployeeRejection)
  router.patch('/accept-reviewer-rating',acceptReviewerRatings)
 router.patch('/accept-normalizer', acceptNormalizer)
-router.patch('/accept-normalizer-bulk', acceptNormalizerBulk)
 router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeException)
 router.patch('/accept-normalizer-grade-exception-bulk', acceptNormalizerGradeExceptionBulk)
 router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
@@ -128,6 +125,7 @@ router.patch('/employee-reject-save/:id', employeeRejectionSave)
 router.get('/filter/:status', getAllEmployees)
 router.get('/allpaemployees/:status', getAllPAEmployees)
 router.get('/:id', getEmployeeById)
+router.get('/view-PA/:id', getEmployeeByIdForViewPA)
 // router.get('/filter/:status', appraisalStatusFilter)
 router.post('/', createEmployee)
 router.patch('/template/:id', addTemplateToEmployee)
