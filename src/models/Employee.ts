@@ -1152,6 +1152,14 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            rating_accepted: {
+                type: Boolean,
+                default: false
+            },
+            rating_resubmitted: {
+                type: Boolean,
+                default: false
+            },
             action_performed: {
                 type: Boolean,
                 default: false
