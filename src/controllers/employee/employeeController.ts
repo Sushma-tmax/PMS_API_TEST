@@ -1614,6 +1614,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.objective_type": appraisal.objective_type,
                 "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "appraisal_previous_submission.objective_description" : appraisal.objective_description, 
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
                 "normalizer.normalizer_rating": current_overallRating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
@@ -1835,7 +1836,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "appraisal.status": "completed",
                     "appraisal.show_reviewer": false,
                     "appraisal.pa_rating": current_overallRating,
-                    "appraisal_previous_submission" : appraisal_previous_submission  ,
+                    "appraisal_previous_submission.objective_description" : appraisal_previous_submission  ,
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
                     // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
@@ -2719,7 +2720,8 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         meetingNotes,
         normalizerComments,
         normalizerObjDesc,
-        current_previous_submission } = req.body
+        current_previous_submission ,
+        appraisal_previous_submission} = req.body
     console.log(talentCategory, 'talentCategory')
 
     const { employee, normalizer } = await Employee.findById(id)
@@ -2741,7 +2743,8 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
             "normalizer.normalizer_rating": current_OverAllRating,
             "talent_category": talentCategory,
             "current_previous_submission.objective_description": current_previous_submission,
-            "normalizer_previous_submission.objective_description" : normalizerObjDesc
+            "normalizer_previous_submission.objective_description" : normalizerObjDesc,
+            "appraisal_previous_submission.objective_description" : appraisal_previous_submission
         }
     })
     res.status(StatusCodes.OK).json({
