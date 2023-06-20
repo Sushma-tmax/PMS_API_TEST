@@ -1876,7 +1876,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "appraisal.pa_rating": current_overallRating,
                     "appraisal.status": "rejected",
                     "appraisal.show_reviewer": false,
-                    "appraisal_previous_submission" : appraisal_previous_submission  ,
+                    "appraisal_previous_submission.objective_description" : appraisal_previous_submission  ,
                     "reviewer.objective_group": appraisal.objective_group,
                     "reviewer.objective_type": appraisal.objective_type,
                     "reviewer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),

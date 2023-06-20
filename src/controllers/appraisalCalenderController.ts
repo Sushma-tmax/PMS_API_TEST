@@ -485,6 +485,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 appraisal: {
                     appraiser_status: 'pending',
                     status: 'not-started',
+                    pa_status: 'Pending with Appraiser',
                     objective_group: weightage.objective_group,
                     objective_type: weightage.objective_type,
                     objective_description: weightage.objective_description,
