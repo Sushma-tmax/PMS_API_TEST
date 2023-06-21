@@ -2599,7 +2599,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
 
     const { id } = req.params
     const { comments,
-        previousRating,
+        // previousRating,
         talentCategory,
         employeeObjectiveDescription,
         current_overallRating,
@@ -2630,7 +2630,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "reviewerIsChecked": false,
             // "employee.employee_status": "accepted",
             "appraisal.appraiser_rating": current_overallRating,
-            "appraisal_previous_rating.objective_description": previousRating,
+            // "appraisal_previous_rating.objective_description": previousRating,
             "current_previous_submission.objective_description": current_previous_submission,
             "employee_previous_submission.objective_description" : employee_previous_submission
 

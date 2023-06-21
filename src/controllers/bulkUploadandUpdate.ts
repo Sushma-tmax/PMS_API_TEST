@@ -118,6 +118,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             return {
                 Ecode: item.employee_code,
                 'Employee Name': item.legal_full_name,
+                'First Name' : item.first_name,
                 Position: item.position_long_description,
                 Grade: item.grade,
                 'Probation Status': item.probation_status,
@@ -147,6 +148,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         const requiredFields = [
             'Ecode',
             'Employee Name',
+            'First Name',
             'Position',
             'Grade',
             'Probation Status',
