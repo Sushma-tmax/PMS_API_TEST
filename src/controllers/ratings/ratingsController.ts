@@ -187,7 +187,7 @@ const updateRatingScaleDescription = asyncHandler(async (req: Request, res: Resp
 const deleteRatingScaleDescription = asyncHandler(async (req: Request, res: Response) => {
 
     // const ifExist = await AppraisalCalender.exists({ "rating.name": req.params.id })
-    const calendar = await AppraisalCalender.findOne({ "rating.name": req.params.id })
+    const calendar = await AppraisalCalender.findOne({ "rating.name": req.params.id ,'status': {$ne : "Closed"}})
 
     if (!calendar) {
         const ratingScaleDescription = await RatingScaleDescription.findByIdAndDelete(req.params.id);
