@@ -3703,7 +3703,8 @@ const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
         value,
         comments,
         appraiser_objective_description,
-        current_objective_description
+        current_objective_description,
+        reviewerOverallFeedComments
     } = req.body
 
     const employee = await Employee.findOneAndUpdate({
@@ -3727,7 +3728,8 @@ const reviewerAcceptsAppraiserRating = asyncHandler(async (req: Request, res: Re
                 "reviewer.objective_description.$[description].reason_for_rejection": reason_for_rejection,
                 "reviewer.objective_description.$[description].comments": comments,
                 "appraisal.objective_description": appraiser_objective_description,
-                "current_rating.objective_description" : current_objective_description
+                "current_rating.objective_description" : current_objective_description,
+                "reviewer.reviewer_overall_feedback" : reviewerOverallFeedComments,
             }
         },
         {
