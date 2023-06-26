@@ -47,7 +47,9 @@ app.use(express.urlencoded({limit: '50mb'}))
 app.use(cookieParser('secret'));
 
 
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 
 dotenv.config({path: __dirname + '/.env'});
 
