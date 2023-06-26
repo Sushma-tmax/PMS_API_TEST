@@ -1661,11 +1661,13 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer_previous_submission.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
                 "normalizer.normalizer_rating": current_overallRating,
+                "employee.employee_rating": current_overallRating,
                 "normalizer.training_recommendation": appraisal.training_recommendation,
                 "normalizer.other_recommendation": appraisal.other_recommendation,
                 "normalizer.area_of_improvement": appraisal.area_of_improvement,
                 "normalizer.feedback_questions": appraisal.feedback_questions,
                 "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
                 "normalizer.normalizer_acceptance": true,
@@ -1731,7 +1733,10 @@ const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
                 "appraisal.pa_rating": current_overallRating,
-                "talent_category": definitionValue?.title
+                "talent_category": definitionValue?.title,
+                "employee.employee_rating": current_overallRating,
+                "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+
             }
         }
     )
