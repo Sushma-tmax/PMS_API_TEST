@@ -1602,7 +1602,7 @@ const appraisalStatusFilter = asyncHandler(async (req: Request, res: Response) =
 
 
 const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
-    const { id, current_overallRating, reviewerObjectiveDescription, normalized_Date, current_previous_submission } = req.body
+    const { id, current_overallRating, reviewerObjectiveDescription, normalized_Date, current_previous_submission,  previous_overall_rating  } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1636,6 +1636,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "reviewer.rejection_count": 0,
                 "normalizer.normalized_Date": normalized_Date,
                 "current_previous_submission.objective_description": current_previous_submission,
+                "current_previous_submission.overall_rating" : previous_overall_rating
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }

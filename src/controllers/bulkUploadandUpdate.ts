@@ -182,7 +182,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 if (item[field] === undefined || item[field] === null || item[field] === "") {
                   /* adding that field as a missing field if value is undefined or empty */
                   if (!(item["CEO Role"] && 
-                  (field === "Appraiser Name" || field === "Appraiser Code" ||
+                  (field === "Known As" || field === "Appraiser Name" || field === "Appraiser Code" ||
                    field === "Reviewer Name" || field === "Reviewer Code" ||
                    field === "Normalizer Name" || field === "Normalizer Code" ||
                    field === "Manager Name" || field === "Manager Code" ||
