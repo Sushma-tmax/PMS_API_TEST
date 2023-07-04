@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import  nodemailerConfig = require('./nodemailerConfig');
 
-const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async ({ to, cc, subject, html }) => {
   let testAccount = await nodemailer.createTestAccount();
 
   //const transporter = nodemailer.createTransport(nodemailerConfig);
@@ -26,6 +26,7 @@ const sendEmail = async ({ to, subject, html }) => {
     return await transporter.sendMail({
         from: '"PMS" <do-not-replyemail@taqeef.com>', // sender address
         to, // list of receivers
+        cc,
         subject, // Subject line
         html, // html body
     });

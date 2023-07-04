@@ -68,6 +68,9 @@ const EmployeeSchema = new Schema({
         type: String,
 
     },
+    first_name: {
+        type: String,
+    },
     position_long_description: {
         type: String,
     },

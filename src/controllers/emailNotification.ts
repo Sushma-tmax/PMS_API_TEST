@@ -7,10 +7,11 @@ import { Employee } from '../models';
 
 const sendEmailController = asyncHandler(async (req: Request, res: Response) => {
 
-const {to,subject, html} = req.body
+const {to,cc,subject, html} = req.body
 
     console.log(await sendEmail({
         to: to,
+        cc:cc,
         subject: subject,
         html: html
     }))
@@ -28,11 +29,13 @@ const getEmailIds = asyncHandler(async (req, res) => {
             $in: [appraiser_code, reviewer_code, normalizer_code]
           }
         });
-        const employeeData = employees.map((employee) => ({
+        const employeeData = employees.map((employee : any) => ({
             employee_code: employee.employee_code,
-            email: employee.email
+            email: employee.email,
+            firstName : employee.first_name         
           }));
         return res.json({ employeeData })
+
     } catch (error) {
       console.error('Error retrieving emails:', error);
        res.status(500).json({ error: 'Internal server error' });
