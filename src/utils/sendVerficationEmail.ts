@@ -13,6 +13,7 @@ const sendVerificationEmail = async ({
 
   return sendEmail({
     to: email,
+    cc:[],
     subject: 'Email Confirmation',
     html: `<h4> Hello, ${name}</h4>
     ${message}
