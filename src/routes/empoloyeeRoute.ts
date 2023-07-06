@@ -75,7 +75,8 @@ import {
     removeBulkEmployeesfromRoleException,
     updateEmployeeRoles,
     getEmployeeByIdForViewPA,
-    acceptNormalizerGradeExceptionBulk,  
+    acceptNormalizerGradeExceptionBulk,
+    getEmployeeByEmail,  
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
@@ -124,6 +125,7 @@ router.patch('/normalizer-reject-employee/:id', normalizerRejectsEmployee)
 router.patch('/employee-reject-save/:id', employeeRejectionSave)
 router.get('/filter/:status', getAllEmployees)
 router.get('/allpaemployees/:status', getAllPAEmployees)
+router.get('/user/:id', getEmployeeByEmail)
 router.get('/:id', getEmployeeById)
 router.get('/view-PA/:id', getEmployeeByIdForViewPA)
 // router.get('/filter/:status', appraisalStatusFilter)

@@ -329,6 +329,23 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+const getEmployeeByEmail =  asyncHandler(async (req: Request, res: Response) => {
+    const employee = await Employee.find({email : req.params.id});
+    // @ts-ignore
+    employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
+    if (!employee) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            error: 'No employee found'
+        });
+    }
+    res.status(StatusCodes.OK).json({
+        success: true,
+        data: employee,
+        // att
+    });
+})
+
 
 const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
 
@@ -4061,6 +4078,7 @@ export {
     addRating,
     appraisal,
     getEmployeeById,
+    getEmployeeByEmail,
     appraisalStatusFilter,
     updateEmployee,
     acceptReviewer,
