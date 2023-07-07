@@ -1814,7 +1814,6 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
 const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: Response) => {
     const { id, current_overallRating, talentCategory, current_previous_submission, appraisal_previous_submission } = req.body
     console.log(id, '`````````````````````````````````````````````````')
-
     const { appraisal, reviewer, normalizer } = await Employee.findById(id);
     // const employee = await Employee.updateMany({ _id: { $in: id } },
     //     {
@@ -1868,7 +1867,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     // "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
                     // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                     "reviewer.reviewer_rating": current_overallRating,
-                    "normalizer.nomalizer_rating": current_overallRating,
+                    "normalizer.normalizer_rating": current_overallRating,
                     "reviewer.training_recommendation": appraisal.training_recommendation,
                     "reviewer.other_recommendation": appraisal.other_recommendation,
                     "reviewer.area_of_improvement": appraisal.area_of_improvement,
