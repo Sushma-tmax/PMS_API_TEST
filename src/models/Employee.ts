@@ -80,7 +80,7 @@ const EmployeeSchema = new Schema({
     profile_image_url: {
         type: String
     },
-    appraiser: String,
+    // appraiser: String,
     mobile: {
         type: String,
 

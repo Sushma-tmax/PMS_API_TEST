@@ -2269,7 +2269,7 @@ const acceptNormalizerRejectedAppraiser = asyncHandler(async (req: Request, res:
                 "reviewerIsChecked": false,
                 "reviewer.reviewer_status": 'pending',
                 "reviewer.rejection_count": 0,
-                "appraiser.rejection_count": 0
+                // "appraiser.rejection_count": 0
             }
         }
     )
@@ -2856,6 +2856,7 @@ const attachmentsReviewer = asyncHandler(async (req: Request, res: Response) => 
             }
 
             // Update the employee document
+            console.log(employee,"employeeDetails")
             employee.reviewer.attachments = reviewerAttachments;
             const updatedEmployee = await employee.save();
 
@@ -2979,6 +2980,7 @@ const attachmentsEmployee = asyncHandler(async (req: Request, res: Response) => 
                 employeeAttachments.push(attachments);
             }
 
+            console.log(employee,'employeeAttachments')
             // Update the employee document
             employee.employee.attachments = employeeAttachments;
             const updatedEmployee = await employee.save();
