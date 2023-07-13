@@ -1902,7 +1902,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "reviewer.objective_group": appraisal.objective_group,
                     "reviewer.objective_type": appraisal.objective_type,
                     "reviewer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
-                    // "normalizer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
+                    "normalizer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
                     "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
                     "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
                     "reviewer.reviewer_rating": current_overallRating,
