@@ -1723,7 +1723,7 @@ const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res
         "box_9_definitions.performance_level": performance.category,
         "box_9_definitions.potential_level": potential,
     })
-    let boxdefinitions : any[] = nineBoxValue.box_9_definitions
+    let boxdefinitions : any[] = nineBoxValue?.box_9_definitions
     let definitionValue = boxdefinitions?.find(item => {  
         console.log(item,'itemssss')     
         return ((item?.performance_level == performance?.category) && (item?.potential_level == potential))
@@ -1759,7 +1759,7 @@ const acceptNormalizerGradeExceptionBulk = asyncHandler(async (req: Request, res
         }
     )
     res.status(StatusCodes.OK).json({
-        employee
+        employee,performance,nineBoxValue
     });
 })
 
