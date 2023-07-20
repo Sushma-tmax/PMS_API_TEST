@@ -1756,6 +1756,10 @@ const EmployeeSchema = new Schema({
             type: Number,
             default: 0
         },
+        normalized_overallRating: {
+            type: Number,
+            default: 0
+        },
         normalizer_rejected_value: [{
             value: {
                 type: String,
