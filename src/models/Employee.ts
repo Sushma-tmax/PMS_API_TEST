@@ -1061,6 +1061,10 @@ const EmployeeSchema = new Schema({
             default: ''
         },
 
+        appraiser_rejection_reason: {
+            type: String,
+            default: ''
+        },
         other_recommendation_comments: {
             type: String,
             default: ''
