@@ -161,7 +161,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             'Manager Name',
             'Section',
             // 'Sub-Section',
-            // 'Service-Date',
+            'Service-Date',
             'Division',
             'Manager Position',
             'Work Location',
