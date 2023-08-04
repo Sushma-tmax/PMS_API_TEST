@@ -1775,7 +1775,7 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
-                "appraisal.pa_status": "Pending with Normalizer",
+                "appraisal.pa_status": "Pending with HR Normalizer",
                 "appraisal.pa_rating": current_overallRating,
                 "appraisal.show_reviewer": false,
                 "reviewer.objective_group": appraisal.objective_group,
@@ -1819,7 +1819,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
     // const employee = await Employee.updateMany({ _id: { $in: id } },
     //     {
     //         $set: {
-    //             "appraisal.pa_status": "Pending with Normalizer",
+    //             "appraisal.pa_status": "Pending with HR Normalizer",
     //             "appraisal.pa_rating": appraisal.appraiser_rating,
     //             "appraisal.show_reviewer": false,
     //             "reviewer.objective_group": appraisal.objective_group,
@@ -1896,7 +1896,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
-                    "appraisal.pa_status": "Pending with Normalizer",
+                    "appraisal.pa_status": "Pending with HR Normalizer",
                     "appraisal.pa_rating": current_overallRating,
                     "appraisal.status": "rejected",
                     "appraisal.show_reviewer": false,
