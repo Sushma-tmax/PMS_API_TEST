@@ -76,14 +76,15 @@ import {
     updateEmployeeRoles,
     getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk,
-    getEmployeeByEmail,  
+    getEmployeeByEmail,
+    getPAcalendarEmployeeEmails  
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
-
+router.get('/calendarEmployeeEmails/:calendarId', getPAcalendarEmployeeEmails)
 router.get('/lineManagerPlusOneEmployee/:employee_code/:calId', lineManagerPlusOneEmployee)
 router.post('/updateEmployeeRoles',updateEmployeeRoles)
 router.patch('/remove-BulkEmployee-Roleexception', removeBulkEmployeesfromRoleException)
