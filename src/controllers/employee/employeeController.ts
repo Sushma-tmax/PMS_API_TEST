@@ -3415,6 +3415,24 @@ const removeNormalizerAttachments = asyncHandler(async (req: Request, res: Respo
 
 })
 
+const removeMeetingNotesNormalizerAttachments = asyncHandler(async (req: Request, res: Response) => {
+   
+    const { id } = req.params
+    const { name } = req.body
+    console.log(id,name,'checknormalizer')
+    
+
+    const updatedCalendar = await Employee.findByIdAndUpdate(id,
+        {
+            $pull: {
+                "normalizer.meetingNotesAttachments": { "url": name },
+            }
+        }, { new: true, multi: true }
+    )
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+
+})
+
 const removeEmployeeAttachments = asyncHandler(async (req: Request, res: Response) => {
 
     const { id } = req.params
@@ -4169,6 +4187,7 @@ export {
     updateEmployeeRoles,
     getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk,
-    getPAcalendarEmployeeEmails
+    getPAcalendarEmployeeEmails,
+    removeMeetingNotesNormalizerAttachments
 
 }

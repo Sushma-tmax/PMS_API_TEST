@@ -201,6 +201,19 @@ const deleteObjectiveType = asyncHandler(async (req: Request, res: Response) => 
 
 })
 
+/*  if objective type is used in appraisal, then cannot edit the objective group. */
+const editObjectiveType  = asyncHandler(async (req: Request, res: Response) => {
+    const {objectiveTypeId} = req.body; 
+    const template = await Template.findOne({
+        'weightage.objective_type.name': objectiveTypeId
+      }).sort({ updatedAt: -1 });
+    
+        res.status(StatusCodes.OK).json({
+          template,
+          success: true,
+          message: `Objective type exists in the ${template.name}.  `
+        })       
+})
 
 const getObjectiveType = asyncHandler(async (req: Request, res: Response) => {
     const {id: objectiveId} = req.params;
@@ -441,7 +454,7 @@ const createObjective = asyncHandler(async (req: Request, res: Response) => {
 const toggleObjectiveTitle = asyncHandler(async (req, res) => {
     const { objectiveTitleId , objectiveTitle} = req.body;   
       const template = await Template.findOne({
-        'weightage.objective_description.name': objectiveTitleId
+        'weightage.objective_description.name': objectiveTitleId,
       }).sort({ updatedAt: -1 });
     
         res.status(StatusCodes.OK).json({
@@ -478,5 +491,6 @@ export {
     getAllObjectiveTitles,
     getObjectiveTitle,
     updateObjectiveTitle,
-    toggleObjectiveTitle
+    toggleObjectiveTitle,
+    editObjectiveType
 };

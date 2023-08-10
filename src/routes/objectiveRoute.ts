@@ -23,6 +23,7 @@ import {
     createObjectiveTitle,
     updateObjectiveTitle,
     toggleObjectiveTitle,
+    editObjectiveType,
 
 } from "../controllers/objective/objectiveController";
 
@@ -43,7 +44,7 @@ router.get('/objective-type', getAllObjectiveTypes)
 router.get('/objective-type/:id', getObjectiveType)
 router.patch('/objective-type/:id', updateObjectiveType)
 router.delete('/objective-type/:id', deleteObjectiveType)
-
+router.post('/objective-type/edit', editObjectiveType)
 
 
 
@@ -59,6 +60,7 @@ router.get('/objective-title/:id', getObjectiveTitle)
 router.delete('/objective-title/:id', deleteObjectiveTitle)
 router.patch('/objective-title/:id', updateObjectiveTitle)
 router.post('/objective-title/toggle-objectiveTitle', toggleObjectiveTitle)
+
 
 
 router.post('/objective', createObjective)

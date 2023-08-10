@@ -77,7 +77,8 @@ import {
     getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk,
     getEmployeeByEmail,
-    getPAcalendarEmployeeEmails  
+    getPAcalendarEmployeeEmails,  
+    removeMeetingNotesNormalizerAttachments
 } from "../controllers/employee/employeeController";
 import {advancedResults} from "../middleware/advancedResults";
 import {Employee} from "../models";
@@ -156,7 +157,7 @@ router.patch('/delete/appraiser-attachments-rejection/:id', removeRejectionAppra
 router.patch('/delete/appraiser-attachments-overview/:id', removeAppraiserAttachmentsOverview)
 router.patch('/delete/employee-attachments/:id', removeEmployeeAttachments)
 router.patch('/delete/normalizer-attachments/:id', removeNormalizerAttachments)
-router.patch('/delete/normalizer-attachments/:id', removeNormalizerAttachments)
+router.patch('/delete/meeting-notes-attachments-normalizer/:id', removeMeetingNotesNormalizerAttachments)
 router.patch('/delete/reviewer-attachments/:id', removeReviewerAttachments)
 
 
