@@ -264,7 +264,7 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
 const getPAcalendarEmployeeEmails = asyncHandler(async (req: Request, res: Response) => {
     const { calendarId } = req.params
     let employees: any
-    employees = await Employee.find({ "calendar": calendarId }).select('email isLeavers')
+    employees = await Employee.find({ "employee_upload_flag": true }).select('email isLeavers')
     res.status(StatusCodes.OK).json({
         success: true,
         data: employees,
