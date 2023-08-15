@@ -42,7 +42,28 @@ const getEmailIds = asyncHandler(async (req, res) => {
     }
     })
 
+    const getEmailIdsBulk = asyncHandler(async (req, res) => {
+      const { ecodes } = req.body;   
+      try {
+          const employees = await Employee.find({
+            employee_code: {
+              $in: ecodes
+            }
+          });
+          const employeeData = employees.map((employee : any) => ({
+              employee_code: employee.employee_code,
+              email: employee.email,
+              firstName : employee.first_name         
+            }));
+          return res.json({ employeeData })
+  
+      } catch (error) {
+        console.error('Error retrieving emails:', error);
+         res.status(500).json({ error: 'Internal server error' });
+      }
+      })
 export {
     sendEmailController,
-    getEmailIds
+    getEmailIds,
+    getEmailIdsBulk
 }

@@ -42,7 +42,7 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
 
     /* Function to check whether appraiser code , reviewer code and normalizer code exists in the employee master
        and if yes then check whether their respective names matches their respective codes */
-    const employeeData = await Employee.find({employee_upload_flag : true, isCeoRole : false, isExcluded : false , isLeavers : false });
+    const employeeData = await Employee.find({employee_upload_flag : true, isCEORole : false, isExcluded : false , isLeavers : false });
 
     let errorMessage = "";
 
@@ -71,7 +71,7 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
                 errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${employeeCode}'.\n`;
             }
         } else {
-            errorMessage += `Appraiser code '${appraiserCode}' does not exist.\n`;
+            errorMessage += `Appraiser code '${appraiserCode}' does not exist for employee code '${employeeCode}'..\n`;
         }
 
         // find the employee with the corresponding reviewer code
@@ -114,7 +114,8 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
         });
         res.status(StatusCodes.OK).json({
             //data:employee
-            data: employeeVal
+            data: employeeVal,
+            employeeData
         });
     }
    
