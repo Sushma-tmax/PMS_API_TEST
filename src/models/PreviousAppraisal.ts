@@ -93,6 +93,9 @@ const PreviousAppraisal = new Schema({
     talent_category : {
         type: String,
     },
+    first_name : {
+        type: String,
+    },
     appraisal: {
         appraiser_overall_feedback: {
             type: String

@@ -475,6 +475,12 @@ const EmployeeSchema = new Schema({
     master_reviewer_name: String,
     master_normalizer_code: String,
     master_normalizer_name: String,
+    appraiser_code_Draft: String,
+    appraiser_name_Draft: String,
+    reviewer_code_Draft: String,
+    reviewer_name_Draft: String,
+    normalizer_code_Draft: String,
+    normalizer_name_Draft: String,
     employee_upload_flag : {
         type : Boolean,
         default : false
@@ -487,11 +493,19 @@ const EmployeeSchema = new Schema({
         type: Boolean,
         default: false
     },
+    isRoleExceptionDraft: {
+        type: Boolean,
+        default: false
+    },
     isCEORole: {
         type: Boolean,
         default: false
     },
     isLeavers: {
+        type: Boolean,
+        default: false
+    },
+    isLeaversDraft: {
         type: Boolean,
         default: false
     },
@@ -1062,6 +1076,10 @@ const EmployeeSchema = new Schema({
         },
 
         appraiser_rejection_reason: {
+            type: String,
+            default: ''
+        },
+        other_recommendation_others :{
             type: String,
             default: ''
         },

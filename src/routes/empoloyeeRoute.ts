@@ -58,13 +58,16 @@ import {
     removeRejectionAppraiserAttachments,
     acceptEmployeeExcluded,
     acceptEmployeeNamesChange,
+    acceptEmployeeNamesChangeDraft,
     appraiserAcceptsReviewerRating,
     reviewerAcceptsAppraiserRating,
     appraiserAcceptsEmployeeRating,
     employeeAcceptsAppraiserRating,
     acceptEmployeeRoleExceptions,
+    acceptEmployeeRoleExceptionsDraft,
     acceptEmployeeCEORole,
     acceptEmployeeLeavers,
+    acceptEmployeeLeaversDraft,
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
@@ -85,6 +88,7 @@ import {Employee} from "../models";
 
 const router = Router()
 // @ts-ignore
+
 router.get('/calendarEmployeeEmails/:calendarId', getPAcalendarEmployeeEmails)
 router.get('/lineManagerPlusOneEmployee/:employee_code/:calId', lineManagerPlusOneEmployee)
 router.post('/updateEmployeeRoles',updateEmployeeRoles)
@@ -114,11 +118,13 @@ router.patch('/accept-normalizer-grade-exception', acceptNormalizerGradeExceptio
 router.patch('/accept-normalizer-grade-exception-bulk', acceptNormalizerGradeExceptionBulk)
 router.patch('/accept-employee-gradeException', acceptEmployeeGradeException)
 router.patch('/accept-employee-roleExceptions', acceptEmployeeRoleExceptions)
+router.patch('/accept-employee-roleExceptions-Draft', acceptEmployeeRoleExceptionsDraft)
 router.patch('/accept-employee-CEORole',acceptEmployeeCEORole)
 router.patch('/accept-employee-Excluded', acceptEmployeeExcluded)
 router.patch('/accept-Employee-Names-Change', acceptEmployeeNamesChange)
-
+router.patch('/accept-Employee-Names-Change-Draft', acceptEmployeeNamesChangeDraft)
 router.patch('/accept-employee-Leavers', acceptEmployeeLeavers)
+router.patch('/accept-employee-Leavers-Draft', acceptEmployeeLeaversDraft)
 router.patch('/reject-reviewer-values/:id', rejectedReviewerValues)
 router.patch('/appraiser-accept-reviewer/:id', acceptReviewerRejectedAppraiser)
 router.patch('/appraiser-accept-normalizer/:id', acceptNormalizerRejectedAppraiser)

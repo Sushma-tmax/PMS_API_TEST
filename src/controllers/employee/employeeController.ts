@@ -3546,6 +3546,36 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
         employee
     });
 })
+const acceptEmployeeRoleExceptionsDraft = asyncHandler(async (req: Request, res: Response) => {
+    const { id, masterAppraiserCode, masterAppraiserName } = req.body
+
+    // const { employee: appraisal } = await Employee.findById(id);
+
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        [{
+            $set: {
+                "isRoleExceptionDraft": true,
+                "master_appraiser_code": "$appraiser_code",
+                "master_appraiser_name": "$appraiser_name",
+                "master_reviewer_code": "$reviewer_code",
+                "master_reviewer_name": "$reviewer_name",
+                "master_normalizer_code": "$normalizer_code",
+                "master_normalizer_name": "$normalizer_name",
+                "appraiser_name_Draft": "$appraiser_name",
+                "appraiser_code_Draft": "$appraiser_code",
+                "reviewer_name_Draft": "$reviewer_name",
+                "reviewer_code_Draft": "$reviewer_code",
+                "normalizer_name_Draft": "$normalizer_name",
+                "normalizer_code_Draft": "$normalizer_code",
+
+            }
+
+        }]
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
 
 const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
@@ -3568,7 +3598,6 @@ const acceptEmployeeCEORole = asyncHandler(async (req: Request, res: Response) =
     });
 })
 
-
 const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
 
@@ -3577,6 +3606,7 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
             $set: {
+                //"isLeaversDraft": true,
                 "isLeavers": true,
                 "isGradeException": false,
                 "isRoleException": false,
@@ -3589,7 +3619,27 @@ const acceptEmployeeLeavers = asyncHandler(async (req: Request, res: Response) =
         employee
     });
 })
+const acceptEmployeeLeaversDraft = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.body
 
+    // const { employee: appraisal } = await Employee.findById(id);
+
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+       [{
+            $set: {
+                //"isLeaversDraft": true,
+                "isLeaversDraft": true,
+                "isGradeException": false,
+                "isRoleException": false,
+                "appraisal.status": "excepted",
+                "appraisal.pa_status": "excepted",             
+            }
+        }]
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
 const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.body
 
@@ -3611,6 +3661,28 @@ const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) 
     });
 })
 const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Response) => {
+    const {id} = req.body
+    const employee = await Employee.updateMany({ _id: { $in: id } },
+        //filter by role exception true
+        [{
+            $set: {
+                "appraiser_name": "$appraiser_name_Draft",
+                "appraiser_code": "$appraiser_code_Draft",
+                "reviewer_name": "$reviewer_name_Draft",
+                "reviewer_code": "$reviewer_code_Draft",
+                "normalizer_name": "$normalizer_name_Draft",
+                "normalizer_code": "$normalizer_code_Draft",
+                //set isroleexceptionDraft false
+                //"isRoleExceptionDraft":false
+            }         
+        }]
+    )
+    res.status(StatusCodes.OK).json({
+        employee
+    });
+})
+
+const acceptEmployeeNamesChangeDraft = asyncHandler(async (req: Request, res: Response) => {
     const { id, appraiser_name, appraiser_code, reviewer_name,
         reviewer_code, normalizer_name, normalizer_code, activeCheckbox
     } = req.body
@@ -3618,16 +3690,16 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
     // const { employee: appraisal } = await Employee.findById(id);
     let setValues = {};
     if (activeCheckbox.includes("AppraiserActivation")) {
-        setValues["appraiser_name"] = appraiser_name
-        setValues["appraiser_code"] = appraiser_code
+        setValues["appraiser_name_Draft"] = appraiser_name
+        setValues["appraiser_code_Draft"] = appraiser_code
     }
     if (activeCheckbox.includes("reviewerActivation")) {
-        setValues["reviewer_name"] = reviewer_name
-        setValues["reviewer_code"] = reviewer_code
+        setValues["reviewer_name_Draft"] = reviewer_name
+        setValues["reviewer_code_Draft"] = reviewer_code
     }
     if (activeCheckbox.includes("normalizerActivation")) {
-        setValues["normalizer_name"] = normalizer_name
-        setValues["normalizer_code"] = normalizer_code
+        setValues["normalizer_name_Draft"] = normalizer_name
+        setValues["normalizer_code_Draft"] = normalizer_code
     }
     const employee = await Employee.updateMany({ _id: { $in: id } },
         {
@@ -3638,7 +3710,7 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
             //     "reviewer_code": reviewer_code,
             //     "normalizer_name": normalizer_name,
             //     "normalizer_code": normalizer_code,
-            // }
+            // },
             $set: setValues
         }
     )
@@ -3646,7 +3718,6 @@ const acceptEmployeeNamesChange = asyncHandler(async (req: Request, res: Respons
         employee
     });
 })
-
 const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, res: Response) => {
     const { id, exception } = req.body
     let exceptionValues = {};
@@ -3657,6 +3728,7 @@ const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, r
     }
     if (exception == "RoleException") {
         exceptionValues["isRoleException"] = false
+        exceptionValues["isRoleExceptionDraft"] = false
     }
     if (exception == "GradeException") {
         exceptionValues["isGradeException"] = false
@@ -3666,6 +3738,7 @@ const removeBulkEmployeesfromRoleException = asyncHandler(async (req: Request, r
     }
     if (exception == "Leavers") {
         exceptionValues["isLeavers"] = false
+        exceptionValues["isLeaversDraft"] = false
     }
     const employee = await Employee.updateMany({ _id: { $in: id } },
         [{
@@ -4172,12 +4245,15 @@ export {
     appraiserAcceptsEmployeeRating,
     employeeAcceptsAppraiserRating,
     acceptEmployeeRoleExceptions,
+    acceptEmployeeRoleExceptionsDraft,
     acceptEmployeeCEORole,
     acceptEmployeeLeavers,
+    acceptEmployeeLeaversDraft,
     lineManagerEmployee,
     lineManagerPlusOneEmployee,
     acceptReviewerEmployeeRejection,
     acceptEmployeeNamesChange,
+    acceptEmployeeNamesChangeDraft,
 
     addEmployeestoPrevioisAppraisal,
 
