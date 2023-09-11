@@ -177,6 +177,6 @@ const PreviousAppraisal = new Schema({
         type: Array,
     },
 
-})
+},  {timestamps: true} )
 
 export default model("PreviousAppraisal", PreviousAppraisal)

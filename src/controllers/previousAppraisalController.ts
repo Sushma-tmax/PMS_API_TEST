@@ -64,7 +64,7 @@ const getPreviousAppraisalDetailsofEmployee = asyncHandler(async (req: Request, 
 
 //  to get employee master details mapped to the previous calendar based on the calendar Id 
 
-const getEmployeeDetails = asyncHandler(async (req: Request, res: Response) => {
+const getEmployeeDetailsPrevious = asyncHandler(async (req: Request, res: Response) => {
     const {calendarId} = req.params;  
 
     const employees = await PreviousAppraisal.find({calendar: new mongoose.Types.ObjectId(calendarId)})  
@@ -73,7 +73,19 @@ const getEmployeeDetails = asyncHandler(async (req: Request, res: Response) => {
     });
 })
 
+const getEmployeePAWithEmployeeCode = asyncHandler(async (req: Request, res: Response) => {
+    const {employeeCode} = req.params;  
+
+    const employees = await PreviousAppraisal.find({ employee_code: employeeCode })
+  .sort({ createdAt: -1 })
+  .exec(); 
+    res.status(StatusCodes.OK).json({
+        employees
+    });
+})
+
 export {addEmployeestoPrevioisAppraisal,
     getpastAppraisalDetailsofEmployee,
     getPreviousAppraisalDetailsofEmployee,
-    getEmployeeDetails}
+    getEmployeeDetailsPrevious,
+    getEmployeePAWithEmployeeCode}

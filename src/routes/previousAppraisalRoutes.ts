@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import { testFilter } from '../controllers/employee/employeeController';
-import {addEmployeestoPrevioisAppraisal, getEmployeeDetails, getPreviousAppraisalDetailsofEmployee, getpastAppraisalDetailsofEmployee} from "../controllers/previousAppraisalController";
+import {addEmployeestoPrevioisAppraisal, getEmployeeDetailsPrevious, getEmployeePAWithEmployeeCode, getPreviousAppraisalDetailsofEmployee, getpastAppraisalDetailsofEmployee} from "../controllers/previousAppraisalController";
 import {advancedResults} from "../middleware/advancedResults";
 import PreviousAppraisal from "../models/PreviousAppraisal";
 
@@ -12,7 +12,8 @@ router.route('/filter').get(advancedResults(PreviousAppraisal, "calendar"), test
 router.post('/', addEmployeestoPrevioisAppraisal)
 router.get('/pastappraisalemployee/:id',getpastAppraisalDetailsofEmployee)
 router.get('/previousAppraisalEmployee/:employeeCode/:calendarId',getPreviousAppraisalDetailsofEmployee)
-router.get('/employeeDetails/:calendarId',getEmployeeDetails)
+router.get('/employeeDetails/:calendarId',getEmployeeDetailsPrevious)
+router.get('/PA_details_employee_code/:employeeCode',getEmployeePAWithEmployeeCode)
 
 
 

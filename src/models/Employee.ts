@@ -520,7 +520,9 @@ const EmployeeSchema = new Schema({
     previous_rating: {
       type: Number
     },
-
+    myPendingActionCount:{
+        type: Number
+    },
 
 
     employee: {
@@ -983,7 +985,9 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
-
+            ratingdef :{
+                type: String,
+            },
             rating_resubmitted : {
                 type: Boolean,
                 default : false
@@ -1470,10 +1474,12 @@ const EmployeeSchema = new Schema({
         reason_for_rejection: {
             type: String
         },
+        reason_for_rejection_draft: {
+            type: String
+        },
         reviewer_acceptance: {
             type: Boolean,
         },
-
         reviewer_status: {
             type: String,
             default: 'pending'
@@ -2001,6 +2007,6 @@ const EmployeeSchema = new Schema({
  
     },
 
-})
+},  {timestamps: true})
 
 export default model('Employee', EmployeeSchema)

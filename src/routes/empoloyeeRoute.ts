@@ -22,6 +22,9 @@ import {
     appraisalStatusReviewer,
     appraisalStatusNormalizer,
     filterByPotential,
+    totalAppraiserDetails,
+    totalReviewerDetails,
+    totalNormalizerDetails,
     filterByRatings,
     testFilter,
     employeeRejection,
@@ -100,6 +103,9 @@ router.get('/mappedEmployees', getAllMappedEmployee)
 router.get('/filters/employee-with-template', getEmployeeTemplate)
 router.get('/status-count', statusBasedCount)
 router.route('/employee-filter').get(advancedResults(Employee,"calendar"), testFilter)
+router.get('/totalAppraiserDetails', totalAppraiserDetails)
+router.get('/totalReviewerDetails', totalReviewerDetails)
+router.get('/totalNormalizerDetails', totalNormalizerDetails)
 router.get('/zzzzzz', employeeUpdateMany)
 router.get('/close', employeeAppraisalClose)
 router.get('/reviewer-employee/:id',getReviewerEmployee)
@@ -146,6 +152,7 @@ router.patch('/normalizer-rejection/:id', normalizerRejection)
 router.patch('/employee-rejection/:id', employeeRejection)
 router.patch('/:id', updateEmployee)
 router.get('/filter/potential/:status', filterByPotential)
+
 router.get('/filter/:gt/:lt', filterByRatings)
 router.patch('/accept-appraisal/:id', acceptAppraisalEmployee)
 router.patch('/appraiser-accept-reviewer-rating/:id', appraiserAcceptsReviewerRating)
