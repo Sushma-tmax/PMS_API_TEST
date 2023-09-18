@@ -2548,7 +2548,7 @@ const testFilter = asyncHandler(async (req: Request, res: Response) => {
     //@ts-ignore
     res.status(200).json(res.advancedResults);
 })
-
+//------------------------------------------------------------------For reminder notification
 const totalAppraiserDetails = asyncHandler(async (req, res) => {
     // Find all employees with the "appraiser" role
     const employeesWithAppraiserRole = await Employee.find({ "roles.appraiser": true });
@@ -2569,6 +2569,8 @@ const totalAppraiserDetails = asyncHandler(async (req, res) => {
             if (!existingAppraiser) {
                 appraiserDetails.push({
                     appraiserName,
+                    appraiserCode: employee?.appraiser_code,
+                    appraiserEmail: employee?.email,
                     count: 0,
                     employees: [],
                 });
@@ -2578,7 +2580,7 @@ const totalAppraiserDetails = asyncHandler(async (req, res) => {
             if (employee.appraisal && employee.appraisal.pa_status === "Pending with Appraiser") {
                 const updatedAppraiser = appraiserDetails.find(appraiser => appraiser.appraiserName === appraiserName);
                 updatedAppraiser.count++;
-                updatedAppraiser.employees.push(employee);
+                updatedAppraiser?.employees?.push(employee);
             }
         }
     });
@@ -2598,21 +2600,22 @@ const totalReviewerDetails = asyncHandler(async (req, res) => {
             if (!existingReviewer) {
                 reviewerDetails.push({
                     reviewerName,
+                    reviewerCode: employee?.reviewer_code,
+                    reviewerEmail: employee?.email,
                     count: 0,
-                    employees: [],
+                    //employees: [],
                 });
             }
             if (employee.appraisal && employee.appraisal.pa_status === "Pending with Reviewer") {
                 const updatedReviewer = reviewerDetails.find(appraiser => appraiser.reviewerName === reviewerName);
                 updatedReviewer.count++;
-                updatedReviewer.employees.push(employee);
+                updatedReviewer?.employees?.push(employee);
             }
         }
     });
     return res.status(StatusCodes.OK).json(reviewerDetails);
 });
 const totalNormalizerDetails = asyncHandler(async (req, res) => {
-
     const employeesWithNormalizerRole = await Employee.find({ "roles.reviewer": true });
     const normalizerDetails = [];
     const allEmployees = await Employee.find({});
@@ -2623,19 +2626,124 @@ const totalNormalizerDetails = asyncHandler(async (req, res) => {
             if (!existingNormalizer) {
                 normalizerDetails.push({
                     normalizerName,
+                    normalizerCode: employee?.normalizer_code,
+                    normalizerEmail: employee?.email,
                     count: 0,
-                    employees: [],
+                    //employees: [],
                 });
             }
             if (employee.appraisal && employee.appraisal.pa_status === "Pending with Normalizer") {
                 const updatedNormalizer = normalizerDetails.find(normalizer => normalizer.normalizerName === normalizerName);
                 updatedNormalizer.count++;
-                updatedNormalizer.employees.push(employee);
+                updatedNormalizer?.employees?.push(employee);
             }
         }
     });
     return res.status(StatusCodes.OK).json(normalizerDetails);
 });
+const totalNormalizerDetailsEmail = async () => {
+    const employeesWithNormalizerRole = await Employee.find({ "roles.reviewer": true });
+    const normalizerDetails = [];
+    const allEmployees = await Employee.find({});
+    allEmployees.forEach(employee => {
+        const normalizerName = employee.normalizer_name;
+        if (employeesWithNormalizerRole.some(e => e.legal_full_name === normalizerName)) {
+            const existingNormalizer = normalizerDetails.find(normalizer => normalizer.normalizerName === normalizerName);
+            if (!existingNormalizer) {
+                normalizerDetails.push({
+                    normalizerName,
+                    normalizerCode: employee?.normalizer_code,
+                    normalizerEmail: employee?.email,
+                    count: 0,
+                    //employees: [],
+                });
+            }
+            if (employee.appraisal && employee.appraisal.pa_status === "Pending with Normalizer") {
+                const updatedNormalizer = normalizerDetails.find(normalizer => normalizer.normalizerName === normalizerName);
+                updatedNormalizer.count++;
+                updatedNormalizer?.employees?.push(employee);
+            }
+        }
+    });
+    // Extract the email addresses from normalizerDetails
+    const normalizerEmails = normalizerDetails.map(normalizer => normalizer.normalizerEmail);
+    //return res.status(StatusCodes.OK).json(normalizerEmails);
+    return normalizerEmails;
+};
+const totalAppraiserDetailsEmail = async () => {
+    // Find all employees with the "appraiser" role
+    const employeesWithAppraiserRole = await Employee.find({ "roles.appraiser": true });
+    // Create an array to store appraiser details
+    const appraiserDetails = [];
+    // Iterate through all employees
+    const allEmployees = await Employee.find({});
+    allEmployees.forEach(employee => {
+        const appraiserName = employee.appraiser_name;
+        // Check if the appraiser_name matches any name in employeesWithAppraiserRole
+        if (employeesWithAppraiserRole.some(e => e.legal_full_name === appraiserName)) {
+            const existingAppraiser = appraiserDetails.find(appraiser => appraiser.appraiserName === appraiserName);
+            if (!existingAppraiser) {
+                appraiserDetails.push({
+                    appraiserName,
+                    appraiserCode: employee?.appraiser_code,
+                    appraiserEmail: employee?.email,
+                    count: 0,
+                    employees: [],
+                });
+            }
+            // Check if pa_status is "Pending with Appraiser" before pushing the employee
+            if (employee.appraisal && employee.appraisal.pa_status === "Pending with Appraiser") {
+                const updatedAppraiser = appraiserDetails.find(appraiser => appraiser.appraiserName === appraiserName);
+                updatedAppraiser.count++;
+                updatedAppraiser?.employees?.push(employee);
+            }
+        }
+    });
+    // Send the appraiser details in the response
+    const appraiserEmails = appraiserDetails.map(appraiser => appraiser.appraiserEmail);
+    return appraiserEmails;
+};
+const totalReviewerDetailsEmail = async () => {
+    const employeesWithReviewerRole = await Employee.find({ "roles.reviewer": true });
+    const reviewerDetails = [];
+    const allEmployees = await Employee.find({});
+    allEmployees.forEach(employee => {
+        const reviewerName = employee.reviewer_name;
+        if (employeesWithReviewerRole.some(e => e.legal_full_name === reviewerName)) {
+            const existingReviewer = reviewerDetails.find(reviewer => reviewer.reviewerName === reviewerName);
+            if (!existingReviewer) {
+                reviewerDetails.push({
+                    reviewerName,
+                    reviewerCode: employee?.reviewer_code,
+                    reviewerEmail: employee?.email,
+                    count: 0,
+                    //employees: [],
+                });
+            }
+            if (employee.appraisal && employee.appraisal.pa_status === "Pending with Reviewer") {
+                const updatedReviewer = reviewerDetails.find(appraiser => appraiser.reviewerName === reviewerName);
+                updatedReviewer.count++;
+                updatedReviewer?.employees?.push(employee);
+            }
+        }
+    });
+    const reviewerEmails = reviewerDetails.map(reviewer => reviewer.normalizerEmail);
+    return reviewerEmails;
+    // return res.status(StatusCodes.OK).json(reviewerDetails);  
+};
+// const totalAppraiserDetailsEmail = async () => {
+//     // Find all employees with the "appraiser" role and "Pending with Appraiser" status
+//     const employeesWithAppraiserRoleAndStatus = await Employee.find({
+//         "roles.appraiser": true,
+//         "appraisal.pa_status": "Pending with Appraiser"
+//     });
+// console.log(employeesWithAppraiserRoleAndStatus,"employeesWithAppraiserRoleAndStatus")
+//     // Create an array to store appraiser email addresses
+//     const appraiserEmails = employeesWithAppraiserRoleAndStatus.map(employee => employee.email);
+
+//     return appraiserEmails;
+// };
+//------------------------------------------------------------------For reminder notification
 
 const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params
@@ -4355,6 +4463,9 @@ export {
     getEmployeeByIdForViewPA,
     acceptNormalizerGradeExceptionBulk,
     getPAcalendarEmployeeEmails,
-    removeMeetingNotesNormalizerAttachments
+    removeMeetingNotesNormalizerAttachments,
+    totalAppraiserDetailsEmail,
+    totalNormalizerDetailsEmail,
+    totalReviewerDetailsEmail
 
 }

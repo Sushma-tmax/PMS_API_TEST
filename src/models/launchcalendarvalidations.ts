@@ -14,6 +14,10 @@ const launchcalendarvalidationsSchema = new Schema({
         type: Boolean,
         default: false
     },
+    reminderNotificationStatus: {
+        type: Boolean,
+        default: false
+    },
 })
 
 export default model("launchcalendarvalidations", launchcalendarvalidationsSchema);
