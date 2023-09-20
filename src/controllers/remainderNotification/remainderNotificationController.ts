@@ -114,13 +114,11 @@ async function dailyTask() {
   const appraiserEmails = await totalAppraiserDetailsEmail();
   const reviewerEmails = await totalReviewerDetailsEmail();
   const normalizerEmails = await totalNormalizerDetailsEmail();
-
   // Find all reminder notifications of type "Appraiser" with a startDate after the current date
   const reminderNotifications = await ReminderNotification.find({
-    reminderType: "Appraiser",
+    // reminderType: "Appraiser",//not required
     nextRemainderDate: { $lt: currentDate },
   });
-
   if (reminderNotifications.length === 0) {
     console.log(
       "No reminder notifications with a startDate before today. Still there is time for reminder notifications."
@@ -128,74 +126,67 @@ async function dailyTask() {
     return; // Exit the function if no notifications are found
   }
   console.log(reminderNotifications, "reminderNotifications");
-  //let emailsToSendData = [];
-
-  // Determine which email lists to include
-  // if (reminderNotifications?.sendMailTo?.includes("Appraiser")) {
-  //   emailsToSendData = emailsToSendData.concat(appraiserEmails);
-  // }
-  // if ((reminderNotifications?.sendMailTo?.includes("Reviewer")) {
-  //   emailsToSendData = emailsToSendData.concat(reviewerEmails);
-  // }
-  // if ((reminderNotifications?.sendMailTo?.includes("Normalizer")) {
-  //   emailsToSendData = emailsToSendData.concat(normalizerEmails);
-  // }
-  //   // Remove duplicate email addresses, if any
-  //   emailsToSendData = Array.from(new Set(emailsToSendData));
-  // Filter appraiser emails based on reminder notifications
-  const emailsToSend = appraiserEmails.filter((email) => {
-    return reminderNotifications.some(
-      (reminder) => reminder.nextRemainderDate > currentDate
-    );
-  });
-
   // Calculate updated startDate and remainderCount for notifications that meet the condition
-  for (const reminder of reminderNotifications) {
-    if (reminder.nextRemainderDate > currentDate) {
-      // Calculate new startDate based on occurance
-      const newStartDate = new Date(reminder.nextRemainderDate);
-      newStartDate.setDate(newStartDate.getDate() + reminder.occurance);
+  try {
+    for (const reminder of reminderNotifications) {
+      // if (reminder.nextRemainderDate > currentDate) {//date comparison ==
+      //check reminder type.
+      if (
+        reminder.nextRemainderDate.getDate() === currentDate.getDate() &&
+        reminder.nextRemainderDate.getMonth() === currentDate.getMonth() &&
+        reminder.nextRemainderDate.getFullYear() === currentDate.getFullYear()
+      ) {
+        let emailsToSendData = [];
 
-      // Update startDate and increment remainderCount
-      await ReminderNotification.updateOne(
-        { _id: reminder._id },
-        {
-          $set: {
-            previousRemainderDate: reminder.nextRemainderDate,
-            // startDate: newStartDate,
-            nextRemainderDate: newStartDate,
-            remainderCount: reminder.remainderCount + 1,
-          },
+        // Determine which email lists to include
+        if (reminder?.sendMailTo?.includes("Appraiser")) {
+          emailsToSendData = emailsToSendData.concat(appraiserEmails);
         }
-      );
-    }
-  }
+        if (reminder?.sendMailTo?.includes("Reviewer")) {
+          emailsToSendData = emailsToSendData.concat(reviewerEmails);
+        }
+        if (reminder?.sendMailTo?.includes("Normalizer")) {
+          emailsToSendData = emailsToSendData.concat(normalizerEmails);
+        }
+        // Remove duplicate email addresses, if any
+        emailsToSendData = Array.from(new Set(emailsToSendData));
+        //Email List
 
-  // Put your task logic here.
-  // For example, sending emails to the filtered appraiserEmails.
-  for (const email of emailsToSend) {
-    try {
-      // Find the corresponding reminder notification for this email
-      const reminder = reminderNotifications.find(
-        (r) => r.nextRemainderDate > currentDate && r.subject && r.content
-      );
+        // const emailsToSend = emailsToSendData.filter(async  (email) => {
+          //sending email
+          if (reminder) {
+            await sendEmail({
+              to: emailsToSendData, //emailtosend
+              cc: [],
+              subject: reminder.subject, // Use subject from ReminderNotification
+              html: `<h4>${reminder.content}</h4>`, // Use content from ReminderNotification
+            });
+            console.log(`Email sent `);
+          } else {
+            console.error(
+              `No valid reminder notification found for email `
+            );
+          }
+        // });
+        // Calculate new startDate based on occurance
+        const newStartDate = new Date(reminder.nextRemainderDate);
+        newStartDate.setDate(newStartDate.getDate() + reminder.occurance);
 
-      if (reminder) {
-        await sendEmail({
-          to: email,
-          cc: [],
-          subject: reminder.subject, // Use subject from ReminderNotification
-          html: `<h4>${reminder.content}</h4>`, // Use content from ReminderNotification
-        });
-        console.log(`Email sent to ${email}`);
-      } else {
-        console.error(
-          `No valid reminder notification found for email ${email}`
+        // Update startDate and increment remainderCount
+        await ReminderNotification.updateOne(
+          { _id: reminder._id },
+          {
+            $set: {
+              previousRemainderDate: reminder.nextRemainderDate,
+              nextRemainderDate: newStartDate,
+              remainderCount: reminder.remainderCount + 1,
+            },
+          }
         );
       }
-    } catch (error) {
-      console.error(`Failed to send email to ${email}: ${error.message}`);
     }
+  } catch (error) {
+    console.error(`Failed to send email : ${error.message}`);
   }
 }
 

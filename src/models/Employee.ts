@@ -1087,6 +1087,10 @@ const EmployeeSchema = new Schema({
             type: String,
             default: ''
         },
+        others_checkbox :{
+                type: Boolean,
+                default: false
+        },
         other_recommendation_comments: {
             type: String,
             default: ''
