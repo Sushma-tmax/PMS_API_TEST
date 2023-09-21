@@ -114,6 +114,13 @@ async function dailyTask() {
   const appraiserEmails = await totalAppraiserDetailsEmail();
   const reviewerEmails = await totalReviewerDetailsEmail();
   const normalizerEmails = await totalNormalizerDetailsEmail();
+
+//Employee
+const allEmployees = await Employee.find({"employee_upload_flag":true})
+const allEmployeeEmails = allEmployees.map(employee => employee.email);
+
+
+console.log(allEmployeeEmails,"allEmployeeEmails")
   // Find all reminder notifications of type "Appraiser" with a startDate after the current date
   const reminderNotifications = await ReminderNotification.find({
     // reminderType: "Appraiser",//not required
@@ -147,6 +154,9 @@ async function dailyTask() {
         }
         if (reminder?.sendMailTo?.includes("Normalizer")) {
           emailsToSendData = emailsToSendData.concat(normalizerEmails);
+        }
+        if (reminder?.sendMailTo?.includes("Employee")) {
+          emailsToSendData = emailsToSendData.concat(allEmployeeEmails);
         }
         // Remove duplicate email addresses, if any
         emailsToSendData = Array.from(new Set(emailsToSendData));
@@ -191,23 +201,23 @@ async function dailyTask() {
 }
 
 // Function to calculate the time until the next run (every 1 min).
-// function calculateTimeUntilNextRun() {
-//   const now = new Date();
-//   const nextMinute = new Date(now);
-//   nextMinute.setMinutes(now.getMinutes() + 1);
-//   nextMinute.setSeconds(0);
-//   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
-//   return timeUntilNextRun;
-// }
-// Function to calculate the time until the next run (every 24 hours).
 function calculateTimeUntilNextRun() {
   const now = new Date();
-  const nextRun = new Date(now);
-  nextRun.setDate(nextRun.getDate() + 1); // Add 1 day to the current date
-  nextRun.setHours(0, 0, 0, 0); // Set the time to midnight
-  const timeUntilNextRun = nextRun.getTime() - now.getTime();
+  const nextMinute = new Date(now);
+  nextMinute.setMinutes(now.getMinutes() + 1);
+  nextMinute.setSeconds(0);
+  const timeUntilNextRun = nextMinute.getTime() - now.getTime();
   return timeUntilNextRun;
 }
+// Function to calculate the time until the next run (every 24 hours).
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   const nextRun = new Date(now);
+//   nextRun.setDate(nextRun.getDate() + 1); // Add 1 day to the current date
+//   nextRun.setHours(0, 0, 0, 0); // Set the time to midnight
+//   const timeUntilNextRun = nextRun.getTime() - now.getTime();
+//   return timeUntilNextRun;
+// }
 // Function to start the daily task if reminderNotificationStatus is true
 async function startDailyTaskIfStatusIsTrue() {
   const launchCalendarValidation = await launchcalendarvalidations.findOne({});

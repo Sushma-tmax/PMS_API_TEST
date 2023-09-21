@@ -3557,10 +3557,10 @@ const getUnMappedEmployeeLength = asyncHandler(async (req: Request, res: Respons
     });
 })
 const getReviewerEmployee = asyncHandler(async (req: Request, res: Response) => {
-    const emp = await Employee.findById({ _id: req.params.id })
+    const emp:any = await Employee.findById({ _id: req.params.id })
     // console.log(emp.legal_full_name, 'emppp')
     // const emp2 = await Employee.findOne({manager_code: emp.employee_code})
-    const reviewerData = await Employee.find({ manager_code: emp.appraiser })
+    const reviewerData = await Employee.find({ manager_code: emp?.appraiser_code })
 
 
     res.status(StatusCodes.OK).json({
