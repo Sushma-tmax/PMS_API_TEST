@@ -199,16 +199,28 @@ console.log(allEmployeeEmails,"allEmployeeEmails")
     console.error(`Failed to send email : ${error.message}`);
   }
 }
-
-// Function to calculate the time until the next run (every 1 min).
+// Function to calculate the time until the next run (every 1 hour).
 function calculateTimeUntilNextRun() {
   const now = new Date();
-  const nextMinute = new Date(now);
-  nextMinute.setMinutes(now.getMinutes() + 1);
-  nextMinute.setSeconds(0);
-  const timeUntilNextRun = nextMinute.getTime() - now.getTime();
-  return timeUntilNextRun;
+  const nextHour = new Date(now);
+  nextHour.setMinutes(0); // Reset minutes to 0
+  nextHour.setSeconds(0); // Reset seconds to 0
+  nextHour.setMilliseconds(0); // Reset milliseconds to 0
+  nextHour.setHours(now.getHours() + 1); // Set hours to the next hour
+
+  const timeUntilNextHour = nextHour.getTime() - now.getTime();
+  return timeUntilNextHour;
 }
+
+// Function to calculate the time until the next run (every 1 min).
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   const nextMinute = new Date(now);
+//   nextMinute.setMinutes(now.getMinutes() + 1);
+//   nextMinute.setSeconds(0);
+//   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
+//   return timeUntilNextRun;
+// }
 // Function to calculate the time until the next run (every 24 hours).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
