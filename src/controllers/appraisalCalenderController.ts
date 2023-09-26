@@ -497,7 +497,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: [],
-
+                    appraiser_PA_rejected : false,
+                    appraiser_PA_accepted : false
                 },
                 current_rating: {
                     overall_rating: 0,
@@ -546,7 +547,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-                    attachments: []
+                    attachments: [],
+                    reviewer_PA_rejected : false,
+                    reviewer_PA_accepted : false
                 },
 
                 reviewer_previous_submission: {
@@ -571,7 +574,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     training_recommendation_comments: '',
                     feedback_questions: [],
                     area_of_improvement: [],
-                    attachments: []
+                    attachments: [],
+                    normalizer_PA_rejected : false,
+                    normalizer_PA_accepted : false
                 },
 
                 normalizer_previous_submission: {

@@ -22,14 +22,38 @@ const updateNineBox = asyncHandler(async (req: Request, res: Response) => {
             "potential_definitions": potential_definitions,
             "performance_definitions": performance_definitions,
             "box_9_definitions": box_9_definitions
-        },
-        // $push: {
-        //     "box_9_definitions": box_9_definitions
-        // }
+        },       
     }
         , {
             new: true,
             runValidators: true
+        });
+        //update performance definition high
+        const highPerformance = await PerformanceDefinition.updateOne({
+            category :"High"
+        }, {
+            $set : {
+                "from" : performance_definitions?.high_from,
+                "to": performance_definitions?.high_to,
+            }
+        });
+        //update performance definition moderate
+        const moderatePerformance = await PerformanceDefinition.updateOne({
+            category :"Moderate"
+        }, {
+            $set : {
+                "from" : performance_definitions?.medium_from,
+                "to": performance_definitions?.medium_to,
+            }
+        });
+        //update performance definition low
+        const lowPerformance = await PerformanceDefinition.updateOne({
+            category :"Low"
+        }, {
+            $set : {
+                "from" : performance_definitions?.low_from,
+                "to": performance_definitions?.low_to,
+            }
         });
     res.status(StatusCodes.OK).json({
         success: true,
