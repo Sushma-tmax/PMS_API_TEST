@@ -28,8 +28,7 @@ import {Request, Response} from "express";
 import emailRoutes from "./src/routes/emailRoutes";
 import bulkApiRoutes from "./src/routes/bulkApiRoutes";
 import previousAppraisalRoutes from "./src/routes/previousAppraisalRoutes";
-
-
+import reminderNotificationRoutes from "./src/routes/reminderNotificationRoutes";
 
 
 
@@ -94,6 +93,7 @@ app.use('/api/v1/azure-images',azureImagesRoutes)
 app.use('/api/v1/color', dashboardColorRoutes)
 app.use('/api/v1/validations',launchcalendarvalidationsRoutes)
 app.use('/api/v1/bulk', bulkApiRoutes)
+app.use('/api/v1/reminderNotification',reminderNotificationRoutes)
 const graphAPIQuery = asyncHandler(async (req: Request, res: Response) => {
 
     const {site, list,email} = req.body
