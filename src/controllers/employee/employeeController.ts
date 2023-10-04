@@ -1862,7 +1862,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
     //     employee
     // });
 
-    if (Math.abs(current_overallRating - normalizer.normalizer_rating) <= 0.3) {
+    if (Math.abs(current_overallRating - normalizer.normalized_overallRating) <= 0.3) {
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
@@ -1906,7 +1906,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         });
     }
 
-    if (Math.abs(current_overallRating - normalizer.normalizer_rating) >= 0.3) {
+    if (Math.abs(current_overallRating - normalizer.normalized_overallRating) >= 0.3) {
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {

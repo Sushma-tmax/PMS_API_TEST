@@ -115,16 +115,18 @@ async function dailyTask() {
   const reviewerEmails = await totalReviewerDetailsEmail();
   const normalizerEmails = await totalNormalizerDetailsEmail();
 
-//Employee
-const allEmployees = await Employee.find({"employee_upload_flag":true})
-const allEmployeeEmails = allEmployees.map(employee => employee.email);
+  //Employee
+  const allEmployees = await Employee.find({ employee_upload_flag: true });
+  //const allEmployeeEmails = allEmployees.map(employee => employee.email);
+  const allEmployeeEmails = allEmployees
+    .map((employee) => employee.email)
+    .filter(Boolean);
 
-
-console.log(allEmployeeEmails,"allEmployeeEmails")
+  console.log(allEmployeeEmails, "allEmployeeEmails");
   // Find all reminder notifications of type "Appraiser" with a startDate after the current date
   const reminderNotifications = await ReminderNotification.find({
     // reminderType: "Appraiser",//not required
-    nextRemainderDate: { $lt: currentDate },
+    // nextRemainderDate: { $eq: currentDate },
   });
   if (reminderNotifications.length === 0) {
     console.log(
@@ -139,9 +141,10 @@ console.log(allEmployeeEmails,"allEmployeeEmails")
       // if (reminder.nextRemainderDate > currentDate) {//date comparison ==
       //check reminder type.
       if (
-        reminder.nextRemainderDate.getDate() === currentDate.getDate() &&
-        reminder.nextRemainderDate.getMonth() === currentDate.getMonth() &&
-        reminder.nextRemainderDate.getFullYear() === currentDate.getFullYear()
+        reminder?.nextRemainderDate?.getDate() === currentDate?.getDate() &&
+        reminder?.nextRemainderDate?.getMonth() === currentDate?.getMonth() &&
+        reminder?.nextRemainderDate?.getFullYear() ===
+          currentDate?.getFullYear()
       ) {
         let emailsToSendData = [];
 
@@ -159,24 +162,27 @@ console.log(allEmployeeEmails,"allEmployeeEmails")
           emailsToSendData = emailsToSendData.concat(allEmployeeEmails);
         }
         // Remove duplicate email addresses, if any
-        emailsToSendData = Array.from(new Set(emailsToSendData));
-        //Email List
+        //emailsToSendData = Array.from(new Set(emailsToSendData));
+        // Remove duplicate email addresses and undefined values, if any
+        emailsToSendData = Array.from(
+          new Set(emailsToSendData.filter(Boolean))
+        );
 
+        //Email List
+        console.log(emailsToSendData, "emailsToSendData");
         // const emailsToSend = emailsToSendData.filter(async  (email) => {
-          //sending email
-          if (reminder) {
-            await sendEmail({
-              to: emailsToSendData, //emailtosend
-              cc: [],
-              subject: reminder.subject, // Use subject from ReminderNotification
-              html: `<h4>${reminder.content}</h4>`, // Use content from ReminderNotification
-            });
-            console.log(`Email sent `);
-          } else {
-            console.error(
-              `No valid reminder notification found for email `
-            );
-          }
+        //sending email
+        if (reminder) {
+          await sendEmail({
+            to: emailsToSendData, //emailtosend
+            cc: [],
+            subject: reminder?.subject + "hi", // Use subject from ReminderNotification
+            html: `<h4>${reminder?.content}</h4>`, // Use content from ReminderNotification
+          });
+          console.log(`Email sent `);
+        } else {
+          console.error(`No valid reminder notification found for email `);
+        }
         // });
         // Calculate new startDate based on occurance
         const newStartDate = new Date(reminder.nextRemainderDate);
@@ -200,23 +206,31 @@ console.log(allEmployeeEmails,"allEmployeeEmails")
   }
 }
 // Function to calculate the time until the next run (every 1 hour).
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   const nextHour = new Date(now);
+//   nextHour.setMinutes(0); // Reset minutes to 0
+//   nextHour.setSeconds(0); // Reset seconds to 0
+//   nextHour.setMilliseconds(0); // Reset milliseconds to 0
+//   nextHour.setHours(now.getHours() + 1); // Set hours to the next hour
+
+//   const timeUntilNextHour = nextHour.getTime() - now.getTime();
+//   return timeUntilNextHour;
+// }
+// Function to calculate the time until the next run (every 30 min).
 function calculateTimeUntilNextRun() {
   const now = new Date();
-  const nextHour = new Date(now);
-  nextHour.setMinutes(0); // Reset minutes to 0
-  nextHour.setSeconds(0); // Reset seconds to 0
-  nextHour.setMilliseconds(0); // Reset milliseconds to 0
-  nextHour.setHours(now.getHours() + 1); // Set hours to the next hour
-
-  const timeUntilNextHour = nextHour.getTime() - now.getTime();
-  return timeUntilNextHour;
+  const nextMinute = new Date(now);
+  nextMinute.setMinutes(now.getMinutes() + 30);
+  nextMinute.setSeconds(0);
+  const timeUntilNextRun = nextMinute.getTime() - now.getTime();
+  return timeUntilNextRun;
 }
-
 // Function to calculate the time until the next run (every 1 min).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
 //   const nextMinute = new Date(now);
-//   nextMinute.setMinutes(now.getMinutes() + 1);
+//   nextMinute.setMinutes(now.getMinutes() + 2);
 //   nextMinute.setSeconds(0);
 //   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
 //   return timeUntilNextRun;

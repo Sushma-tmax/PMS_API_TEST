@@ -57,11 +57,14 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
   const normalizerCodes = new Set(
     employeeData.map((item) => item.normalizer_code)
   );
+  const managerCodes = new Set(
+    employeeData.map((item) => item.manager_code)
+  );
 
   // retrieve all employees with these codes
   const employeesWithCodes = await Employee.find({
     employee_code: {
-      $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes],
+      $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes, ...managerCodes],
     },
   });
 
@@ -73,6 +76,8 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
     const reviewerName = item.reviewer_name;
     const normalizerCode = item.normalizer_code;
     const normalizerName = item.normalizer_name;
+    const managerCode = item.manager_code;
+    const managerName = item.manager_name;
 
     // find the employee with the corresponding appraiser code
     const employeeWithAppraiserCode = employeesWithCodes.find(
@@ -111,6 +116,19 @@ const updateValidations = asyncHandler(async (req: Request, res: Response) => {
       }
     } else {
       errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
+    }
+
+    // find the employee with the corresponding manager code
+    const employeeWithManagerCode = employeesWithCodes.find(
+      (employee) => employee.employee_code === managerCode
+    );
+    if (employeeWithManagerCode) {
+      const employeeManagerName = employeeWithManagerCode.legal_full_name;
+      if (employeeManagerName !== managerName) {
+        errorMessage += `Manager name '${managerName}' is not correct for employee code '${employeeCode}'.\n`;
+      }
+    } else {
+      errorMessage += `Manager code '${managerCode}' does not exist.\n`;
     }
   });
 
