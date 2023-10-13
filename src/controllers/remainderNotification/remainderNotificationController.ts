@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import _ from "lodash";
 import ReminderNotification from "../../models/ReminderNotification";
 import launchcalendarvalidations from "../../models/launchcalendarvalidations";
+import Calender from "../../models/Calender";
 import {
   totalAppraiserDetails,
   totalReviewerDetails,
@@ -86,7 +87,7 @@ function stopDailyTask() {
   }
 }
 
-// Function to periodically check the reminderNotificationStatus
+// Function to periodically check the reminderNotificationStatus(without endDate check)
 async function checkStatus() {
   try {
     const launchCalendarValidation = await launchcalendarvalidations.findOne(
@@ -100,10 +101,40 @@ async function checkStatus() {
   } catch (error) {
     console.error("Error while checking status:", error);
   }
-
   // Check the status periodically, e.g., every minute
   setTimeout(checkStatus, 60 * 1000); // 60 seconds
 }
+// async function checkStatus() {
+//   try {
+//     const calenders = await Calender.find({ status: "Live" })
+    
+//     if (calenders.length > 0) {
+//       const activeCalendar = calenders[0]; // Get the latest calendar
+//       const currentDate = new Date();
+//       //console.log(activeCalendar.end_date > currentDate,"calendersLIVE")
+//       // Check if the current date is before the end_date of the latest calendar
+//       if (activeCalendar.end_date > currentDate) {
+//         const launchCalendarValidation = await launchcalendarvalidations.findOne({});
+        
+//         if (launchCalendarValidation?.reminderNotificationStatus === true) {
+//           startDailyTask();
+//         } else {
+//           stopDailyTask();
+//         }
+//       } else {
+//         // End date of the latest calendar has passed, stop the task
+//         stopDailyTask();
+//       }
+//     } else {
+//       // No live calendars found, stop the task
+//       stopDailyTask();
+//     }
+//   } catch (error) {
+//     console.error("Error while checking status:", error);
+//   }
+//   // Check the status periodically, e.g., every minute
+//   setTimeout(checkStatus, 60 * 1000); // 60 seconds
+// }
 
 // Start checking the status
 checkStatus();
@@ -116,7 +147,7 @@ async function dailyTask() {
   const normalizerEmails = await totalNormalizerDetailsEmail();
 
   //Employee
-  const allEmployees = await Employee.find({ employee_upload_flag: true });
+  const allEmployees = await Employee.find({ "employee_upload_flag": true , "appraisal.pa_status" :"Pending with Appraiser"});//"Pending with Employee"
   //const allEmployeeEmails = allEmployees.map(employee => employee.email);
   const allEmployeeEmails = allEmployees
     .map((employee) => employee.email)
@@ -138,7 +169,7 @@ async function dailyTask() {
   // Calculate updated startDate and remainderCount for notifications that meet the condition
   try {
     for (const reminder of reminderNotifications) {
-      // if (reminder.nextRemainderDate > currentDate) {//date comparison ==
+     
       //check reminder type.
       if (
         reminder?.nextRemainderDate?.getDate() === currentDate?.getDate() &&
@@ -161,16 +192,16 @@ async function dailyTask() {
         if (reminder?.sendMailTo?.includes("Employee")) {
           emailsToSendData = emailsToSendData.concat(allEmployeeEmails);
         }
-        // Remove duplicate email addresses, if any
-        //emailsToSendData = Array.from(new Set(emailsToSendData));
+       
+       
         // Remove duplicate email addresses and undefined values, if any
         emailsToSendData = Array.from(
           new Set(emailsToSendData.filter(Boolean))
         );
-
+     
         //Email List
         console.log(emailsToSendData, "emailsToSendData");
-        // const emailsToSend = emailsToSendData.filter(async  (email) => {
+      
         //sending email
         if (reminder) {
           await sendEmail({
@@ -205,28 +236,28 @@ async function dailyTask() {
     console.error(`Failed to send email : ${error.message}`);
   }
 }
-// Function to calculate the time until the next run (every 1 hour).
-// function calculateTimeUntilNextRun() {
-//   const now = new Date();
-//   const nextHour = new Date(now);
-//   nextHour.setMinutes(0); // Reset minutes to 0
-//   nextHour.setSeconds(0); // Reset seconds to 0
-//   nextHour.setMilliseconds(0); // Reset milliseconds to 0
-//   nextHour.setHours(now.getHours() + 1); // Set hours to the next hour
-
-//   const timeUntilNextHour = nextHour.getTime() - now.getTime();
-//   return timeUntilNextHour;
-// }
-// Function to calculate the time until the next run (every 30 min).
+// Function to calculate the time until the next run (every 2 hour).
 function calculateTimeUntilNextRun() {
   const now = new Date();
-  const nextMinute = new Date(now);
-  nextMinute.setMinutes(now.getMinutes() + 30);
-  nextMinute.setSeconds(0);
-  const timeUntilNextRun = nextMinute.getTime() - now.getTime();
-  return timeUntilNextRun;
+  const nextHour = new Date(now);
+  nextHour.setMinutes(0); // Reset minutes to 0
+  nextHour.setSeconds(0); // Reset seconds to 0
+  nextHour.setMilliseconds(0); // Reset milliseconds to 0
+  nextHour.setHours(now.getHours() + 2); // Set hours to the next hour
+
+  const timeUntilNextHour = nextHour.getTime() - now.getTime();
+  return timeUntilNextHour;
 }
-// Function to calculate the time until the next run (every 1 min).
+// Function to calculate the time until the next run (every 30 min).
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   const nextMinute = new Date(now);
+//   nextMinute.setMinutes(now.getMinutes() + 30);
+//   nextMinute.setSeconds(0);
+//   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
+//   return timeUntilNextRun;
+// }
+// Function to calculate the time until the next run (every 2 min).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
 //   const nextMinute = new Date(now);

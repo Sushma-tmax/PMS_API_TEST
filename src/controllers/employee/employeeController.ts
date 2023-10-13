@@ -1641,11 +1641,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal_previous_submission.objective_description": appraisal.objective_description,
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
                 "normalizer.normalizer_rating": current_overallRating,
-                "normalizer.normalized_overallRating": normalized_overallRating,
-                "normalizer.training_recommendation": appraisal.training_recommendation,
-                "normalizer.other_recommendation": appraisal.other_recommendation,
-                "normalizer.area_of_improvement": appraisal.area_of_improvement,
-                "normalizer.feedback_questions": appraisal.feedback_questions,
+                "normalizer.normalized_overallRating": normalized_overallRating,                
                 "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
                 "normalizerIsDisabled": true,
@@ -1663,6 +1659,8 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "current_previous_submission.objective_description": current_previous_submission,
                 "current_previous_submission.overall_rating": previous_overall_rating,
                 "normalizer.normalizer_PA_rejected" : false,
+                /** making normalizer rejection reason empty if normalizer accepted PA */
+                "normalizer.normalizer_overall_feedback" : ""
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
             }
