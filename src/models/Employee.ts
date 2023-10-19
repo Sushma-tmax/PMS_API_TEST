@@ -1197,10 +1197,10 @@ const EmployeeSchema = new Schema({
             type: String,
             default: ''
         },
-        reason_for_rejection: {
+        reviewer_comments: {
             type: String
         },
-        reason_for_rejection_draft: {
+        reviewer_comments_draft: {
             type: String
         },
         reviewer_acceptance: {
