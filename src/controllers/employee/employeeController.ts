@@ -203,7 +203,7 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
                     path: 'objective_description.name'
                 }
             })
-            .select('-reviewer -appraisal_previous_submission -employee_previous_submission -normalizer_previous_submission -reviewer_previous_submission -appraisal_previous_rating ')
+            .select('-appraisal_previous_submission -employee_previous_submission -normalizer_previous_submission -reviewer_previous_submission -appraisal_previous_rating ')
 
     }
     // employees.populate('calendar')
@@ -1626,7 +1626,7 @@ const appraisalStatusFilter = asyncHandler(async (req: Request, res: Response) =
 
 
 const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
-    const { id, current_overallRating, reviewerObjectiveDescription, normalized_Date, current_previous_submission, previous_overall_rating, appraisal_previous_rating, normalized_overallRating } = req.body
+    const { id, current_overallRating, reviewerObjectiveDescription, normalized_Date, current_previous_submission, previous_overall_rating, appraisal_previous_rating, normalized_overallRating, normalizer_comments } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1660,9 +1660,10 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "current_previous_submission.overall_rating": previous_overall_rating,
                 "normalizer.normalizer_PA_rejected" : false,
                 /** making normalizer rejection reason empty if normalizer accepted PA */
-                "normalizer.normalizer_overall_feedback" : ""
+                "normalizer.normalizer_overall_feedback" : "",
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
+                "normalizer.reason_for_rejection" : normalizer_comments
             }
         }
     )
@@ -1674,7 +1675,7 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
 
 
 const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Response) => {
-    const { id, talentCategory, current_overallRating } = req.body
+    const { id, talentCategory, current_overallRating, normalizer_comments } = req.body
     console.log(id, '`````````````````````````````````````````````````')
     const { reviewer: appraisal } = await Employee.findById(id);
 
@@ -1702,6 +1703,7 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "appraisal.pa_rating": current_overallRating,
                 "talent_category": talentCategory,
                 "normalizer.normalizer_PA_rejected" : false,
+                "normalizer.reason_for_rejection" : normalizer_comments
             }
         }
     )

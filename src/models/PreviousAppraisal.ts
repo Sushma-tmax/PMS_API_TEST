@@ -96,6 +96,33 @@ const PreviousAppraisal = new Schema({
     first_name : {
         type: String,
     },
+    function : {
+        type: String,
+    },
+    email : {
+        type: String,
+    },
+    normalizer_rating : {
+        type: String,
+    },
+    reviewer_rating : {
+        type: String,
+    },
+    appraiser_rating : {
+        type: String,
+    },
+    employee_rating : {
+        type: String,
+    },
+    normalized_overallRating : {
+        type: String,
+    },
+    employee_status : {
+        type: String,
+    },
+    status: {
+        type: String,
+    },
     appraisal: {
         appraiser_overall_feedback: {
             type: String
@@ -109,7 +136,34 @@ const PreviousAppraisal = new Schema({
         status: {
             type: String
         },
+      
     },
+    appraiser_PA_accepted: {
+        type: String
+    },
+    appraiser_PA_rejected: {
+        type: String
+    },
+        reviewer_PA_rejected: {
+            type: Boolean,
+            default: false
+        },
+        reviewer_PA_accepted: {
+            type: Boolean,
+            default: false
+        },
+    
+   
+        normalizer_PA_accepted: {
+            type: Boolean,
+            default: false
+        },
+
+        normalizer_PA_rejected: {
+            type: Boolean,
+            default: false
+        },
+    
     employee: {
         employee_status: {
             type: String
@@ -120,6 +174,15 @@ const PreviousAppraisal = new Schema({
         employee_rejection:{
             type: String
         },
+    },
+    high:{
+        type: String
+    },
+    moderate:{
+        type: String
+    },
+    low:{
+        type: String
     },
     // objective_description: [{
     //     description: {

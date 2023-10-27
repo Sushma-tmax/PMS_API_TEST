@@ -114,7 +114,11 @@ const CalenderSchema = new Schema({
         calendar_type:{
             type: String,
             default : "Mid Year"
-        }
+        },
+        calendar_closing_date: {
+            type: Date,
+            //required: true,
+        },  
         } ,{timestamps: true})
 
         CalenderSchema.plugin(UniqueValidator)
