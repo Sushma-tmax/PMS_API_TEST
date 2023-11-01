@@ -2821,9 +2821,9 @@ const totalReviewerDetailsEmail = async () => {
 
 const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params
-    const { comments } = req.body
+    // const { comments } = req.body
 
-    console.log('```````````` running ', id, comments)
+    console.log('```````````` running ', id)
 
     // const  id = "62ac2037c1c19127416aaff1"
 
@@ -2836,7 +2836,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
 
         const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
-                "employee.comments": comments,
+                // "employee.comments": comments,
                 "appraisal.appraiser_status": 'employee-rejected',
                 "appraisal.status": "rejected",
                 "employee.employee_status": "rejected"
@@ -2846,7 +2846,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
     } else if (agreeValue === false) {
         const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
-                "employee.comments": comments,
+                // "employee.comments": comments,
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
                 "normalizer.normalizer_status": 'employee-rejected',

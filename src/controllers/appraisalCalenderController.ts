@@ -831,12 +831,19 @@ const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) 
 
 
     // @ts-ignore
-
-    const updatePreviousRating = await Employee.collection.updateMany({}, [{
-        "$set": {
+    const updatePreviousRating = await Employee.collection.updateMany(
+        { "appraisal.status": "completed" },
+        [{
+          "$set": {
             "previous_rating": "$appraisal.pa_rating"
-        }
-    }])
+          }
+        }]
+      );
+    // const updatePreviousRating = await Employee.collection.updateMany({}, [{
+    //     "$set": {
+    //         "previous_rating": "$appraisal.pa_rating"
+    //     }
+    // }])
     //     const addEmployeetoPreviousAppraisal = PreviousAppraisal.insertMany(emp)
 
     res.status(StatusCodes.OK).json({
