@@ -54,7 +54,7 @@ const getpastAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res:
 const getPreviousAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res: Response) => {
     const {employeeCode,calendarId} = req.params;  
 
-    const employeeArray = await PreviousAppraisal.find({employee_code : employeeCode , calendar: new mongoose.Types.ObjectId(calendarId)})
+    const employeeArray = await PreviousAppraisal.find({employee_code : employeeCode , calendar: new mongoose.Types.ObjectId(calendarId), "appraisal.status":"completed"})
     let employee = employeeArray[0]
     console.log(employeeCode,employee,'calendardata')
     res.status(StatusCodes.OK).json({
@@ -76,7 +76,7 @@ const getEmployeeDetailsPrevious = asyncHandler(async (req: Request, res: Respon
 const getEmployeePAWithEmployeeCode = asyncHandler(async (req: Request, res: Response) => {
     const {employeeCode} = req.params;  
 
-    const employees = await PreviousAppraisal.find({ employee_code: employeeCode })
+    const employees = await PreviousAppraisal.find({ employee_code: employeeCode, "appraisal.status" : "completed"})
   .sort({ createdAt: -1 })
   .exec(); 
     res.status(StatusCodes.OK).json({
