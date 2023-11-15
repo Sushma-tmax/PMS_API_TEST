@@ -1912,7 +1912,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
         const employee = await Employee.updateMany({ _id: { $in: id } },
             {
                 $set: {
-                    "appraisal.pa_status": "Pending with HR Normalizer",
+                    "appraisal.pa_status": "Pending with HR Normalizer (Re-normalization)",
                     "appraisal.pa_rating": current_overallRating,
                     "appraisal.status": "rejected",
                     "appraisal.show_reviewer": false,
@@ -4452,6 +4452,21 @@ const updateSubsectionForEmployees = asyncHandler(async (req: Request, res: Resp
 })
 
 
+const checkRoleLogs = asyncHandler(async (req : Request , res: Response) => {
+    const {pa_action_by, id} = req.body
+    const updateEmployeeLogs = await Employee.findByIdAndUpdate(id,{
+        $push : {
+            activity_Log : {
+                pa_action_by : pa_action_by 
+            }
+        },
+        new: true
+    })
+    res.status(StatusCodes.OK).json({
+        updateEmployeeLogs
+    });
+})
+
 
 
 export {
@@ -4544,6 +4559,7 @@ export {
     removeMeetingNotesNormalizerAttachments,
     totalAppraiserDetailsEmail,
     totalNormalizerDetailsEmail,
-    totalReviewerDetailsEmail
+    totalReviewerDetailsEmail,
+    checkRoleLogs
 
 }

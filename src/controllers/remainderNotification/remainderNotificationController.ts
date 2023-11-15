@@ -208,7 +208,7 @@ async function dailyTask() {
             to: emailsToSendData, //emailtosend
             cc: [],
             subject: reminder?.subject + "hi", // Use subject from ReminderNotification
-            html: `<h4>${reminder?.content}</h4>`, // Use content from ReminderNotification
+            html: reminder?.content, // Use content from ReminderNotification
           });
           console.log(`Email sent `);
         } else {

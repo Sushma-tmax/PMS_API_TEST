@@ -123,6 +123,9 @@ const PreviousAppraisal = new Schema({
     status: {
         type: String,
     },
+    previous_rating : {
+        type: String,
+    },
     appraisal: {
         appraiser_overall_feedback: {
             type: String

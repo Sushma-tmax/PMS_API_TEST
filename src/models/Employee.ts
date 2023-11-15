@@ -248,6 +248,9 @@ const EmployeeSchema = new Schema({
         type: String
     },
 
+    activity_Log: [{
+        pa_action_by : {type: String} 
+    }],
 
     employee: {
         one_to_one_meeting: {
