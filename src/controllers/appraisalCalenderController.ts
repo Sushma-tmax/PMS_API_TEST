@@ -482,6 +482,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 appraiserIsDisabled: true,
                 appraiserIsChecked: false,
                 calendar: new mongoose.Types.ObjectId(calendar),
+                activity_Log : [],
                 appraisal: {
                     appraiser_status: 'pending',
                     status: 'not-started',

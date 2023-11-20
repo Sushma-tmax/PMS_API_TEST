@@ -724,6 +724,9 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            rating_scale :{
+                type: String,
+            },
             ratingdef: {
                 type: String,
             },
