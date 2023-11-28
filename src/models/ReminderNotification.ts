@@ -32,6 +32,9 @@ const ReminderNotificationSchema = new Schema({
   sendMailTo: {
    type:Array,
   },
+  reminderLogs: {
+    type:Array,
+   },
 },  {timestamps: true});
 
 export default model("ReminderNotification", ReminderNotificationSchema);

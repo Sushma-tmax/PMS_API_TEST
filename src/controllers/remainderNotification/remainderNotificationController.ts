@@ -169,7 +169,7 @@ async function dailyTask() {
   // Calculate updated startDate and remainderCount for notifications that meet the condition
   try {
     for (const reminder of reminderNotifications) {
-     
+     let logMessage = "";
       //check reminder type.
       if (
         reminder?.nextRemainderDate?.getDate() === currentDate?.getDate() &&
@@ -177,23 +177,26 @@ async function dailyTask() {
         reminder?.nextRemainderDate?.getFullYear() ===
           currentDate?.getFullYear()
       ) {
-        let emailsToSendData = [];
 
+        let emailsToSendData = [];
+        let emailsToSend = [];
         // Determine which email lists to include
         if (reminder?.sendMailTo?.includes("Appraiser")) {
           emailsToSendData = emailsToSendData.concat(appraiserEmails);
+          emailsToSend = emailsToSend.concat("Appraiser")
         }
         if (reminder?.sendMailTo?.includes("Reviewer")) {
           emailsToSendData = emailsToSendData.concat(reviewerEmails);
+          emailsToSend = emailsToSend.concat("Reviewer")
         }
         if (reminder?.sendMailTo?.includes("Normalizer")) {
           emailsToSendData = emailsToSendData.concat(normalizerEmails);
+          emailsToSend = emailsToSend.concat("Normalizer")
         }
         if (reminder?.sendMailTo?.includes("Employee")) {
           emailsToSendData = emailsToSendData.concat(allEmployeeEmails);
+          emailsToSend = emailsToSend.concat("Employee")
         }
-       
-       
         // Remove duplicate email addresses and undefined values, if any
         emailsToSendData = Array.from(
           new Set(emailsToSendData.filter(Boolean))
@@ -204,16 +207,33 @@ async function dailyTask() {
       
         //sending email
         if (reminder) {
+          // Update the reminderLog array with the current time and date
+          //const updatedReminderLog = [...(reminder?.reminderLogs || []), { sentAt: new Date() }];
+
+          // Update the reminder object with the new reminderLog
+          //const updatedReminder = { ...reminder, reminderLogs: updatedReminderLog };
           await sendEmail({
             to: emailsToSendData, //emailtosend
             cc: [],
             subject: reminder?.subject + "hi", // Use subject from ReminderNotification
             html: reminder?.content, // Use content from ReminderNotification
-          });
+          }).then((res)=>{
+            logMessage += "Email sent"
+          }).catch((res)=>{
+            logMessage += `Failed to send email : ${res.message}`
+          })
+          //add the appended array
           console.log(`Email sent `);
         } else {
           console.error(`No valid reminder notification found for email `);
         }
+        // Update the reminderLog array with the current time and date
+        const updatedReminderLog = [
+          ...(reminder?.reminderLogs || []),
+           { sentAt: new Date(),sentTo: emailsToSendData,logMessage }
+        ];
+        // Update the reminder object with the new reminderLog
+        // const updatedReminder = { ...reminder, reminderLogs: updatedReminderLog };
         // });
         // Calculate new startDate based on occurance
         const newStartDate = new Date(reminder.nextRemainderDate);
@@ -227,6 +247,7 @@ async function dailyTask() {
               previousRemainderDate: reminder.nextRemainderDate,
               nextRemainderDate: newStartDate,
               remainderCount: reminder.remainderCount + 1,
+              reminderLogs:updatedReminderLog
             },
           }
         );
@@ -234,20 +255,21 @@ async function dailyTask() {
     }
   } catch (error) {
     console.error(`Failed to send email : ${error.message}`);
+    //add another log to application errors with func name,date,error msg and data(reminder for here)
   }
 }
 // Function to calculate the time until the next run (every 2 hour).
-function calculateTimeUntilNextRun() {
-  const now = new Date();
-  const nextHour = new Date(now);
-  nextHour.setMinutes(0); // Reset minutes to 0
-  nextHour.setSeconds(0); // Reset seconds to 0
-  nextHour.setMilliseconds(0); // Reset milliseconds to 0
-  nextHour.setHours(now.getHours() + 2); // Set hours to the next hour
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   const nextHour = new Date(now);
+//   nextHour.setMinutes(0); // Reset minutes to 0
+//   nextHour.setSeconds(0); // Reset seconds to 0
+//   nextHour.setMilliseconds(0); // Reset milliseconds to 0
+//   nextHour.setHours(now.getHours() + 2); // Set hours to the next hour
 
-  const timeUntilNextHour = nextHour.getTime() - now.getTime();
-  return timeUntilNextHour;
-}
+//   const timeUntilNextHour = nextHour.getTime() - now.getTime();
+//   return timeUntilNextHour;
+// }
 // Function to calculate the time until the next run (every 30 min).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
@@ -258,14 +280,14 @@ function calculateTimeUntilNextRun() {
 //   return timeUntilNextRun;
 // }
 // Function to calculate the time until the next run (every 2 min).
-// function calculateTimeUntilNextRun() {
-//   const now = new Date();
-//   const nextMinute = new Date(now);
-//   nextMinute.setMinutes(now.getMinutes() + 2);
-//   nextMinute.setSeconds(0);
-//   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
-//   return timeUntilNextRun;
-// }
+function calculateTimeUntilNextRun() {
+  const now = new Date();
+  const nextMinute = new Date(now);
+  nextMinute.setMinutes(now.getMinutes() + 2);
+  nextMinute.setSeconds(0);
+  const timeUntilNextRun = nextMinute.getTime() - now.getTime();
+  return timeUntilNextRun;
+}
 // Function to calculate the time until the next run (every 24 hours).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
