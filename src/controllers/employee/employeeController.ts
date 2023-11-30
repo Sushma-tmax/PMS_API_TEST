@@ -202,7 +202,7 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
                 populate: {
                     path: 'objective_description.name'
                 }
-            })
+            })          
             .select('-appraisal_previous_submission -employee_previous_submission -normalizer_previous_submission -reviewer_previous_submission -appraisal_previous_rating ')
 
     }
@@ -439,6 +439,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         })
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.feedback_questions.name')
+        .populate('appraisal_previous_submission') 
         .populate({
             path: 'reviewer',
             populate: {
@@ -815,6 +816,9 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
         })
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.feedback_questions.name')
+        .populate('appraisal_previous_submission.feedback_questions.name')
+        .populate('appraisal_previous_submission.training_recommendation.name')
+        .populate('appraisal_previous_submission.other_recommendation.name')
         .populate({
             path: 'reviewer',
             populate: {
@@ -1688,10 +1692,6 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer_previous_submission.normalizer_rating": appraisal.reviewer_rating,
                 "normalizer.normalizer_rating": current_overallRating,
                 "employee.employee_rating": current_overallRating,
-                "normalizer.training_recommendation": appraisal.training_recommendation,
-                "normalizer.other_recommendation": appraisal.other_recommendation,
-                "normalizer.area_of_improvement": appraisal.area_of_improvement,
-                "normalizer.feedback_questions": appraisal.feedback_questions,
                 "appraisal.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "normalizerIsChecked": true,
@@ -1700,10 +1700,14 @@ const acceptNormalizerGradeException = asyncHandler(async (req: Request, res: Re
                 "normalizer.normalizer_status": 'normalizer-accepted',
                 "appraisal.status": "completed",
                 "appraisal.pa_status": "Completed",
+                "appraisal_previous_submission.pa_status": "Completed",
                 "appraisal.pa_rating": current_overallRating,
                 "talent_category": talentCategory,
                 "normalizer.normalizer_PA_rejected" : false,
-                "normalizer.reason_for_rejection" : normalizer_comments
+                "normalizer.reason_for_rejection" : normalizer_comments,
+                "normalizer_previous_submission.reason_for_rejection" : normalizer_comments,
+                "normalizer.normalizer_overall_feedback" : "",
+                "normalizer_previous_submission.normalizer_overall_feedback" : "",
             }
         }
     )
@@ -1793,12 +1797,14 @@ const acceptReviewer = asyncHandler(async (req: Request, res: Response) => {
                 "appraisal.appraiser_rejected": false,
                 "appraisal.objective_description": appraisal_objective_description,
                 "appraisal_previous_submission.objective_description": appraisal_objective_description,
+                "appraisal_previous_submission.pa_status": "Pending with HR Normalizer",
                 // "normalizer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
                 "reviewer_previous_submission.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
                 "reviewer_previous_submission.reviewer_rating": appraisal.appraiser_rating,
                 // "reviewer.reviewer_rating": appraisal.appraiser_rating,
                 "reviewer.reviewer_rating": current_overallRating,
                 "reviewer.reviewer_overall_feedback": "",
+                "reviewer_previous_submission.reviewer_overall_feedback": "",
                 "reviewer.reviewer_acceptance": true,
                 "reviewerIsChecked": true,
                 "reviewerIsDisabled": true,
@@ -1871,6 +1877,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "appraisal.show_reviewer": false,
                     "appraisal.pa_rating": current_overallRating,
                     "appraisal_previous_submission.objective_description": appraisal_previous_submission,
+                    "appraisal_previous_submission.pa_status": "Completed",
                     // "reviewer.objective_group": appraisal.objective_group,
                     // "reviewer.objective_type": appraisal.objective_type,
                     // "reviewer.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
@@ -1899,7 +1906,10 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "reviewer.reviewer_PA_accepted" : true,
                     "appraisal.appraiser_PA_rejected" : false,
                     "reviewer.reviewer_comments" : reviewer_comments,
-                    "reviewer.reviewer_comments_draft" : reviewer_comments_draft
+                    "reviewer.reviewer_comments_draft" : reviewer_comments_draft,
+                    "reviewer_previous_submission.reviewer_comments" : reviewer_comments,
+                    "reviewer.reviewer_overall_feedback": "",
+                    "reviewer_previous_submission.reviewer_overall_feedback": "",
                 }
             }
         )
@@ -1917,6 +1927,7 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "appraisal.status": "rejected",
                     "appraisal.show_reviewer": false,
                     "appraisal_previous_submission.objective_description": appraisal_previous_submission,
+                    "appraisal_previous_submission.pa_status": "Pending with HR Normalizer (Re-normalization)",
                     "reviewer.objective_group": appraisal.objective_group,
                     "reviewer.objective_type": appraisal.objective_type,
                     "reviewer.objective_description": getRatingsfromObjectiveDescriptionForAccept(appraisal.objective_description),
@@ -1942,6 +1953,10 @@ const acceptReviewerEmployeeRejection = asyncHandler(async (req: Request, res: R
                     "reviewer.reviewer_PA_rejected" : false,
                     "reviewer.reviewer_PA_accepted" : true,
                     "appraisal.appraiser_PA_rejected" : false,
+                    "reviewer.reviewer_comments" : reviewer_comments,
+                    "reviewer_previous_submission.reviewer_comments" : reviewer_comments,
+                    "reviewer.reviewer_overall_feedback": "",
+                    "reviewer_previous_submission.reviewer_overall_feedback": "",
                 }
             }
         )
@@ -2764,7 +2779,8 @@ const totalAppraiserDetailsEmail = async () => {
                 });
             }
             // Check if pa_status is "Pending with Appraiser" before pushing the employee
-            if (employee.appraisal && employee.appraisal.pa_status === "Pending with Appraiser") {
+            // === "Pending with Appraiser" changed to includes
+            if (employee.appraisal && employee.appraisal.pa_status.includes("Pending with Appraiser")) {
                 const updatedAppraiser = appraiserDetails.find(appraiser => appraiser.appraiserName === appraiserName);
                 updatedAppraiser.count++;
                 updatedAppraiser?.employees?.push(employee);
@@ -2908,7 +2924,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         current_overallRating,
         current_previous_submission,
         appraisalObjectiveDescription,
-        employee_previous_submission
+        employee_previous_submission,
+        appraiser_overall_feedback
     } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
@@ -2920,8 +2937,11 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.status": 'rejected',
             "appraisal.pa_status": "Pending with Reviewer (Employee Rejection)",
             "appraisal.comments": comments,
+            "appraisal.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
             "appraisal_previous_submission.objective_description": appraisal.objective_description,
             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
+            "appraisal_previous_submission.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
+            "appraisal_previous_submission.pa_status": "Pending with Reviewer (Employee Rejection)",
             // "normalizer.normalizer_rating": appraisal.appraiser_rating,
             // "normalizer.normalizer_rating": current_overallRating,
             // "normalizer.normalizer_status": 'completed',
@@ -2939,6 +2959,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "employee.employee_PA_rejected" : false,
             "appraisal.appraiser_PA_rejected" : false,
             "appraisal.appraiser_PA_accepted" : true,
+
 
         }
     })
@@ -3012,6 +3033,8 @@ const appraiserRejectsEmployee = asyncHandler(async (req: Request, res: Response
             "employee.employee_status": "pending",
             "appraisal.pa_status": "Pending with Employee",
             "appraisal.appraiser_rejected": true,
+            "appraisal_previous_submission.pa_status": "Pending with Employee",
+
         }
     })
     res.status(StatusCodes.OK).json({ "message": updatedEmployee });
@@ -3040,16 +3063,23 @@ const normalizerSubmitEmployeeRejection = asyncHandler(async (req: Request, res:
         $set: {
             "appraisal.status": 'completed',
             "appraisal.pa_status": "Completed",
+            "appraisal_previous_submission.pa_status": "Completed",
             "appraisal.pa_rating": current_OverAllRating,
             "normalizer.comments": comments,
+            "normalizer_previous_submission.comments": comments,
             "normalizerIsChecked": true,
             "normalizerIsDisabled": true,
             "normalizer.objective_description": normalizerObjDesc,
             "normalizer.reason_for_rejection": normalizerComments,
+            "normalizer_previous_submission.reason_for_rejection": normalizerComments,
             "normalizer.normalizer_meeting_notes": meetingNotes,
+            "normalizer_previous_submission.normalizer_meeting_notes": meetingNotes,
             "normalizer.isAppraiserChecked": isAppraiserChecked,
+            "normalizer_previous_submission.isAppraiserChecked": isAppraiserChecked,
             "normalizer.isReviewerChecked": isReviewerChecked,
+            "normalizer_previous_submission.isReviewerChecked": isReviewerChecked,
             "normalizer.isEmployeeChecked": isEmployeeChecked,
+            "normalizer_previous_submission.isEmployeeChecked": isEmployeeChecked,
             // "employee.objective_description": normalizer.objective_description,
             // "employee.employee_rating": normalizer.normalizer_rating,
             "normalizer.normalizer_status": "re-normalized",

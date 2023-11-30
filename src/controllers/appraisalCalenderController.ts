@@ -524,14 +524,14 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 },
 
                 appraisal_previous_submission: {
-                    appraiser_rating: 0,
-                    appraiser_status: 'pending',
-                    pa_status: 'not-started',
-                    potential: false,
-                    status: 'not-started',
-                    objective_group: weightage.objective_group,
-                    objective_type: weightage.objective_type,
-                    objective_description: weightage.objective_description,
+                    // appraiser_rating: 0,
+                    // appraiser_status: 'pending',
+                    // pa_status: 'not-started',
+                    // potential: false,
+                    // status: 'not-started',
+                    // objective_group: weightage.objective_group,
+                    // objective_type: weightage.objective_type,
+                    // objective_description: weightage.objective_description,
                 },
 
                 reviewer: {
@@ -554,11 +554,11 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 },
 
                 reviewer_previous_submission: {
-                    reviewer_rating: 0,
-                    reviewer_status: 'pending',
-                    objective_group: weightage.objective_group,
-                    objective_type: weightage.objective_type,
-                    objective_description: weightage.objective_description,
+                    // reviewer_rating: 0,
+                    // reviewer_status: 'pending',
+                    // objective_group: weightage.objective_group,
+                    // objective_type: weightage.objective_type,
+                    // objective_description: weightage.objective_description,
                 },
 
                 normalizer: {
@@ -581,21 +581,21 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 },
 
                 normalizer_previous_submission: {
-                    normalizer_rating: 0,
-                    normalizer_status: 'pending',
-                    objective_group: weightage.objective_group,
-                    objective_type: weightage.objective_type,
-                    objective_description: weightage.objective_description,
+                    // normalizer_rating: 0,
+                    // normalizer_status: 'pending',
+                    // objective_group: weightage.objective_group,
+                    // objective_type: weightage.objective_type,
+                    // objective_description: weightage.objective_description,
                 },
 
                 employee: {},
 
                 employee_previous_submission: {
-                    employee_rating: 0,
-                    employee_status: 'pending',
-                    objective_group: weightage.objective_group,
-                    objective_type: weightage.objective_type,
-                    objective_description: weightage.objective_description,
+                    // employee_rating: 0,
+                    // employee_status: 'pending',
+                    // objective_group: weightage.objective_group,
+                    // objective_type: weightage.objective_type,
+                    // objective_description: weightage.objective_description,
                 },
 
             },
