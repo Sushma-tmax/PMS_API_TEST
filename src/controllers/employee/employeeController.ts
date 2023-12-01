@@ -2758,8 +2758,7 @@ const totalNormalizerDetailsEmail = async () => {
     return normalizerEmails;
 };
 const totalAppraiserDetailsEmail = async () => {   
-    // Create an array to store appraiser details
-    const appraiserDetails = [];
+    
    //Find the appraisers of all live employees whose status is Pending with Appraiser   
     const allAppraisers = await Employee.distinct("appraiser_code", {
         "employee_upload_flag": true,
