@@ -2775,31 +2775,19 @@ const totalAppraiserDetailsEmail = async () => {
     return appraiserEmails;
 };
 const totalReviewerDetailsEmail = async () => {
-    const employeesWithReviewerRole = await Employee.find({ "roles.reviewer": true });
-    const reviewerDetails = [];
-    const allEmployees = await Employee.find({"employee_upload_flag":true});
-    allEmployees.forEach(employee => {
-        const reviewerName = employee.reviewer_name;
-        if (employeesWithReviewerRole.some(e => e.legal_full_name === reviewerName)) {
-            const existingReviewer = reviewerDetails.find(reviewer => reviewer.reviewerName === reviewerName);
-            if (!existingReviewer) {
-                reviewerDetails.push({
-                    reviewerName,
-                    reviewerCode: employee?.reviewer_code,
-                    reviewerEmail: employee?.email,
-                    count: 0,
-                    //employees: [],
-                });
-            }
-            if (employee.appraisal && employee.appraisal.pa_status === "Pending with Reviewer") {
-                const updatedReviewer = reviewerDetails.find(appraiser => appraiser.reviewerName === reviewerName);
-                updatedReviewer.count++;
-                updatedReviewer?.employees?.push(employee);
-            }
-        }
-    });
-    //const reviewerEmails = reviewerDetails.map(reviewer => reviewer.normalizerEmail);
-    const reviewerEmails = reviewerDetails.filter(reviewer => reviewer.count > 0).map(reviewer => reviewer.reviewerEmail);
+
+    //Find the reviewers of all live employees whose status is Pending with Reviewer 
+    const allReviewers = await Employee.distinct("appraiser_code", {
+        "employee_upload_flag": true,
+        "appraisal.pa_status": /.*Pending with Reviewer.*/i
+      })
+    //Find email of those reviewers
+    const  allReviewerEmails = await Employee.find({
+        "employee_code": { $in: allReviewers }
+      },{
+        "email":1
+      })     
+    const reviewerEmails = allReviewerEmails    .map(reviewer => reviewer.email);
     return reviewerEmails;
     // return res.status(StatusCodes.OK).json(reviewerDetails);  
 };
