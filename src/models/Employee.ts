@@ -249,7 +249,7 @@ const EmployeeSchema = new Schema({
     },
 
     activity_Log: [{
-        pa_action_by : {type: String} 
+        pa_action_by: { type: String }
     }],
 
     employee: {
@@ -263,7 +263,7 @@ const EmployeeSchema = new Schema({
         },
 
         /*Added to check the workflow status and based on that display color in dashboard */
-       employee_PA_accepted: {
+        employee_PA_accepted: {
             type: Boolean,
             default: false
         },
@@ -451,6 +451,47 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+        }],
+
+        one_to_one_meeting: {
+            type: Date,
+        },
+
+        employee_agree: {
+            type: Boolean,
+            default: false,
+        },
+
+        comments: {
+            type: String,
+        },
+        rejection_reason: {
+            type: String,
+        },
+
+        training_recommendation: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'TrainingRecommendation'
+            },
+            training_name: {
+                type: String,
+            },
+            justification: {
+                type: String,
+            },
+        }],
+        area_of_improvement: [{
+            value: {
+                type: String,
+                default: ""
+            },
+            specific_actions: [{
+                value: {
+                    type: String,
+                    default: ""
+                },
+            }],
         }],
 
     },
@@ -724,6 +765,9 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            rating_scale: {
+                type: String,
+            },
             ratingdef: {
                 type: String,
             },
@@ -812,12 +856,10 @@ const EmployeeSchema = new Schema({
             },
             sort_value: Number
         }],
-
         appraiser_overall_feedback: {
             type: String,
             default: ''
         },
-
         appraiser_rejection_reason: {
             type: String,
             default: ''
@@ -830,23 +872,6 @@ const EmployeeSchema = new Schema({
             type: Boolean,
             default: false
         },
-        other_recommendation_comments: {
-            type: String,
-            default: ''
-        },
-        feedback_questions_comments: {
-            type: String,
-            default: ''
-        },
-        area_of_improvement_comments: {
-            type: String,
-            default: ''
-        },
-        training_recommendation_comments: {
-            type: String,
-            default: ''
-        },
-
         potential: {
             type: String
         },
@@ -966,6 +991,64 @@ const EmployeeSchema = new Schema({
         potential: {
             type: String
         },
+        feedback_questions: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'FeedBackQuestionaire'
+            },
+            value: {
+                type: String,
+                default: ""
+            },
+        }],
+        area_of_improvement: [{
+            value: {
+                type: String,
+                default: ""
+            },
+            specific_actions: [{
+                value: {
+                    type: String,
+                    default: ""
+                },
+            }],
+        }],
+        training_recommendation: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'TrainingRecommendation'
+            },
+            training_name: {
+                type: String,
+            },
+            justification: {
+                type: String,
+            },
+        }],
+        other_recommendation: [{
+            name: {
+                type: Schema.Types.ObjectId,
+                ref: 'OtherRecommendation'
+            },
+            isChecked: {
+                type: Boolean,
+                default: false
+            },
+            sort_value: Number
+        }],
+        others_checkbox: {
+            type: Boolean,
+            default: false
+        },
+        other_recommendation_others: {
+            type: String,
+            default: ''
+        },
+        appraiser_overall_feedback: {
+            type: String,
+            default: ''
+        },
+
     },
 
 
@@ -1438,7 +1521,22 @@ const EmployeeSchema = new Schema({
                 type: Boolean,
                 default: false
             },
+            reviewer_overall_feedback: {
+                type: String,
+                default: ''
+            },
+            reviewer_comments: {
+                type: String
+            },
         }],
+
+        reviewer_overall_feedback: {
+            type: String,
+            default: ''
+        },
+        reviewer_comments: {
+            type: String
+        },
 
     },
 
@@ -1747,6 +1845,53 @@ const EmployeeSchema = new Schema({
                 default: false
             },
         }],
+
+        meetingNotesAttachments: [{
+            url: { type: String },
+            name: { type: String }
+        }],
+
+        isChecked: {
+            type: Boolean,
+            default: false
+        },
+
+        isAppraiserChecked: {
+            type: Boolean,
+            default: false
+        },
+
+        isReviewerChecked: {
+            type: Boolean,
+            default: false
+        },
+
+        isEmployeeChecked: {
+            type: Boolean,
+            default: false
+        },
+
+        normalizer_meeting_notes: {
+            type: String,
+            default: ''
+        },
+
+        normalizer_overall_feedback: {
+            type: String,
+            default: ''
+        },
+        reason_for_rejection: {
+            type: String
+        },
+
+        normalized_overallRating: {
+            type: Number,
+            default: 0
+        },
+        normalized_Date: {
+            type: Date,
+        },
+
 
     },
 
