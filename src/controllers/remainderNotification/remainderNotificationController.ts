@@ -141,24 +141,33 @@ checkStatus();
 
 async function dailyTask() {
   console.log("This task runs every 24 hours.");
-  const currentDate = new Date();
+  //Find today (without time)
+  var currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  //Find emails
   const appraiserEmails = await totalAppraiserDetailsEmail();
   const reviewerEmails = await totalReviewerDetailsEmail();
   const normalizerEmails = await totalNormalizerDetailsEmail();
 
-  //Employee
-  const allEmployees = await Employee.find({ "employee_upload_flag": true , "appraisal.pa_status" :"Pending with Appraiser"});//"Pending with Employee"
-  //const allEmployeeEmails = allEmployees.map(employee => employee.email);
-  const allEmployeeEmails = allEmployees
-    .map((employee) => employee.email)
-    .filter(Boolean);
-
+  //Find all employees whose pa status is pending with employee
+  const allEmployees = await Employee.find({ 
+    "employee_upload_flag": true , 
+    "appraisal.pa_status" :/.*Pending with Employee.*/i
+  },{
+    "email":1
+  }); 
+  const allEmployeeEmails = allEmployees.map((employee) => employee.email)
   console.log(allEmployeeEmails, "allEmployeeEmails");
-  // Find all reminder notifications of type "Appraiser" with a startDate after the current date
+
+  // Find all reminder notifications where next reminder date is today
   const reminderNotifications = await ReminderNotification.find({
-    // reminderType: "Appraiser",//not required
-    // nextRemainderDate: { $eq: currentDate },
-  });
+    $expr: {
+      $eq: [
+        { $dateToString: { format: "%Y-%m-%d", date: "$nextReminderDate" } },
+        { $dateToString: { format: "%Y-%m-%d", date: currentDate } }
+      ]
+    }
+  })
   if (reminderNotifications.length === 0) {
     console.log(
       "No reminder notifications with a startDate before today. Still there is time for reminder notifications."
@@ -215,7 +224,7 @@ async function dailyTask() {
           await sendEmail({
             to: emailsToSendData, //emailtosend
             cc: [],
-            subject: reminder?.subject + "hi", // Use subject from ReminderNotification
+            subject: reminder?.subject , // Use subject from ReminderNotification
             html: reminder?.content, // Use content from ReminderNotification
           }).then((res)=>{
             logMessage += "Email sent"
