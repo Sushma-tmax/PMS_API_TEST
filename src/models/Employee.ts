@@ -1530,6 +1530,14 @@ const EmployeeSchema = new Schema({
             },
         }],
 
+        reviewer_overall_feedback: {
+            type: String,
+            default: ''
+        },
+        reviewer_comments: {
+            type: String
+        },
+
     },
 
 

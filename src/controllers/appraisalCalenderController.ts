@@ -597,6 +597,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     // objective_type: weightage.objective_type,
                     // objective_description: weightage.objective_description,
                 },
+                talent_category : "",
 
             },
 
