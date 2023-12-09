@@ -118,7 +118,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             return {
                 Ecode: item.employee_code,
                 'Employee Name': item.legal_full_name,
-                'Known As' : item.first_name,
+                'Known As': item.first_name,
                 Position: item.position_long_description,
                 Grade: item.grade,
                 'Probation Status': item.probation_status,
@@ -139,7 +139,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 'Reviewer Code': item.reviewer_code,
                 'Normalizer Code': item.normalizer_code,
                 'Email Id': item.email,
-                'CEO Role' : item.isCEORole                
+                'CEO Role': item.isCEORole
             }
 
         })
@@ -180,18 +180,18 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             /*checking only the required fields from the mappedFields which is having data in same format.*/
             requiredFields?.forEach((field) => {
                 if (item[field] === undefined || item[field] === null || item[field] === "") {
-                  /* adding that field as a missing field if value is undefined or empty */
-                  if (!(item["CEO Role"] && 
-                  (field === "Known As" || field === "Appraiser Name" || field === "Appraiser Code" ||
-                   field === "Reviewer Name" || field === "Reviewer Code" ||
-                   field === "Normalizer Name" || field === "Normalizer Code" ||
-                   field === "Manager Name" || field === "Manager Code" ||
-                   field === "Manager Position" || field === "Manager Position" ))) {
-                    missingFields?.push(field);
-                  }
+                    /* adding that field as a missing field if value is undefined or empty */
+                    if (!(item["CEO Role"] &&
+                        (field === "Known As" || field === "Appraiser Name" || field === "Appraiser Code" ||
+                            field === "Reviewer Name" || field === "Reviewer Code" ||
+                            field === "Normalizer Name" || field === "Normalizer Code" ||
+                            field === "Manager Name" || field === "Manager Code" ||
+                            field === "Manager Position" || field === "Manager Position"))) {
+                        missingFields?.push(field);
+                    }
                 }
                 if (field === "Ecode") {
-                  missingEmployeeCodes?.push(item.Ecode);
+                    missingEmployeeCodes?.push(item.Ecode);
                 }
             })
         })
@@ -221,105 +221,159 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
             };
         });
 
-        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
-
-        /* Codes commented as it is improvised further 
-
-        // const appraiserCodes = data
-        //     .filter((employee) => employee.AppraiserCode)
-        //     .map((employee) => employee.Ecode);
-
-
-
-        // const reviewerCodes = data
-        //     .filter((employee) => employee.ReviewerCode)
-        //     .map((employee) => employee.Ecode);
-
-
-
-        // const normalizerCodes = data
-        //     .filter((employee) => employee.NormalizerCode)
-        //     .map((employee) => employee.Ecode);
-
-
-        // Employee.updateMany(
-        //     { employee_code: { $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes] } },
-        //     {
-
-        //         $set: {
-        //             roles: {
-        //                 employee: true,
-        //                 appraiser: (employee) => appraiserCodes.includes(employee.employee_code),
-        //                 reviewer: (employee) => reviewerCodes.includes(employee.employee_code),
-        //                 normalizer: (employee) => normalizerCodes.includes(employee.employee_code),
-        //             },
-        //         },
-
-        //     },
-        //     (err, result) => {
-        //         if (err) {
-        //             console.error(err);
-        //             return;
-        //         }
-
-
-
-        //         console.log(`${result.nModified} employees updated successfully.`);
-        //     }
-        // );
-
-        */
+        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });        
 
         if (result) {
-            /* get data for all the existing appraiser codes, reviewer codes and normalizer codes*/
-            const existingEmployees = await Employee.find({ employee_upload_flag: true });
-            const existingAppraiserCodes = existingEmployees.map(employee => employee.appraiser_code);
-            const existingReviewerCodes = existingEmployees.map(employee => employee.reviewer_code);
-            const existingNormalizerCodes = existingEmployees.map(employee => employee.normalizer_code);
 
-            /* Assigning roles as Appraiser, Reviewer, or Normalizer */
-            let appraiserCodes = [];
-            let reviewerCodes = [];
-            let normalizerCodes = [];
+            /* Function to check whether appraiser code , reviewer code and normalizer code exists in the employee master
+       and if yes then check whether their respective names matches their respective codes */
+            const employeeData = await Employee.find({
+                employee_upload_flag: true,
+                isCEORole: false,
+                isExcluded: false,
+                isLeavers: false,
+            });
 
-            /* Adding all the appraiser codes, reviewerCodes , normalizerCodes  from the available data to 
-             appraiserCodes = []; reviewerCodes = []; normalizerCodes = []; respectively*/
-            data.forEach(employee => {
-                if (employee.appraiser_code !== null) {
-                    appraiserCodes.push(employee.appraiser_code);
+            let errorMessage = "";
+
+            // create a set of unique appraiser, reviewer, and normalizer codes
+            const appraiserCodes = new Set(
+                employeeData.map((item) => item.appraiser_code)
+            );
+            const reviewerCodes = new Set(employeeData.map((item) => item.reviewer_code));
+            const normalizerCodes = new Set(
+                employeeData.map((item) => item.normalizer_code)
+            );
+            const managerCodes = new Set(
+                employeeData.map((item) => item.manager_code)
+            );
+
+            // retrieve all employees with these codes
+            const employeesWithCodes = await Employee.find({
+                employee_code: {
+                    $in: [...appraiserCodes, ...reviewerCodes, ...normalizerCodes, ...managerCodes],
+                },
+            });
+
+            employeeData.forEach((item: any) => {
+                const employeeCode = item.employee_code;
+                const appraiserCode = item.appraiser_code;
+                const appraiserName = item.appraiser_name;
+                const reviewerCode = item.reviewer_code;
+                const reviewerName = item.reviewer_name;
+                const normalizerCode = item.normalizer_code;
+                const normalizerName = item.normalizer_name;
+                const managerCode = item.manager_code;
+                const managerName = item.manager_name;
+
+                // find the employee with the corresponding appraiser code
+                const employeeWithAppraiserCode = employeesWithCodes.find(
+                    (employee) => employee.employee_code === appraiserCode
+                );
+                if (employeeWithAppraiserCode) {
+                    const employeeAppraiserName = employeeWithAppraiserCode.legal_full_name;
+                    if (employeeAppraiserName !== appraiserName) {
+                        errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${employeeCode}'.\n`;
+                    }
+                } else {
+                    errorMessage += `Appraiser code '${appraiserCode}' does not exist for employee code '${employeeCode}'..\n`;
                 }
-                if (employee.reviewer_code !== null) {
-                    reviewerCodes.push(employee.reviewer_code);
+
+                // find the employee with the corresponding reviewer code
+                const employeeWithReviewerCode = employeesWithCodes.find(
+                    (employee) => employee.employee_code === reviewerCode
+                );
+                if (employeeWithReviewerCode) {
+                    const employeeReviewerName = employeeWithReviewerCode.legal_full_name;
+                    if (employeeReviewerName !== reviewerName) {
+                        errorMessage += `Reviewer name '${reviewerName}' is not correct for employee code '${employeeCode}'.\n`;
+                    }
+                } else {
+                    errorMessage += `Reviewer code '${reviewerCode}' does not exist.\n`;
                 }
-                if (employee.normalizer_code !== null) {
-                    normalizerCodes.push(employee.normalizer_code);
+
+                // find the employee with the corresponding normalizer code
+                const employeeWithNormalizerCode = employeesWithCodes.find(
+                    (employee) => employee.employee_code === normalizerCode
+                );
+                if (employeeWithNormalizerCode) {
+                    const employeeNormalizerName = employeeWithNormalizerCode.legal_full_name;
+                    if (employeeNormalizerName !== normalizerName) {
+                        errorMessage += `Normalizer name '${normalizerName}' is not correct for employee code '${employeeCode}'.\n`;
+                    }
+                } else {
+                    errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
+                }
+
+                // find the employee with the corresponding manager code
+                const employeeWithManagerCode = employeesWithCodes.find(
+                    (employee) => employee.employee_code === managerCode
+                );
+                if (employeeWithManagerCode) {
+                    const employeeManagerName = employeeWithManagerCode.legal_full_name;
+                    if (employeeManagerName !== managerName) {
+                        errorMessage += `Manager name '${managerName}' is not correct for employee code '${employeeCode}'.\n`;
+                    }
+                } else {
+                    errorMessage += `Manager code '${managerCode}' does not exist.\n`;
                 }
             });
 
-            /* Adding all the employee codes to appraiserCodes = []; reviewerCodes = []; normalizerCodes = []; 
-            respectively based on whether it was already added as a appraiser , reviewer or normalizer in the existing database.*/
-            data.forEach(employee => {
-                if (existingAppraiserCodes.includes(employee.employee_code + "")) {                  
-                    appraiserCodes.push(employee.employee_code);
-                }
-                if (employee.employee_code !== null && existingReviewerCodes.includes(employee.employee_code)) {
-                    reviewerCodes.push(employee.employee_code);
-                }
-                if (employee.employee_code !== null && existingNormalizerCodes.includes(employee.employee_code)) {
-                    normalizerCodes.push(employee.employee_code);
-                }
-            });
+            if (errorMessage !== "") {
+                /* If any of the codes do not exist in the database, throw an error with the error message */
+                return res.status(400).json({
+                    message: errorMessage,
+                });
+            } else {
+                /* get data for all the existing appraiser codes, reviewer codes and normalizer codes*/
+                const existingEmployees = await Employee.find({ employee_upload_flag: true });
+                const existingAppraiserCodes = existingEmployees.map(employee => employee.appraiser_code);
+                const existingReviewerCodes = existingEmployees.map(employee => employee.reviewer_code);
+                const existingNormalizerCodes = existingEmployees.map(employee => employee.normalizer_code);
 
-            /* Updating the roles to true based on the employee codes equal to appraiser codes, reviewer codes , normalizer codes
-            respectively */
-            await Employee.updateMany({ employee_code: { $in: appraiserCodes } },
-                { $set: { 'roles.appraiser': true } });
-            await Employee.updateMany({ employee_code: { $in: reviewerCodes } },
-                { $set: { 'roles.reviewer': true } });
-            await Employee.updateMany({ employee_code: { $in: normalizerCodes } },
-                { $set: { 'roles.normalizer': true } });
-            await Employee.updateMany({ $set: { 'roles.employee': true } });
+                /* Assigning roles as Appraiser, Reviewer, or Normalizer */
+                let appraiserCodes = [];
+                let reviewerCodes = [];
+                let normalizerCodes = [];
 
+                /* Adding all the appraiser codes, reviewerCodes , normalizerCodes  from the available data to 
+                 appraiserCodes = []; reviewerCodes = []; normalizerCodes = []; respectively*/
+                data.forEach(employee => {
+                    if (employee.appraiser_code !== null) {
+                        appraiserCodes.push(employee.appraiser_code);
+                    }
+                    if (employee.reviewer_code !== null) {
+                        reviewerCodes.push(employee.reviewer_code);
+                    }
+                    if (employee.normalizer_code !== null) {
+                        normalizerCodes.push(employee.normalizer_code);
+                    }
+                });
+
+                /* Adding all the employee codes to appraiserCodes = []; reviewerCodes = []; normalizerCodes = []; 
+                respectively based on whether it was already added as a appraiser , reviewer or normalizer in the existing database.*/
+                data.forEach(employee => {
+                    if (existingAppraiserCodes.includes(employee.employee_code + "")) {
+                        appraiserCodes.push(employee.employee_code);
+                    }
+                    if (employee.employee_code !== null && existingReviewerCodes.includes(employee.employee_code)) {
+                        reviewerCodes.push(employee.employee_code);
+                    }
+                    if (employee.employee_code !== null && existingNormalizerCodes.includes(employee.employee_code)) {
+                        normalizerCodes.push(employee.employee_code);
+                    }
+                });
+
+                /* Updating the roles to true based on the employee codes equal to appraiser codes, reviewer codes , normalizer codes
+                respectively */
+                await Employee.updateMany({ employee_code: { $in: appraiserCodes } },
+                    { $set: { 'roles.appraiser': true } });
+                await Employee.updateMany({ employee_code: { $in: reviewerCodes } },
+                    { $set: { 'roles.reviewer': true } });
+                await Employee.updateMany({ employee_code: { $in: normalizerCodes } },
+                    { $set: { 'roles.normalizer': true } });
+                await Employee.updateMany({ $set: { 'roles.employee': true } });
+            }        
         }
 
         res
