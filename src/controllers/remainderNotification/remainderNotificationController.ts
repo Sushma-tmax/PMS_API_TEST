@@ -161,12 +161,12 @@ async function dailyTask() {
 
   // Find all reminder notifications where next reminder date is today
   const reminderNotifications = await ReminderNotification.find({
-    $expr: {
-      $eq: [
-        { $dateToString: { format: "%Y-%m-%d", date: "$nextReminderDate" } },
-        { $dateToString: { format: "%Y-%m-%d", date: currentDate } }
-      ]
-    }
+    // $expr: {
+    //   $eq: [
+    //     { $dateToString: { format: "%Y-%m-%d", date: "$nextReminderDate" } },
+    //     { $dateToString: { format: "%Y-%m-%d", date: currentDate } }
+    //   ]
+    // }
   })
   if (reminderNotifications.length === 0) {
     console.log(
