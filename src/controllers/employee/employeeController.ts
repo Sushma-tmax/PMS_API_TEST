@@ -338,7 +338,10 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
 })
 
 const getEmployeeByEmail = asyncHandler(async (req: Request, res: Response) => {
-    const employee = await Employee.find({ email: req.params.id });
+    let emailId= req.params.id
+    //const employee = await Employee.find({ email: emailId });
+    const employee = await Employee.find({ email: { $regex: new RegExp(emailId, 'i') } });
+
     // @ts-ignore
     employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
     if (!employee) {
