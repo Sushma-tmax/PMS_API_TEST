@@ -5,6 +5,7 @@ import {Employee} from "../models";
 import mongoose from "mongoose";
 import PreviousAppraisal from "../models/PreviousAppraisal";
 import {StatusCodes} from "http-status-codes";
+import { getImage } from "./azureImageStorage";
 
 
 // const addEmployeestoPrevioisAppraisal = asyncHandler(async (req: Request, res: Response) => {
@@ -45,6 +46,15 @@ console.log(data)
 
 const getpastAppraisalDetailsofEmployee = asyncHandler(async (req: Request, res: Response) => {
     const employee = await PreviousAppraisal.findById(req.params.id).populate("calendar")
+    
+    // @ts-ignore
+    employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
+    if (!employee) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            error: 'No employee found'
+        });
+    }
     res.status(StatusCodes.OK).json({
         employee
     });

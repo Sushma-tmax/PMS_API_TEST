@@ -1668,9 +1668,11 @@ const acceptNormalizer = asyncHandler(async (req: Request, res: Response) => {
                 "normalizer.normalizer_PA_rejected" : false,
                 /** making normalizer rejection reason empty if normalizer accepted PA */
                 "normalizer.normalizer_overall_feedback" : "",
+                "normalizer_previous_submission.normalizer_overall_feedback" : "",
+                "normalizer.reason_for_rejection" : normalizer_comments,
+                "normalizer_previous_submission.reason_for_rejection" : normalizer_comments,
                 // "employee":{},
                 // "employee.objective_description": getRatingsfromObjectiveDescription(appraisal.objective_description),
-                "normalizer.reason_for_rejection" : normalizer_comments
             }
         }
     )

@@ -54,6 +54,9 @@ const PreviousAppraisal = new Schema({
     probation_status: {
         type: String,
     },
+    profile_image_url: {
+        type: String,
+    },
     service_reference_date: {
         type: String,
     },
