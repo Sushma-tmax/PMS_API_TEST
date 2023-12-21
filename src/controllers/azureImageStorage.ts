@@ -1,10 +1,10 @@
 import asyncHandler from "../middleware/asyncHandler";
-import express, {Request, Response} from "express";
+import express, { Request, Response } from "express";
 import azure from 'azure-storage';
-import {BlobServiceClient} from '@azure/storage-blob';
+import { BlobServiceClient } from '@azure/storage-blob';
 
 const AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=remoblobstorage;AccountKey=2dyNCBrGp/3St5coni+Xca3mFbQA67byG6qnp81UjypSK65msMG461kPruQ/Vr0EaZS0qk9y7dxewDnnb3kcxQ==;EndpointSuffix=core.windows.net"
-import {StatusCodes} from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 
 const bodyParser = require('body-parser');
 
@@ -19,8 +19,8 @@ const app = express();
 // app.use(bodyParser.json({limit: '2500mb'}));
 // app.use(bodyParser.urlencoded({limit: '2500mb',extended: false, parameterLimit: 100000}));
 const maxRequestBodySize = '10mb';
-app.use(bodyParser.json({limit: maxRequestBodySize}));
-app.use(bodyParser.urlencoded({limit: maxRequestBodySize}));
+app.use(bodyParser.json({ limit: maxRequestBodySize }));
+app.use(bodyParser.urlencoded({ limit: maxRequestBodySize }));
 // const getImage =  (name: any)=> {
 //     if (!AZURE_STORAGE_CONNECTION_STRING) {
 
@@ -74,13 +74,11 @@ const getImage = (name: any) => {
         throw Error("Azure Storage Connection string not found");
     }
     const containerName = 'candidate'
-    var blobName = name.toLowerCase();  // Convert the input blob name to lowercase for case-insensitive search
+    var blobName = name.toLowerCase();
     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
 
-    // Use listBlobsSegmented to get a list of blobs in the container
     blobService.listBlobsSegmented(containerName, null, function (error, result, response) {
         if (!error) {
-            // Iterate through the list of blobs and find the matching blob case-insensitively
             var matchingBlob = result.entries.find(function (blob) {
                 return blob.name.toLowerCase() === blobName;
             });
@@ -91,40 +89,37 @@ const getImage = (name: any) => {
                 var expiryDate = new Date(startDate);
                 expiryDate.setMinutes(startDate.getMinutes() + 60);
 
+                // Use string instead of string[]
                 var sharedAccessPolicy = {
                     AccessPolicy: {
-                        Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],
+                        Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
                         Start: startDate,
                         Expiry: expiryDate
                     }
                 };
 
-                // Generate SAS token for the matching blob
                 var sasToken = blobService.generateSharedAccessSignature(containerName, matchingBlob.name, sharedAccessPolicy);
 
-                // Generate URL for the matching blob with SAS token
                 var imageUrl = blobService.getUrl(containerName, matchingBlob.name, sasToken);
 
-                // Return the URL
                 return imageUrl;
             } else {
-                // Handle the case when the blob is not found
                 console.error("Blob not found.");
-                return null; // or throw an error, depending on your use case
+                return null;
             }
         } else {
-            // Handle the error
             console.error(error);
-            return null; // or throw an error, depending on your use case
+            return null;
         }
     });
+
 
 }
 
 const postImage = asyncHandler(async (req: Request, res: Response) => {
 
     //@ts-ignore
-    const {newspic, newspicname} = req.body
+    const { newspic, newspicname } = req.body
     console.log(newspic, 'uill')
     console.log(newspicname, 'kkkkk')
     if (!AZURE_STORAGE_CONNECTION_STRING) {
@@ -149,7 +144,7 @@ const postImage = asyncHandler(async (req: Request, res: Response) => {
     // const uploadBlobResponse = await blockBlobClient.uploadFile(filePath);
     //@ts-ignore
 
-    blobService.createBlockBlobFromText(containerName, blobName, buffer, {contentType: type}, function (error, result, response) {
+    blobService.createBlockBlobFromText(containerName, blobName, buffer, { contentType: type }, function (error, result, response) {
         if (error) {
             console.log(error);
         } else {
