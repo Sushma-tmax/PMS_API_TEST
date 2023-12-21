@@ -21,49 +21,104 @@ const app = express();
 const maxRequestBodySize = '10mb';
 app.use(bodyParser.json({limit: maxRequestBodySize}));
 app.use(bodyParser.urlencoded({limit: maxRequestBodySize}));
-const getImage =  (name: any)=> {
+// const getImage =  (name: any)=> {
+//     if (!AZURE_STORAGE_CONNECTION_STRING) {
+
+//         throw Error("Azure Storage Connection string not found");
+//     }
+//     //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
+//     const containerName = 'candidate'
+//     //   var blobName = res.data.value[0].fields.blobName;
+//     var blobName = name
+//     // var filePath = "./Remo_Designs/CEO.png";
+
+//     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
+//     var startDate = new Date();
+//     startDate.setMinutes(startDate.getMinutes() - 5);
+//     var expiryDate = new Date(startDate);
+//     expiryDate.setMinutes(startDate.getMinutes() + 60);
+
+//     var sharedAccessPolicy = {
+//         AccessPolicy: {
+//             Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],  //grent read permission only
+//             Start: startDate,
+//             Expiry: expiryDate
+//         }
+//     };
+//     // @ts-ignore
+//     var sasToken = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
+
+//     var response = {};
+//     // @ts-ignore
+//     response.image = blobService.getUrl(containerName, blobName, sasToken);
+//     //@ts-ignore
+
+//     //@ts-ignore
+//     return response.image
+
+//     //@ts-ignore
+//     // res.status(StatusCodes.CREATED).json({
+//     //     success: true,
+//     //     response
+//     //     // Acalender
+//     //     // templateName,
+//     //     // calenderName
+//     // });
+// }
+
+//get employee images from azure blob (function to search by employee code, case-insensitive)
+const getImage = (name: any) => {
+
     if (!AZURE_STORAGE_CONNECTION_STRING) {
 
         throw Error("Azure Storage Connection string not found");
     }
-    //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
     const containerName = 'candidate'
-    //   var blobName = res.data.value[0].fields.blobName;
-    var blobName = name
-    // var filePath = "./Remo_Designs/CEO.png";
-
+    var blobName = name.toLowerCase();  // Convert the input blob name to lowercase for case-insensitive search
     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
-    var startDate = new Date();
-    startDate.setMinutes(startDate.getMinutes() - 5);
-    var expiryDate = new Date(startDate);
-    expiryDate.setMinutes(startDate.getMinutes() + 60);
 
-    var sharedAccessPolicy = {
-        AccessPolicy: {
-            Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],  //grent read permission only
-            Start: startDate,
-            Expiry: expiryDate
+    // Use listBlobsSegmented to get a list of blobs in the container
+    blobService.listBlobsSegmented(containerName, null, function (error, result, response) {
+        if (!error) {
+            // Iterate through the list of blobs and find the matching blob case-insensitively
+            var matchingBlob = result.entries.find(function (blob) {
+                return blob.name.toLowerCase() === blobName;
+            });
+
+            if (matchingBlob) {
+                var startDate = new Date();
+                startDate.setMinutes(startDate.getMinutes() - 5);
+                var expiryDate = new Date(startDate);
+                expiryDate.setMinutes(startDate.getMinutes() + 60);
+
+                var sharedAccessPolicy = {
+                    AccessPolicy: {
+                        Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],
+                        Start: startDate,
+                        Expiry: expiryDate
+                    }
+                };
+
+                // Generate SAS token for the matching blob
+                var sasToken = blobService.generateSharedAccessSignature(containerName, matchingBlob.name, sharedAccessPolicy);
+
+                // Generate URL for the matching blob with SAS token
+                var imageUrl = blobService.getUrl(containerName, matchingBlob.name, sasToken);
+
+                // Return the URL
+                return imageUrl;
+            } else {
+                // Handle the case when the blob is not found
+                console.error("Blob not found.");
+                return null; // or throw an error, depending on your use case
+            }
+        } else {
+            // Handle the error
+            console.error(error);
+            return null; // or throw an error, depending on your use case
         }
-    };
-    // @ts-ignore
-    var sasToken = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
+    });
 
-    var response = {};
-    // @ts-ignore
-    response.image = blobService.getUrl(containerName, blobName, sasToken);
-    //@ts-ignore
-
-    //@ts-ignore
-    return response.image
-
-    //@ts-ignore
-    // res.status(StatusCodes.CREATED).json({
-    //     success: true,
-    //     response
-    //     // Acalender
-    //     // templateName,
-    //     // calenderName
-    // });
 }
 
 const postImage = asyncHandler(async (req: Request, res: Response) => {
