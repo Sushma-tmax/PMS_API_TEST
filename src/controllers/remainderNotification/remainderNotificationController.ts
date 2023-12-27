@@ -289,21 +289,21 @@ async function dailyTask() {
 //   return timeUntilNextRun;
 // }
 // Function to calculate the time until the next run (every day at 8 am).
-function calculateTimeUntilNextRun() {
-  const now = new Date();
-  let nextRun = new Date(now);
+// function calculateTimeUntilNextRun() {
+//   const now = new Date();
+//   let nextRun = new Date(now);
  
-  // Set the next run time to 8 am.
-  nextRun.setHours(8, 0, 0, 0);
+//   // Set the next run time to 8 am.
+//   nextRun.setHours(8, 0, 0, 0);
  
-  // If the current time is already past 8 am, set the next run to the next day.
-  if (now >= nextRun) {
-    nextRun.setDate(now.getDate() + 1);
-  }
+//   // If the current time is already past 8 am, set the next run to the next day.
+//   if (now >= nextRun) {
+//     nextRun.setDate(now.getDate() + 1);
+//   }
  
-  const timeUntilNextRun = nextRun.getTime() - now.getTime();
-  return timeUntilNextRun;
-}
+//   const timeUntilNextRun = nextRun.getTime() - now.getTime();
+//   return timeUntilNextRun;
+// }
 // Function to calculate the time until the next run (every 2 min).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
@@ -314,14 +314,14 @@ function calculateTimeUntilNextRun() {
 //   return timeUntilNextRun;
 // }
 // Function to calculate the time until the next run (every 24 hours).
-// function calculateTimeUntilNextRun() {
-//   const now = new Date();
-//   const nextRun = new Date(now);
-//   nextRun.setDate(nextRun.getDate() + 1); // Add 1 day to the current date
-//   nextRun.setHours(0, 0, 0, 0); // Set the time to midnight
-//   const timeUntilNextRun = nextRun.getTime() - now.getTime();
-//   return timeUntilNextRun;
-// }
+function calculateTimeUntilNextRun() {
+  const now = new Date();
+  const nextRun = new Date(now);
+  nextRun.setDate(nextRun.getDate() + 1); // Add 1 day to the current date
+  nextRun.setHours(0, 0, 0, 0); // Set the time to midnight
+  const timeUntilNextRun = nextRun.getTime() - now.getTime();
+  return timeUntilNextRun;
+}
 // Function to start the daily task if reminderNotificationStatus is true
 async function startDailyTaskIfStatusIsTrue() {
   const launchCalendarValidation = await launchcalendarvalidations.findOne({});
