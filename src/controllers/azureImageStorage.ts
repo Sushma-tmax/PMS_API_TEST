@@ -21,7 +21,9 @@ const app = express();
 const maxRequestBodySize = '10mb';
 app.use(bodyParser.json({ limit: maxRequestBodySize }));
 app.use(bodyParser.urlencoded({ limit: maxRequestBodySize }));
-const getImage = (name: any) => {
+
+
+const getImage =  (name: any)=> {
     if (!AZURE_STORAGE_CONNECTION_STRING) {
 
         throw Error("Azure Storage Connection string not found");
@@ -65,16 +67,19 @@ const getImage = (name: any) => {
     //     // calenderName
     // });
 }
+
+
+/***********retrive employee image based on case-sensitive*****************/
 async function getBlobUrlAsync(name) {
     if (!AZURE_STORAGE_CONNECTION_STRING) {
-
+ 
         throw Error("Azure Storage Connection string not found");
     }
     //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
     const containerName = 'candidate'
     var blobName = name.toLowerCase();
     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
-
+ 
     return new Promise((resolve, reject) => {
         blobService.listBlobsSegmented(containerName, null, async function (error, result, response) {
             if (error) {
@@ -82,17 +87,17 @@ async function getBlobUrlAsync(name) {
                 reject(error);
                 return;
             }
-
+ 
             var matchingBlob = result.entries.find(function (blob) {
                 return blob.name.toLowerCase() === blobName;
             });
-
+ 
             if (matchingBlob) {
                 var startDate = new Date();
                 startDate.setMinutes(startDate.getMinutes() - 5);
                 var expiryDate = new Date(startDate);
                 expiryDate.setMinutes(startDate.getMinutes() + 60);
-
+ 
                 var sharedAccessPolicy = {
                     AccessPolicy: {
                         Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
@@ -100,9 +105,9 @@ async function getBlobUrlAsync(name) {
                         Expiry: expiryDate
                     }
                 };
-
+ 
                 var sasToken = blobService.generateSharedAccessSignature(containerName, matchingBlob.name, sharedAccessPolicy);
-
+ 
                 var imageUrl = blobService.getUrl(containerName, matchingBlob.name, sasToken);
                 resolve(imageUrl);
             } else {
@@ -185,5 +190,6 @@ const postImage = asyncHandler(async (req: Request, res: Response) => {
 
 export {
     getImage,
-    postImage
+    postImage,
+    getBlobUrlAsync
 }

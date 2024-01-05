@@ -294,7 +294,7 @@ function calculateTimeUntilNextRun() {
   let nextRun = new Date(now);
  
   // Set the next run time to 8 am.
-  nextRun.setHours(8, 0, 0, 0);
+  nextRun.setHours(12, 45, 0, 0);
  
   // If the current time is already past 8 am, set the next run to the next day.
   if (now >= nextRun) {
@@ -304,7 +304,7 @@ function calculateTimeUntilNextRun() {
   const timeUntilNextRun = nextRun.getTime() - now.getTime();
   return timeUntilNextRun;
 }
-// Function to calculate the time until the next run (every 2 min).
+//Function to calculate the time until the next run (every 2 min).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
 //   const nextMinute = new Date(now);
@@ -313,7 +313,7 @@ function calculateTimeUntilNextRun() {
 //   const timeUntilNextRun = nextMinute.getTime() - now.getTime();
 //   return timeUntilNextRun;
 // }
-// Function to calculate the time until the next run (every 24 hours).
+// // Function to calculate the time until the next run (every 24 hours).
 // function calculateTimeUntilNextRun() {
 //   const now = new Date();
 //   const nextRun = new Date(now);
