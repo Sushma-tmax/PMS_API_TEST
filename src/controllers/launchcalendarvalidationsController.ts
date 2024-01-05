@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import launchcalendarvalidations from "../models/launchcalendarvalidations";
 import { StatusCodes } from "http-status-codes";
 import { Employee } from "../models";
+import mongoose from 'mongoose';
 
 const validations = asyncHandler(async (req: Request, res: Response) => {
   //console.log(req,"backend")
@@ -171,8 +172,12 @@ const reminderNotificationStatus = asyncHandler(async (req: Request, res: Respon
   console.log(changedvalidations, "changedvalidations");
 });
 const reminderNotificationStatusUpdate = asyncHandler(async (req: Request, res: Response) => {
-  const { confirmEmployeeMaster } = req.body;
-  console.log(confirmEmployeeMaster, "confirmEmployeeMaster1");
+  // const { confirmEmployeeMaster } = req.body;
+  const { reminderStatus, id } = req.body;
+  // const id = req.params.id 
+  console.log(id,"id")
+  console.log(req.body, "Request Body");
+  // console.log(confirmEmployeeMaster, "confirmEmployeeMaster1");
   const employee = await launchcalendarvalidations.updateOne(
     {
       _id: req.params.id 
@@ -180,7 +185,8 @@ const reminderNotificationStatusUpdate = asyncHandler(async (req: Request, res: 
     },
     {
       $set: {
-        reminderNotificationStatus: confirmEmployeeMaster,
+        //reminderNotificationStatus: confirmEmployeeMaster,
+        reminderNotificationStatus: reminderStatus,
       },
     },
     { upsert: true }
