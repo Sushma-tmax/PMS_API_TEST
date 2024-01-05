@@ -1120,7 +1120,7 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
     imageURL = await getBlobUrlAsync(`${employee.employee_code}.jpg`)
     //@ts-ignore   
     //employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
-    employee?.profile_image_url = imageURL
+    employee?.profile_image_url = await getBlobUrlAsync(`${employee.employee_code}.jpg`)
 
     // const att = {
     //     ...employee,
