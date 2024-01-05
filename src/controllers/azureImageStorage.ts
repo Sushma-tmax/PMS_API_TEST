@@ -21,64 +21,68 @@ const app = express();
 const maxRequestBodySize = '10mb';
 app.use(bodyParser.json({ limit: maxRequestBodySize }));
 app.use(bodyParser.urlencoded({ limit: maxRequestBodySize }));
-// const getImage =  (name: any)=> {
-//     if (!AZURE_STORAGE_CONNECTION_STRING) {
-
-//         throw Error("Azure Storage Connection string not found");
-//     }
-//     //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
-//     const containerName = 'candidate'
-//     //   var blobName = res.data.value[0].fields.blobName;
-//     var blobName = name
-//     // var filePath = "./Remo_Designs/CEO.png";
-
-//     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
-//     var startDate = new Date();
-//     startDate.setMinutes(startDate.getMinutes() - 5);
-//     var expiryDate = new Date(startDate);
-//     expiryDate.setMinutes(startDate.getMinutes() + 60);
-
-//     var sharedAccessPolicy = {
-//         AccessPolicy: {
-//             Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],  //grent read permission only
-//             Start: startDate,
-//             Expiry: expiryDate
-//         }
-//     };
-//     // @ts-ignore
-//     var sasToken = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
-
-//     var response = {};
-//     // @ts-ignore
-//     response.image = blobService.getUrl(containerName, blobName, sasToken);
-//     //@ts-ignore
-
-//     //@ts-ignore
-//     return response.image
-
-//     //@ts-ignore
-//     // res.status(StatusCodes.CREATED).json({
-//     //     success: true,
-//     //     response
-//     //     // Acalender
-//     //     // templateName,
-//     //     // calenderName
-//     // });
-// }
-
-//get employee images from azure blob (function to search by employee code, case-insensitive)
 const getImage = (name: any) => {
-
     if (!AZURE_STORAGE_CONNECTION_STRING) {
 
         throw Error("Azure Storage Connection string not found");
     }
+    //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
+    const containerName = 'candidate'
+    //   var blobName = res.data.value[0].fields.blobName;
+    var blobName = name
+    // var filePath = "./Remo_Designs/CEO.png";
+
+    var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
+    var startDate = new Date();
+    startDate.setMinutes(startDate.getMinutes() - 5);
+    var expiryDate = new Date(startDate);
+    expiryDate.setMinutes(startDate.getMinutes() + 60);
+
+    var sharedAccessPolicy = {
+        AccessPolicy: {
+            Permissions: [azure.BlobUtilities.SharedAccessPermissions.READ],  //grent read permission only
+            Start: startDate,
+            Expiry: expiryDate
+        }
+    };
+    // @ts-ignore
+    var sasToken = blobService.generateSharedAccessSignature(containerName, blobName, sharedAccessPolicy);
+
+    var response = {};
+    // @ts-ignore
+    response.image = blobService.getUrl(containerName, blobName, sasToken);
+    //@ts-ignore
+
+    //@ts-ignore
+    return response.image
+
+    //@ts-ignore
+    // res.status(StatusCodes.CREATED).json({
+    //     success: true,
+    //     response
+    //     // Acalender
+    //     // templateName,
+    //     // calenderName
+    // });
+}
+async function getBlobUrlAsync(name) {
+    if (!AZURE_STORAGE_CONNECTION_STRING) {
+
+        throw Error("Azure Storage Connection string not found");
+    }
+    //  const blobServiceClient= await BlobServiceClient.fromConnectionString(AZURE_STORAGE_CONNECTION_STRING)
     const containerName = 'candidate'
     var blobName = name.toLowerCase();
     var blobService = azure.createBlobService(AZURE_STORAGE_CONNECTION_STRING);
 
-    blobService.listBlobsSegmented(containerName, null, function (error, result, response) {
-        if (!error) {
+    return new Promise((resolve, reject) => {
+        blobService.listBlobsSegmented(containerName, null, async function (error, result, response) {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+
             var matchingBlob = result.entries.find(function (blob) {
                 return blob.name.toLowerCase() === blobName;
             });
@@ -89,7 +93,6 @@ const getImage = (name: any) => {
                 var expiryDate = new Date(startDate);
                 expiryDate.setMinutes(startDate.getMinutes() + 60);
 
-                // Use string instead of string[]
                 var sharedAccessPolicy = {
                     AccessPolicy: {
                         Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
@@ -101,20 +104,15 @@ const getImage = (name: any) => {
                 var sasToken = blobService.generateSharedAccessSignature(containerName, matchingBlob.name, sharedAccessPolicy);
 
                 var imageUrl = blobService.getUrl(containerName, matchingBlob.name, sasToken);
-
-                return imageUrl;
+                resolve(imageUrl);
             } else {
                 console.error("Blob not found.");
-                return null;
+                resolve(null);
             }
-        } else {
-            console.error(error);
-            return null;
-        }
+        });
     });
-
-
 }
+
 
 const postImage = asyncHandler(async (req: Request, res: Response) => {
 
