@@ -1,0 +1,37 @@
+@font-face {
+  font-family: regular;
+
+  src: url(../src/assets/fonts/fonts/AkkuratPro-Regular.otf);
+}
+
+@font-face {
+  font-family: bold;
+
+  src: url(../src/assets/fonts/fonts/AkkuratPro-Bold.ttf);
+}
+
+@font-face {
+  font-family: light;
+
+  src: url(../src/assets/fonts/fonts/akkurat_light.ttf);
+}
+
+
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif, ;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  font-family: regular !important;
+  font-size:16px;
+ 
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

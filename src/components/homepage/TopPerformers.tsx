@@ -1,0 +1,177 @@
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import { Container, Box, IconButton } from "@mui/material";
+import { Link,useNavigate  } from "react-router-dom";
+// import NBoxGrids from "./chartscomponents/nboxgrids";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import { Button } from "@mui/material";
+import Newexcel from "../../../../assets/Images/Newexcel.svg";
+import Expand from "../../assets/Images/Expand.svg";
+import Avatar from "@mui/material/Avatar";
+import {useGetEmployeeByFilterQuery} from "../../service";
+// import {
+ 
+//   TOPPERFORMERS_EXPAND
+// } from "../../constants/routes/Routing";
+const Contain = styled("div")({
+  "& .MuiButton-root": {
+    // border: ` 1px solid `,
+    // borderColor: "#D4D4D4",
+    background: "rgb(155 155 155 / 17%)",
+    minWidth: "0px",
+    borderRadius: "50px",
+    width: "55px",
+    height: "55px",
+    // "&:focus": {
+    //   // borderColor: '#3C8BB5',
+    // },
+  },
+});
+
+export default function Topperformers(props:any) {
+  const {topPerformerEmployees,navigationFrom,activeCalenderName,appCalId} = props;
+  const navigate = useNavigate();
+  console.log(topPerformerEmployees,"topPerformerEmployeeschild")
+  const {data} = useGetEmployeeByFilterQuery('?appraisal.appraiser_rating')
+  const handleNavigationForTopPerformers = () =>{
+    if(navigationFrom === "Appraiser"){
+      navigate("/topperformersexpand",{state : { activeCalenderName :activeCalenderName,topPerformerEmployees:topPerformerEmployees}})
+     }else if(navigationFrom === "Reviewer"){
+      navigate("/topperformersexpandofReviewer",{state :{activeCalenderName :activeCalenderName,topPerformerEmployees:topPerformerEmployees}})
+     }else if(navigationFrom === "Normalizer"){
+      navigate("/topperformersexpandofNormalizer",{state :{activeCalenderName :activeCalenderName,appCalId:appCalId,topPerformerEmployees:topPerformerEmployees}})
+     }
+  }
+  return (
+    <div>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography
+          gutterBottom
+          component="div"
+          sx={{ fontSize: "20px", fontFamily: "Arial", color: "#3e8cb5" }}
+        >
+          Top Performers
+        </Typography>
+        
+          {/* <IconButton> */}
+                  {/* <Link to={"/topperformersexpand"}> */}
+                    <img src={Expand} style={{cursor:"pointer"}} onClick={handleNavigationForTopPerformers} />
+                  {/* </Link> */}
+          {/* </IconButton> */}
+       
+      </Stack>
+      {topPerformerEmployees && topPerformerEmployees
+      // ?.filter((f:any) => f?.appraisal?.appraiser_rating >= 4).sort((a:any,b:any) => b?.appraisal?.appraiser_rating - a?.appraisal?.appraiser_rating)
+      ?.slice(0, 10)
+      ?.map((i:any) => {
+console.log(i,"topperformer")
+     return(
+      <>
+      <div>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <div 
+           style={{
+            width: '300px'
+            //backgroundColor:'coral'
+          }} 
+          >
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Typography style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+                {/* <Avatar sx={{ width: 60, height: 60 }}>A</Avatar> */}
+                {/* <Avatar
+                  sx={{ width: 60, height: 60 }}
+                  alt="Syed"
+                  src="/static/images/avatar/5.jpg"
+                /> */}
+              </Typography>
+              <Stack direction="column" spacing={1}>
+                <span
+                  style={{
+                    fontSize: "17px",
+                    fontFamily: "Arial",
+                    color: "#333333",
+                    paddingTop: "10px"
+                  }}
+                >
+                  {i?.first_name}
+                </span>
+                <span
+                  style={{
+                    color: "#333333",
+                    opacity: "50%",
+                    fontSize: "12px",
+                    fontFamily: "Arial",
+                    marginTop: "5px",
+                  }}
+                >
+                  {i?.position_long_description}
+                </span>
+                <span
+                  style={{
+                    color: "#333333",
+                    opacity: "50%",
+                    fontSize: "12px",
+                    fontFamily: "Arial",
+                    marginTop: "5px",
+                  }}
+                >
+                   {/* Grade {i?.grade} */}
+                </span>
+              </Stack>
+            </Stack>
+          </div>
+          <div
+          // style={{
+          //   width: '80px',
+          //   backgroundColor:'skyblue'
+          // }} 
+          >
+            <div
+             style={{
+              // display:"inline-block",
+              // height:"25px",
+              // width:"25px",
+              // borderRadius: "50%",
+              // background: "rgb(155 155 155 / 17%)",
+              // padding: "10px",
+              // textAlign:"center",
+              width: "55px",
+                lineHeight:"50px",
+                borderRadius: "50%",
+                textAlign:"center",
+                fontSize: "16px",
+                fontFamily: "Arial",
+                background: "rgb(155 155 155 / 17%)",
+
+            }}
+            >
+               {i?.appraisal?.pa_rating}
+            </div>
+          </div>
+         
+        </Stack>
+      </div> 
+      </>
+      )})}
+     
+     <div>
+        {topPerformerEmployees?.length == 0 &&
+       
+          <Typography
+          style={{ fontWeight: '500', border: "none", color: "#808080", fontSize: "18px", fontFamily: "arial", paddingTop: "10px" }}
+          >
+          No data to display
+          </Typography>
+          } 
+      </div>
+       
+      
+    </div>
+  );
+}

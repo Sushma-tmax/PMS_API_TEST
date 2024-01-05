@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="85" height="85" viewBox="0 0 85 85">
+  <g id="Group_1627" data-name="Group 1627" transform="translate(-609 -268)">
+    <g id="Group_1639" data-name="Group 1639">
+      <g id="Group_1626" data-name="Group 1626" transform="translate(-5)">
+        <path id="Path_1162" data-name="Path 1162" d="M42.5,0A42.5,42.5,0,1,1,0,42.5,42.5,42.5,0,0,1,42.5,0Z" transform="translate(614 268)" fill="#c00000" opacity="0.05"/>
+      </g>
+    </g>
+    <g id="delete_2_" data-name="delete (2)" transform="translate(636 291)">
+      <path id="Path_1101" data-name="Path 1101" d="M2.535,11.358V33.374a4.93,4.93,0,0,0,1.311,3.4,4.4,4.4,0,0,0,3.193,1.381H23.945a4.4,4.4,0,0,0,3.193-1.381,4.93,4.93,0,0,0,1.311-3.4V11.358a3.414,3.414,0,0,0-.876-6.713H23V3.528A3.51,3.51,0,0,0,19.459,0H11.524a3.51,3.51,0,0,0-3.539,3.53V4.645H3.41a3.414,3.414,0,0,0-.876,6.713Zm21.411,25.01H7.038a2.83,2.83,0,0,1-2.716-2.994V11.437h22.34V33.374a2.83,2.83,0,0,1-2.716,2.994ZM9.773,3.528a1.722,1.722,0,0,1,1.752-1.742h7.935a1.722,1.722,0,0,1,1.752,1.742V4.645H9.773ZM3.41,6.432H27.573a1.608,1.608,0,0,1,0,3.217H3.41a1.608,1.608,0,1,1,0-3.217Zm0,0" transform="translate(0.003 0.002)" fill="#c00000" stroke="#c00000" stroke-width="0.3" opacity="0.75"/>
+      <g id="Group_1624" data-name="Group 1624" transform="translate(13.221 18.54)">
+        <path id="Path_1099" data-name="Path 1099" d="M222.676,154.7a.321.321,0,0,0-.278.351V161.7a.286.286,0,1,0,.556,0v-6.643A.321.321,0,0,0,222.676,154.7Zm0,0" transform="translate(-219.293 -154.703)" fill="#c00000" stroke="#c00000" stroke-width="0.3"/>
+        <path id="Path_1100" data-name="Path 1100" d="M104.676,154.7a.321.321,0,0,0-.278.351V161.7a.286.286,0,1,0,.556,0v-6.643A.321.321,0,0,0,104.676,154.7Zm0,0" transform="translate(-104.51 -154.703)" fill="#c00000" stroke="#c00000" stroke-width="0.3"/>
+        <path id="Path_1102" data-name="Path 1102" d="M163.676,154.7a.321.321,0,0,0-.278.351V161.7a.286.286,0,1,0,.556,0v-6.643A.321.321,0,0,0,163.676,154.7Zm0,0" transform="translate(-161.927 -154.703)" fill="#c00000" stroke="#c00000" stroke-width="0.3"/>
+      </g>
+    </g>
+  </g>
+</svg>
