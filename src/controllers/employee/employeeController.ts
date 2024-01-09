@@ -1120,7 +1120,7 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
     imageURL = await getBlobUrlAsync(`${employee.employee_code}.jpg`)
     //@ts-ignore   
     //employee?.profile_image_url = getImage(`${employee.employee_code}.jpg`)
-    employee?.profile_image_url = await getBlobUrlAsync(`${employee.employee_code}.jpg`)
+    employee?.profile_image_url = imageURL
 
     // const att = {
     //     ...employee,
@@ -3864,21 +3864,33 @@ const acceptEmployeeLeaversDraft = asyncHandler(async (req: Request, res: Respon
     });
 })
 const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.body
+    const { id,Inprobation } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
-    const employee = await Employee.updateMany({ _id: { $in: id } },
-        {
-            $set: {
-                "isExcluded": true,
-                "isGradeException": false,
-                "isRoleException": false,
-                "appraisal.pa_status": "excepted",
-                "appraisal.status": "excepted",
-            }
-        }
-    )
+    // const employee = await Employee.updateMany({ _id: { $in: id } },
+    //     {
+    //         $set: {
+    //             "isExcluded": true,
+    //             "isGradeException": false,
+    //             "isRoleException": false,
+    //             "appraisal.pa_status": "excepted",
+    //             "appraisal.status": "excepted",
+    //         }
+    //     }
+    // )
+    const updateFields = {
+        "isExcluded": true,
+        "isGradeException": false,
+        "isRoleException": false,
+        "appraisal.pa_status": "excepted",
+        "appraisal.status": "excepted",
+    };
+
+    if (Inprobation === "Inprobationcheck") {
+        updateFields["probation_status"] = "In-Probation";
+    }
+    const employee = await Employee.updateMany({ _id: { $in: id } }, { $set: updateFields });
     res.status(StatusCodes.OK).json({
         employee
     });

@@ -275,8 +275,6 @@ async function dailyTask() {
 //   nextHour.setSeconds(0); // Reset seconds to 0
 //   nextHour.setMilliseconds(0); // Reset milliseconds to 0
 //   nextHour.setHours(now.getHours() + 2); // Set hours to the next hour
-//   //setting to run every 24 hours
-//  // nextHour.setHours(now.getHours() + 24); // Set hours to the next hour
 
 //   const timeUntilNextHour = nextHour.getTime() - now.getTime();
 //   return timeUntilNextHour;
