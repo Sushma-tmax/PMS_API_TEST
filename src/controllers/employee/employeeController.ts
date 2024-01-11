@@ -391,6 +391,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         })
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.training_recommendation.name')
+        .populate('appraisal.performance_goal.goal_category')
         .populate({
             path: 'appraisal',
             populate: {

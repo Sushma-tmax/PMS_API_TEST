@@ -253,6 +253,11 @@ const EmployeeSchema = new Schema({
     }],
 
     employee: {
+        selectedToReject : {
+            type: Boolean,
+            default: false, 
+        },
+
         one_to_one_meeting: {
             type: Date,
         },
@@ -841,6 +846,24 @@ const EmployeeSchema = new Schema({
                 default: ''
             },
         }],
+        performance_goal: [{            
+            goal_category: {
+                type: Schema.Types.ObjectId,
+                ref: 'performanceGoals'
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
+                type: String,
+            },
+        }],
         other_recommendation: [{
             name: {
                 type: Schema.Types.ObjectId,
@@ -1022,6 +1045,24 @@ const EmployeeSchema = new Schema({
                 type: String,
             },
             justification: {
+                type: String,
+            },
+        }],
+        performance_goal: [{           
+            goal_category: {
+                type: Schema.Types.ObjectId,
+                ref: 'performanceGoals'
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
                 type: String,
             },
         }],

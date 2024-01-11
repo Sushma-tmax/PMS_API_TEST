@@ -499,7 +499,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     area_of_improvement: [],
                     attachments: [],
                     appraiser_PA_rejected : false,
-                    appraiser_PA_accepted : false
+                    appraiser_PA_accepted : false,
+                    potential :''
                 },
                 current_rating: {
                     overall_rating: 0,
