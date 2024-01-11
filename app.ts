@@ -59,6 +59,7 @@ dotenv.config({path: __dirname + '/.env'});
 
 // connectDB('mongodb+srv://augustya:brOlGGq5fjj5EL5z@cluster0.22mx4.mongodb.net/PMS?retryWrites=true&w=majority');
 // connectDB('mongodb+srv://mongodb04:7CAV3kA65Td9xn9m@pmstest2cluster.cfpmcjd.mongodb.net/PMS?retryWrites=true&w=majority');
+// connectDB('mongodb+srv://mongodb05:PCHDzk8hG1bx315I@pas.fjjtq1e.mongodb.net/PMS?retryWrites=true&w=majority');
 connectDB('mongodb+srv://mongodb05:PCHDzk8hG1bx315I@pas.fjjtq1e.mongodb.net/PMS?retryWrites=true&w=majority');
 
 // connectDB('mongodb+srv://pms:yGMXa8yrjjnjydFc@cluster0.axzjq.mongodb.net/PMS?retryWrites=true&w=majority');
