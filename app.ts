@@ -19,6 +19,7 @@ import calenderRoutes  from './src/routes/calenderRoutes'
 import appraisalCalenderRoutes  from './src/routes/appraisalCalenderRoutes'
 import ratingValidation from './src/routes/ratingValidationRoutes'
 import nineBoxRoute from "./src/routes/nineBoxRoute";
+import performanceGoalsRoutes from "./src/routes/performanceGoalsRoutes";
 import azureImagesRoutes from './src/routes/azureImagesRoutes'
 import dashboardColorRoutes from "./src/routes/dashboardColorRoutes";
 import launchcalendarvalidationsRoutes from "./src/routes/launchcalendarvalidationsRoutes";
@@ -28,7 +29,6 @@ import {Request, Response} from "express";
 import emailRoutes from "./src/routes/emailRoutes";
 import bulkApiRoutes from "./src/routes/bulkApiRoutes";
 import previousAppraisalRoutes from "./src/routes/previousAppraisalRoutes";
-
 
 
 
@@ -91,6 +91,7 @@ app.use('/api/v1/calender', calenderRoutes)
 app.use('/api/v1/appraisal-calender', appraisalCalenderRoutes)
 app.use('/api/v1/rating-validation', ratingValidation)
 app.use('/api/v1/ninebox', nineBoxRoute)
+app.use('/api/v1/performanceGoals', performanceGoalsRoutes)
 app.use('/api/v1/azure-images',azureImagesRoutes)
 app.use('/api/v1/color', dashboardColorRoutes)
 app.use('/api/v1/validations',launchcalendarvalidationsRoutes)
