@@ -28,6 +28,7 @@ import {Request, Response} from "express";
 import emailRoutes from "./src/routes/emailRoutes";
 import bulkApiRoutes from "./src/routes/bulkApiRoutes";
 import previousAppraisalRoutes from "./src/routes/previousAppraisalRoutes";
+import performanceGoals from './src/models/PerformanceGoal/performanceGoals';
 
 
 
@@ -91,6 +92,7 @@ app.use('/api/v1/calender', calenderRoutes)
 app.use('/api/v1/appraisal-calender', appraisalCalenderRoutes)
 app.use('/api/v1/rating-validation', ratingValidation)
 app.use('/api/v1/ninebox', nineBoxRoute)
+app.use('/api/v1/performanceGoals', performanceGoals)
 app.use('/api/v1/azure-images',azureImagesRoutes)
 app.use('/api/v1/color', dashboardColorRoutes)
 app.use('/api/v1/validations',launchcalendarvalidationsRoutes)
