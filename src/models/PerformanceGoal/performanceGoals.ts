@@ -1,7 +1,7 @@
 import {model, Schema} from "mongoose";
 import  UniqueValidator from 'mongoose-unique-validator'
 
-const performanceGoals  = new Schema({
+const performanceGoalsSchema  = new Schema({
     title: {
         type: String,
         required: true,
@@ -16,6 +16,6 @@ const performanceGoals  = new Schema({
 },
     {timestamps: true});
 
-    performanceGoals.plugin(UniqueValidator)
+    performanceGoalsSchema.plugin(UniqueValidator)
 
-export default model("performanceGoals", performanceGoals);
+export default model("performanceGoals", performanceGoalsSchema);

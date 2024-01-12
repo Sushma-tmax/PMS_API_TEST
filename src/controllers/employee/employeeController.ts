@@ -392,6 +392,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.training_recommendation.name')
         .populate('appraisal.performance_goal.goal_category')
+        .populate('employee.performance_goal.goal_category')
         .populate({
             path: 'appraisal',
             populate: {
@@ -830,6 +831,7 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
         .populate('appraisal_previous_submission.feedback_questions.name')
         .populate('appraisal_previous_submission.training_recommendation.name')
         .populate('appraisal_previous_submission.other_recommendation.name')
+        .populate('appraisal_previous_submission.performance_goal.goal_category')
         .populate({
             path: 'reviewer',
             populate: {
@@ -1033,7 +1035,8 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
             populate: {
                 path: 'objective_description.ratings'
             }
-        })
+        }).populate('employee_previous_submission.performance_goal.goal_category')
+
 
 
     const fun = (test: any) => {
