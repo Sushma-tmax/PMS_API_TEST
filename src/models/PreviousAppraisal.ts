@@ -142,6 +142,23 @@ const PreviousAppraisal = new Schema({
         status: {
             type: String
         },
+        performance_goal: [{            
+            goal_category: {
+                type: String,
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
+                type: String,
+            },
+        }],
       
     },
     appraiser_PA_accepted: {
@@ -180,6 +197,23 @@ const PreviousAppraisal = new Schema({
         employee_rejection:{
             type: String
         },
+        performance_goal: [{            
+            goal_category: {
+                type: String,
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
+                type: String,
+            },
+        }],
     },
     high:{
         type: String

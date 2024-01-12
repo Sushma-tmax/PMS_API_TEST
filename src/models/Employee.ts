@@ -253,7 +253,7 @@ const EmployeeSchema = new Schema({
     }],
 
     employee: {
-        selectedToReject : {
+        selectedToReject : {  /*******************to hide/display Accept button on landing screen if wished to reject******* */
             type: Boolean,
             default: false, 
         },
@@ -325,6 +325,24 @@ const EmployeeSchema = new Schema({
                 default: ''
             },
         }],
+        performance_goal: [{            
+            goal_category: {
+                type: Schema.Types.ObjectId,
+                ref: 'performanceGoals'
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
+                type: String,
+            },
+        }],
         area_of_improvement: [{
             value: {
                 type: String,
@@ -394,6 +412,25 @@ const EmployeeSchema = new Schema({
 
 
     employee_previous_submission: {
+
+        performance_goal: [{            
+            goal_category: {
+                type: Schema.Types.ObjectId,
+                ref: 'performanceGoals'
+            },
+            description: {
+                type: String,
+            },
+            keyresult: {
+                type: String,
+            },
+            due_date: {
+                type: Date,
+            },
+            remarks: {
+                type: String,
+            },
+        }],
 
         employee_status: {
             type: String,
