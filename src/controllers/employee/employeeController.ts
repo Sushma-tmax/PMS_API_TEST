@@ -189,6 +189,8 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
                     path: 'training_recommendation.name'
                 }
             })
+            .populate('appraisal.performance_goal.goal_category')
+            .populate('employee.performance_goal.goal_category')
             .populate({
                 path: 'appraisal',
                 populate: {
