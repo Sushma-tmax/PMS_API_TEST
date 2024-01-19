@@ -2845,8 +2845,8 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
             $set: {
                 // "employee.comments": comments,
                 "appraisal.appraiser_status": 'employee-rejected',
-                "appraisal.status": "rejected",
-                "employee.employee_status": "rejected"
+                // "appraisal.status": "rejected",
+                // "employee.employee_status": "rejected"
             }
         })
 
@@ -2857,8 +2857,8 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
                 "normalizerIsChecked": false,
                 "normalizerIsDisabled": false,
                 "normalizer.normalizer_status": 'employee-rejected',
-                "appraisal.status": "rejected",
-                "employee.employee_status": "rejected"
+                // "appraisal.status": "rejected",
+                // "employee.employee_status": "rejected"
             }
         })
     }
