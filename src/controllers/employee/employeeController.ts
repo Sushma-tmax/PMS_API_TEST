@@ -2916,7 +2916,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
         current_previous_submission,
         appraisalObjectiveDescription,
         employee_previous_submission,
-        appraiser_overall_feedback
+        appraiser_overall_feedback,
+        performancegoalValues
     } = req.body
 
     const { employee, normalizer, appraisal } = await Employee.findById(id)
@@ -2929,6 +2930,8 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.pa_status": "Pending with Reviewer (Employee Rejection)",
             "appraisal.comments": comments,
             "appraisal.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
+            "appraisal.performance_goal": performancegoalValues,
+            "appraisal_previous_submission.performance_goal": performancegoalValues,            
             "appraisal_previous_submission.objective_description": appraisal.objective_description,
             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
             "appraisal_previous_submission.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
