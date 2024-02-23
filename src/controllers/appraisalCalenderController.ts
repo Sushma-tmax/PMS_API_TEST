@@ -139,6 +139,38 @@ const addPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: R
         }, { new: true }
     )
     res.status(StatusCodes.OK).json({ "message": updatedCalendar });
+})
+
+/****** map positions to appraisal calendar with respective template Id*************/
+const mapPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: Response) => {
+
+    const { id } = req.params
+
+    const { employee } = req.body
+    const data = employee
+    console.log(data,id,'cehckposition')
+
+    // const updatedCalendarr = await AppraisalCalender.findById(id)
+
+   // Remove positions that are not in the employee array
+await AppraisalCalender.findByIdAndUpdate(id,
+    {
+        $pull: {
+            position: { $nin: employee }
+        }
+    }
+);
+
+// Add positions that are not already present
+const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+    {
+        $addToSet: {
+            position: { $each: employee }
+        }
+    },
+    { new: true }
+);
+    res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 
 })
@@ -876,5 +908,6 @@ export {
     getAppraisalCalendarofCurrentYear,
     appraisalCalendarEmployeeValidation,
     getAppraisalCalendarForTemplate,
-    appraisalCalendarClose
+    appraisalCalendarClose,
+    mapPositionsToAppraisalCalendar
 }

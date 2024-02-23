@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import asyncHandler from "../middleware/asyncHandler";
 import { Employee } from "../models";
+import Template from "../models/Template";
 import { StatusCodes } from "http-status-codes";
-
+import _ from "lodash";
+import AppraisalCalender from "../models/AppraisalCalender";
 
 // const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
@@ -139,7 +141,10 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 'Reviewer Code': item.reviewer_code,
                 'Normalizer Code': item.normalizer_code,
                 'Email Id': item.email,
-                'CEO Role': item.isCEORole
+                'CEO Role': item.isCEORole,
+                'TemplateName"': item.Template_Name,
+                // 'isExcluded' :item.isExcluded,
+                // 'isGradeException' :item.isGradeException,
             }
 
         })
@@ -211,7 +216,19 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
 
         /* Based on employee codes , it will update if employee code already exists else it will add. */
         const employees = req.body.data;
-        const bulkWriteOps = employees.map((employee) => {
+        // Iterate through the employees array
+        const updatedEmployees = employees.map((employee) => {
+            // Check if Probation Status is "In-Probation"
+            if (employee.probation_status === "In-Probation") {
+                // If yes, set isExcluded to true
+                return { ...employee, isExcluded: true };
+            }
+
+            // If not, keep the original employee object
+            return employee;
+        });
+
+        const bulkWriteOps = updatedEmployees.map((employee) => {
             return {
                 updateOne: {
                     filter: { employee_code: employee.employee_code },
@@ -220,9 +237,9 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 },
             };
         });
-
-        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });        
-
+        console.log(updatedEmployees)
+        const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
+        // console.log(result)
         if (result) {
 
             /* Function to check whether appraiser code , reviewer code and normalizer code exists in the employee master
@@ -266,16 +283,67 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 const managerCode = item.manager_code;
                 const managerName = item.manager_name;
 
+                /***********No need to check for employee names, just check whether employee codes exist************/
+
+                // // find the employee with the corresponding appraiser code
+                // const employeeWithAppraiserCode = employeesWithCodes.find(
+                //     (employee) => employee.employee_code === appraiserCode
+                // );
+                // if (employeeWithAppraiserCode) {
+                //     const employeeAppraiserName = employeeWithAppraiserCode.legal_full_name;
+                //     if (employeeAppraiserName !== appraiserName) {
+                //         errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${employeeCode}'.\n`;
+                //     }
+                // } else {
+                //     errorMessage += `Appraiser code '${appraiserCode}' does not exist for employee code '${employeeCode}'..\n`;
+                // }
+
+                // // find the employee with the corresponding reviewer code
+                // const employeeWithReviewerCode = employeesWithCodes.find(
+                //     (employee) => employee.employee_code === reviewerCode
+                // );
+                // if (employeeWithReviewerCode) {
+                //     const employeeReviewerName = employeeWithReviewerCode.legal_full_name;
+                //     if (employeeReviewerName !== reviewerName) {
+                //         errorMessage += `Reviewer name '${reviewerName}' is not correct for employee code '${employeeCode}'.\n`;
+                //     }
+                // } else {
+                //     errorMessage += `Reviewer code '${reviewerCode}' does not exist.\n`;
+                // }
+
+                // // find the employee with the corresponding normalizer code
+                // const employeeWithNormalizerCode = employeesWithCodes.find(
+                //     (employee) => employee.employee_code === normalizerCode
+                // );
+                // if (employeeWithNormalizerCode) {
+                //     const employeeNormalizerName = employeeWithNormalizerCode.legal_full_name;
+                //     if (employeeNormalizerName !== normalizerName) {
+                //         errorMessage += `Normalizer name '${normalizerName}' is not correct for employee code '${employeeCode}'.\n`;
+                //     }
+                // } else {
+                //     errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
+                // }
+
+                // // find the employee with the corresponding manager code
+                // const employeeWithManagerCode = employeesWithCodes.find(
+                //     (employee) => employee.employee_code === managerCode
+                // );
+                // if (employeeWithManagerCode) {
+                //     const employeeManagerName = employeeWithManagerCode.legal_full_name;
+                //     if (employeeManagerName !== managerName) {
+                //         errorMessage += `Manager name '${managerName}' is not correct for employee code '${employeeCode}'.\n`;
+                //     }
+                // } else {
+                //     errorMessage += `Manager code '${managerCode}' does not exist.\n`;
+                // }
+
+
+                /**** Check whether employee codes exist *************/
                 // find the employee with the corresponding appraiser code
                 const employeeWithAppraiserCode = employeesWithCodes.find(
                     (employee) => employee.employee_code === appraiserCode
                 );
-                if (employeeWithAppraiserCode) {
-                    const employeeAppraiserName = employeeWithAppraiserCode.legal_full_name;
-                    if (employeeAppraiserName !== appraiserName) {
-                        errorMessage += `Appraiser name '${appraiserName}' is not correct for employee code '${employeeCode}'.\n`;
-                    }
-                } else {
+                if (!employeeWithAppraiserCode) {
                     errorMessage += `Appraiser code '${appraiserCode}' does not exist for employee code '${employeeCode}'..\n`;
                 }
 
@@ -283,12 +351,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 const employeeWithReviewerCode = employeesWithCodes.find(
                     (employee) => employee.employee_code === reviewerCode
                 );
-                if (employeeWithReviewerCode) {
-                    const employeeReviewerName = employeeWithReviewerCode.legal_full_name;
-                    if (employeeReviewerName !== reviewerName) {
-                        errorMessage += `Reviewer name '${reviewerName}' is not correct for employee code '${employeeCode}'.\n`;
-                    }
-                } else {
+                if (!employeeWithReviewerCode) {
                     errorMessage += `Reviewer code '${reviewerCode}' does not exist.\n`;
                 }
 
@@ -296,12 +359,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 const employeeWithNormalizerCode = employeesWithCodes.find(
                     (employee) => employee.employee_code === normalizerCode
                 );
-                if (employeeWithNormalizerCode) {
-                    const employeeNormalizerName = employeeWithNormalizerCode.legal_full_name;
-                    if (employeeNormalizerName !== normalizerName) {
-                        errorMessage += `Normalizer name '${normalizerName}' is not correct for employee code '${employeeCode}'.\n`;
-                    }
-                } else {
+                if (!employeeWithNormalizerCode) {
                     errorMessage += `Normalizer code '${normalizerCode}' does not exist.\n`;
                 }
 
@@ -309,12 +367,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 const employeeWithManagerCode = employeesWithCodes.find(
                     (employee) => employee.employee_code === managerCode
                 );
-                if (employeeWithManagerCode) {
-                    const employeeManagerName = employeeWithManagerCode.legal_full_name;
-                    if (employeeManagerName !== managerName) {
-                        errorMessage += `Manager name '${managerName}' is not correct for employee code '${employeeCode}'.\n`;
-                    }
-                } else {
+                if (!employeeWithManagerCode) {
                     errorMessage += `Manager code '${managerCode}' does not exist.\n`;
                 }
             });
@@ -373,7 +426,7 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
                 await Employee.updateMany({ employee_code: { $in: normalizerCodes } },
                     { $set: { 'roles.normalizer': true } });
                 await Employee.updateMany({ $set: { 'roles.employee': true } });
-            }        
+            }
         }
 
         res

@@ -4291,16 +4291,16 @@ const lineManagerEmployee = asyncHandler(async (req: Request, res: Response) => 
 const lineManagerPlusOneEmployee = asyncHandler(async (req: Request, res: Response) => {
     const { employee_code, calId } = req.params;
     console.log(employee_code, calId, "lineManagerPlusOneEmployeeConsoled")
-    const lineManager = await Employee.find({ manager_code: employee_code, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
+    const lineManager = await Employee.find({ manager_code: employee_code, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } }).populate('appraisal.training_recommendation,employee.training_recommendation');
     const lineManagerIds = lineManager.map((j: any) => j.employee_code);
 
-    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
+    const lineManagerPlusOne = await Employee.find({ manager_code: { $in: lineManagerIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } }).populate('appraisal.training_recommendation,employee.training_recommendation');
     const lineManagerPlusOneIds = lineManagerPlusOne.map((j: any) => j.employee_code);
 
-    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
+    const lineManagerPlusTwo = await Employee.find({ manager_code: { $in: lineManagerPlusOneIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } }).populate('appraisal.training_recommendation,employee.training_recommendation');
     const lineManagerPlusTwoIds = lineManagerPlusTwo.map((j: any) => j.employee_code);
 
-    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } });
+    const lineManagerPlusThree = await Employee.find({ manager_code: { $in: lineManagerPlusTwoIds }, calendar: calId, employee_upload_flag: true, "appraisal.status": { $ne: "excepted" } }).populate('appraisal.training_recommendation,employee.training_recommendation');
 
     res.status(StatusCodes.OK).json({
         lineManagerPlusThree,

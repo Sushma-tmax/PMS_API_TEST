@@ -80,6 +80,9 @@ const EmployeeSchema = new Schema({
     employee_code: {
         type: String,
     },
+    TemplateName :{
+        type: String,
+    },
     name: {
         type: String,
     },
@@ -170,6 +173,10 @@ const EmployeeSchema = new Schema({
         type: Date
     },
     employee_upload_flag: {
+        type: Boolean,
+        default: false
+    },
+    live_employee_upload_flag:{
         type: Boolean,
         default: false
     },
