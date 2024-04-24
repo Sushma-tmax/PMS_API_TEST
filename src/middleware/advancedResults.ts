@@ -31,8 +31,8 @@ const advancedResults = (model, populate) => async (req, res, next) => {
         const sortBy = req.query.sort.split(',').join(' ');
         query = query.sort(sortBy);
     } else {
-        query = query.sort('-createdAt');
-    }
+        // query = query.sort('-createdAt');
+        query = query.collation({ locale: 'en', numericOrdering: true }).sort({ employee_code: 1 });    }
 
     // Pagination
     const page = parseInt(req.query.page, 10) || 1;

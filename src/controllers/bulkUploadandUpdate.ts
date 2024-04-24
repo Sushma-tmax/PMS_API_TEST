@@ -215,31 +215,77 @@ const updateEmployee = asyncHandler(async (req: Request, res: Response) => {
         }
 
         /* Based on employee codes , it will update if employee code already exists else it will add. */
+        // const employees = req.body.data;
+        // // Iterate through the employees array
+        // const updatedEmployees = employees.map((employee) => {
+        //     // Check if Probation Status is "In-Probation"
+        //     if (employee.probation_status === "In-Probation") {
+        //         // If yes, set isExcluded to true
+        //         return { ...employee, isExcluded: true };
+        //     }
+        //     if (employee.isCEORole === "yes") {
+        //         // If yes, set isExcluded to true
+        //         return { ...employee, isCEORole: true };
+        //     }
+        //     if (employee.isExcluded === "yes") {
+        //         // If yes, set isExcluded to true
+        //         return { ...employee, isExcluded: true };
+        //     }
+        //     if (employee.isGradeException === "yes") {
+        //         // If yes, set isExcluded to true
+        //         return { ...employee, isGradeException: true };
+        //     }
+
+        //     // If not, keep the original employee object
+        //     return employee;
+        // });
+
+        // const bulkWriteOps = updatedEmployees.map((employee) => {
+        //     return {
+        //         updateOne: {
+        //             filter: { employee_code: employee.employee_code },
+        //             update: employee,
+        //             upsert: true,
+        //         },
+        //     };
+        // });
+        // console.log(updatedEmployees)
+        // const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
+        // console.log(result)
+
         const employees = req.body.data;
-        // Iterate through the employees array
-        const updatedEmployees = employees.map((employee) => {
-            // Check if Probation Status is "In-Probation"
+        const bulkWriteOps = employees.map((employee) => {
+            // Initialize updatedEmployee object with the original employee data
+            let updatedEmployee = { ...employee };
+
+            // Check and update the properties based on conditions
             if (employee.probation_status === "In-Probation") {
-                // If yes, set isExcluded to true
-                return { ...employee, isExcluded: true };
+                updatedEmployee.isExcluded = true;
+            }
+            if (employee.isCEORole === "yes") {
+                updatedEmployee.isCEORole = true;
+            }
+            if (employee.isExcluded === "yes") {
+                updatedEmployee.isExcluded = true;
+            }
+            if (employee.isGradeException === "yes") {
+                updatedEmployee.isGradeException = true;
             }
 
-            // If not, keep the original employee object
-            return employee;
-        });
-
-        const bulkWriteOps = updatedEmployees.map((employee) => {
             return {
                 updateOne: {
                     filter: { employee_code: employee.employee_code },
-                    update: employee,
+                    update: updatedEmployee,
                     upsert: true,
                 },
             };
         });
-        console.log(updatedEmployees)
+
+        console.log(bulkWriteOps);
+
         const result = await Employee.bulkWrite(bulkWriteOps, { ordered: false });
-        // console.log(result)
+
+
         if (result) {
 
             /* Function to check whether appraiser code , reviewer code and normalizer code exists in the employee master

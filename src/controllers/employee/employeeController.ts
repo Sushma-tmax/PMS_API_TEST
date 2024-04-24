@@ -280,9 +280,13 @@ const getAllEmployees = asyncHandler(async (req: Request, res: Response) => {
 
 
     if (status === 'all') {
-        employees = await Employee.find()
+    //    find and sort employee code in ascending order
+        employees = (await Employee.find()).sort((a, b) => parseInt(a.employee_code) - parseInt(b.employee_code));
+
     } else {
-        employees = await Employee.find({ "appraisal.status": status })
+         //    find and sort employee code in ascending order
+        employees = (await Employee.find({ "appraisal.status": status })).sort((a, b) => parseInt(a.employee_code) - parseInt(b.employee_code));
+       
     }
     //employees.populate('calendar')
     // employees.populate({
@@ -393,6 +397,7 @@ const getEmployeeById = asyncHandler(async (req: Request, res: Response) => {
         })
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.training_recommendation.name')
+        .populate('employee.training_recommendation.name')
         .populate('appraisal.performance_goal.goal_category')
         .populate('employee.performance_goal.goal_category')
         .populate({
@@ -776,6 +781,7 @@ const getEmployeeByIdForViewPA = asyncHandler(async (req: Request, res: Response
         })
         .populate('appraisal.other_recommendation.name')
         .populate('appraisal.training_recommendation.name')
+        .populate('employee_previous_submission.training_recommendation.name')
         .populate({
             path: 'appraisal',
             populate: {
@@ -2827,7 +2833,7 @@ const totalReviewerDetailsEmail = async () => {
 //------------------------------------------------------------------For reminder notification
 
 const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params
+    const { id, agreeValue } = req.params
     // const { comments } = req.body
 
     console.log('```````````` running ', id)
@@ -2837,7 +2843,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
     const emp = await Employee.findById(id)
 
 
-    const agreeValue = emp.employee.employee_agree
+    // const agreeValue = emp.employee.employee_agree
 
     if (agreeValue === true) {
 
@@ -2931,7 +2937,7 @@ const appraiserAcceptsEmployee = asyncHandler(async (req: Request, res: Response
             "appraisal.comments": comments,
             "appraisal.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
             "appraisal.performance_goal": performancegoalValues,
-            "appraisal_previous_submission.performance_goal": performancegoalValues,            
+            "appraisal_previous_submission.performance_goal": performancegoalValues,
             "appraisal_previous_submission.objective_description": appraisal.objective_description,
             "appraisal_previous_submission.appraiser_rating": appraisal.appraiser_rating,
             "appraisal_previous_submission.appraiser_overall_feedback": appraiser_overall_feedback?.trim(),
@@ -3873,7 +3879,7 @@ const acceptEmployeeLeaversDraft = asyncHandler(async (req: Request, res: Respon
     });
 })
 const acceptEmployeeExcluded = asyncHandler(async (req: Request, res: Response) => {
-    const { id,Inprobation } = req.body
+    const { id, Inprobation } = req.body
 
     // const { employee: appraisal } = await Employee.findById(id);
 
