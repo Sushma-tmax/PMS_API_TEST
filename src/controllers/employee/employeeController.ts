@@ -2845,7 +2845,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
 
     // const agreeValue = emp.employee.employee_agree
 
-    if (agreeValue === true) {
+    if (agreeValue == true) {
 
         const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
@@ -2856,7 +2856,7 @@ const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) =
             }
         })
 
-    } else if (agreeValue === false) {
+    } else if (agreeValue == false) {
         const employee = await Employee.updateMany({ _id: { $in: id } }, {
             $set: {
                 // "employee.comments": comments,
