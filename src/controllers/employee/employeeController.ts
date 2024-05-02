@@ -2834,16 +2834,8 @@ const totalReviewerDetailsEmail = async () => {
 
 const employeeRejectionSave = asyncHandler(async (req: Request, res: Response) => {
     const { id, agreeValue } = req.body
-    // const { comments } = req.body
-    console.log(id,agreeValue,typeof(agreeValue),'checkagreeValue')
-    console.log('```````````` running ', id)
-
-    // const  id = "62ac2037c1c19127416aaff1"
 
     const emp = await Employee.findById(id)
-
-
-    // const agreeValue = emp.employee.employee_agree
 
     if (agreeValue == true) {
         const employee = await Employee.updateMany({ _id: { $in: id } }, {          
