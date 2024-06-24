@@ -148,28 +148,28 @@ const mapPositionsToAppraisalCalendar = asyncHandler(async (req: Request, res: R
 
     const { employee } = req.body
     const data = employee
-    console.log(data,id,'cehckposition')
+    console.log(data, id, 'cehckposition')
 
     // const updatedCalendarr = await AppraisalCalender.findById(id)
 
-   // Remove positions that are not in the employee array
-await AppraisalCalender.findByIdAndUpdate(id,
-    {
-        $pull: {
-            position: { $nin: employee }
+    // Remove positions that are not in the employee array
+    await AppraisalCalender.findByIdAndUpdate(id,
+        {
+            $pull: {
+                position: { $nin: employee }
+            }
         }
-    }
-);
+    );
 
-// Add positions that are not already present
-const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
-    {
-        $addToSet: {
-            position: { $each: employee }
-        }
-    },
-    { new: true }
-);
+    // Add positions that are not already present
+    const updatedCalendar = await AppraisalCalender.findByIdAndUpdate(id,
+        {
+            $addToSet: {
+                position: { $each: employee }
+            }
+        },
+        { new: true }
+    );
     res.status(StatusCodes.OK).json({ "message": updatedCalendar });
 
 
@@ -486,7 +486,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
         return i.isExcluded === true || i.isLeavers === true || i.isCEORole === true
     })
     const exceptedEmployees = await Employee.updateMany({
-        _id: { $in: getName(exceptionEmployees) },              
+        _id: { $in: getName(exceptionEmployees) },
     },
         {
             $set: {
@@ -514,7 +514,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                 appraiserIsDisabled: true,
                 appraiserIsChecked: false,
                 calendar: new mongoose.Types.ObjectId(calendar),
-                activity_Log : [],
+                activity_Log: [],
                 appraisal: {
                     appraiser_status: 'pending',
                     status: 'not-started',
@@ -530,9 +530,9 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: [],
-                    appraiser_PA_rejected : false,
-                    appraiser_PA_accepted : false,
-                    potential :''
+                    appraiser_PA_rejected: false,
+                    appraiser_PA_accepted: false,
+                    potential: ''
                 },
                 current_rating: {
                     overall_rating: 0,
@@ -582,8 +582,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: [],
-                    reviewer_PA_rejected : false,
-                    reviewer_PA_accepted : false
+                    reviewer_PA_rejected: false,
+                    reviewer_PA_accepted: false
                 },
 
                 reviewer_previous_submission: {
@@ -609,8 +609,8 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     feedback_questions: [],
                     area_of_improvement: [],
                     attachments: [],
-                    normalizer_PA_rejected : false,
-                    normalizer_PA_accepted : false
+                    normalizer_PA_rejected: false,
+                    normalizer_PA_accepted: false
                 },
 
                 normalizer_previous_submission: {
@@ -630,7 +630,7 @@ const updateTemplateForPositions = async (template, calendar, ratingScale, req, 
                     // objective_type: weightage.objective_type,
                     // objective_description: weightage.objective_description,
                 },
-                talent_category : "",
+                talent_category: "",
 
             },
 
@@ -869,11 +869,11 @@ const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) 
     const updatePreviousRating = await Employee.collection.updateMany(
         { "appraisal.status": "completed" },
         [{
-          "$set": {
-            "previous_rating": "$appraisal.pa_rating"
-          }
+            "$set": {
+                "previous_rating": "$appraisal.pa_rating"
+            }
         }]
-      );
+    );
     // const updatePreviousRating = await Employee.collection.updateMany({}, [{
     //     "$set": {
     //         "previous_rating": "$appraisal.pa_rating"
@@ -894,6 +894,8 @@ const appraisalCalendarClose = asyncHandler(async (req: Request, res: Response) 
 
 })
 
+
+
 export {
     createAppraisalCalender,
     deleteAppraisalCalender,
@@ -909,5 +911,5 @@ export {
     appraisalCalendarEmployeeValidation,
     getAppraisalCalendarForTemplate,
     appraisalCalendarClose,
-    mapPositionsToAppraisalCalendar
+    mapPositionsToAppraisalCalendar,    
 }

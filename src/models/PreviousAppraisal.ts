@@ -90,43 +90,43 @@ const PreviousAppraisal = new Schema({
     overall_rating: {
         type: Number
     },
-    rating_scale : {
+    rating_scale: {
         type: Array,
     },
-    talent_category : {
+    talent_category: {
         type: String,
     },
-    first_name : {
+    first_name: {
         type: String,
     },
-    function : {
+    function: {
         type: String,
     },
-    email : {
+    email: {
         type: String,
     },
-    normalizer_rating : {
+    normalizer_rating: {
         type: String,
     },
-    reviewer_rating : {
+    reviewer_rating: {
         type: String,
     },
-    appraiser_rating : {
+    appraiser_rating: {
         type: String,
     },
-    employee_rating : {
+    employee_rating: {
         type: String,
     },
-    normalized_overallRating : {
+    normalized_overallRating: {
         type: String,
     },
-    employee_status : {
+    employee_status: {
         type: String,
     },
     status: {
         type: String,
     },
-    previous_rating : {
+    previous_rating: {
         type: String,
     },
     appraisal: {
@@ -142,9 +142,10 @@ const PreviousAppraisal = new Schema({
         status: {
             type: String
         },
-        performance_goal: [{            
+        performance_goal: [{
             goal_category: {
-                type: String,
+                title: { type: String },  // Title of the goal category
+                definition: { type: String },  // Definition of the goal category                 
             },
             description: {
                 type: String,
@@ -159,7 +160,7 @@ const PreviousAppraisal = new Schema({
                 type: String,
             },
         }],
-      
+
     },
     appraiser_PA_accepted: {
         type: String
@@ -167,26 +168,26 @@ const PreviousAppraisal = new Schema({
     appraiser_PA_rejected: {
         type: String
     },
-        reviewer_PA_rejected: {
-            type: Boolean,
-            default: false
-        },
-        reviewer_PA_accepted: {
-            type: Boolean,
-            default: false
-        },
-    
-   
-        normalizer_PA_accepted: {
-            type: Boolean,
-            default: false
-        },
+    reviewer_PA_rejected: {
+        type: Boolean,
+        default: false
+    },
+    reviewer_PA_accepted: {
+        type: Boolean,
+        default: false
+    },
 
-        normalizer_PA_rejected: {
-            type: Boolean,
-            default: false
-        },
-    
+
+    normalizer_PA_accepted: {
+        type: Boolean,
+        default: false
+    },
+
+    normalizer_PA_rejected: {
+        type: Boolean,
+        default: false
+    },
+
     employee: {
         employee_status: {
             type: String
@@ -194,12 +195,13 @@ const PreviousAppraisal = new Schema({
         employee_agree: {
             type: Boolean
         },
-        employee_rejection:{
+        employee_rejection: {
             type: String
         },
-        performance_goal: [{            
+        performance_goal: [{
             goal_category: {
-                type: String,
+                title: { type: String },  // Title of the goal category
+                definition: { type: String },  // Definition of the goal category  
             },
             description: {
                 type: String,
@@ -214,14 +216,90 @@ const PreviousAppraisal = new Schema({
                 type: String,
             },
         }],
+        one_to_one_meeting: {
+            type: Date,
+        },
+        training_recommendation: [{}],
+        area_of_improvement: [{
+            value: {
+                type: String,
+                default: ""
+            },
+            specific_actions: [{
+                value: {
+                    type: String,
+                    default: ""
+                },               
+            }],
+        }],
     },
-    high:{
+
+    reviewer :{
+        reviewer_PA_accepted: {
+            type: Boolean,
+            default: false
+        },
+        reviewer_PA_rejected: {
+            type: Boolean,
+            default: false
+        },
+        reviewer_overall_feedback: {
+            type: String,
+            default: ''
+        },
+        reviewer_comments: {
+            type: String
+        },
+    },
+
+    normalizer : {
+        normalizer_PA_accepted: {
+            type: Boolean,
+            default: false
+        },  
+        normalizer_PA_rejected: {
+            type: Boolean,
+            default: false
+        }, 
+        comments: {
+            type: String,
+        },
+        reason_for_rejection: {
+            type: String
+        },
+        normalizer_overall_feedback: {
+            type: String,
+            default: ''
+        }, 
+        normalizer_meeting_notes: {
+            type: String,
+            default: ''
+        },
+        meetingNotesAttachments: [{
+            url: { type: String },
+            name: { type: String }
+        }],
+        isAppraiserChecked: {
+            type: Boolean,
+            default: false
+        },
+        isReviewerChecked: {
+            type: Boolean,
+            default: false
+        },
+        isEmployeeChecked: {
+            type: Boolean,
+            default: false
+        },
+    },
+
+    high: {
         type: String
     },
-    moderate:{
+    moderate: {
         type: String
     },
-    low:{
+    low: {
         type: String
     },
     // objective_description: [{
@@ -273,13 +351,13 @@ const PreviousAppraisal = new Schema({
     training_recommendation: {
         type: Array,
     },
-    feedback_questions :{
+    feedback_questions: {
         type: Array,
     },
-    objective_type : {
+    objective_type: {
         type: Array,
     },
 
-},  {timestamps: true} )
+}, { timestamps: true })
 
 export default model("PreviousAppraisal", PreviousAppraisal)

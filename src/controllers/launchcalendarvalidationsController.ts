@@ -571,4 +571,13 @@ const reminderNotificationStatusUpdate = asyncHandler(async (req: Request, res: 
   //     data: employeeVal
   //   });
 });
-export { validations, confirmEmployeeMasterList, reminderNotificationStatus, reminderNotificationStatusUpdate };
+
+const employeesWithoutEmail = asyncHandler(async (req: Request, res: Response) => {
+  const employees = await Employee.find({ "employee_upload_flag" : true, "isGradeException": false , "isLeavers" : false, "isExcluded" : false});
+  const filteredEmployeesWithoutEmail = employees.filter((item: any) => item.email == "" || item.email == undefined)
+  res.status(StatusCodes.OK).json({
+      data: filteredEmployeesWithoutEmail      
+  });
+})
+
+export { validations, confirmEmployeeMasterList, reminderNotificationStatus, reminderNotificationStatusUpdate, employeesWithoutEmail };

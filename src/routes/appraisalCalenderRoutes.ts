@@ -12,7 +12,7 @@ import {
     removePositionsToAppraisalCalendar,
     getAppraisalCalendarofCurrentYear,
     appraisalCalendarEmployeeValidation,
-    getAppraisalCalendarForTemplate, appraisalCalendarClose, mapPositionsToAppraisalCalendar
+    getAppraisalCalendarForTemplate, appraisalCalendarClose, mapPositionsToAppraisalCalendar,
 //     checkTemplatesPosition
 } from "../controllers/appraisalCalenderController";
 import {advancedResults} from "../middleware/advancedResults";
