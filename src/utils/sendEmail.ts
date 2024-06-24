@@ -12,6 +12,7 @@ const sendEmail = async ({ to, cc, subject, html }) => {
         auth: {
             user: 'do-not-replyemail@taqeef.com',
             // pass: 'Nah19349'
+            // pass: 'Vuk08852'
             pass: 'Vuk08852'
         }
     });
