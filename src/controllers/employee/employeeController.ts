@@ -3760,12 +3760,18 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
         [{
             $set: {
                 "isRoleException": true,
-                "master_appraiser_code": "$appraiser_code",
-                "master_appraiser_name": "$appraiser_name",
-                "master_reviewer_code": "$reviewer_code",
-                "master_reviewer_name": "$reviewer_name",
-                "master_normalizer_code": "$normalizer_code",
-                "master_normalizer_name": "$normalizer_name",
+               // "master_appraiser_code": "$appraiser_code",
+                // "master_appraiser_name": "$appraiser_name",
+                // "master_reviewer_code": "$reviewer_code",
+                // "master_reviewer_name": "$reviewer_name",
+                // "master_normalizer_code": "$normalizer_code",
+                // "master_normalizer_name": "$normalizer_name",
+                "appraiser_code": "$appraiser_code_Draft",   
+                "appraiser_name": "$appraiser_name_Draft",
+                "reviewer_code": "$reviewer_code_Draft",
+                "reviewer_name": "$reviewer_name_Draft",
+                "normalizer_code": "$normalizer_code_Draft",
+                "normalizer_name": "$normalizer_name_Draft",
 
             }
 
