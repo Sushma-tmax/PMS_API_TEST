@@ -3767,7 +3767,7 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
                 // "master_reviewer_name": "$reviewer_name",
                 // "master_normalizer_code": "$normalizer_code",
                 // "master_normalizer_name": "$normalizer_name",
-                "appraiser_code": "$appraiser_code_Draft",
+                "appraiser_code": "$appraiser_code_Draft",   
                 "appraiser_name": "$appraiser_name_Draft",
                 "reviewer_code": "$reviewer_code_Draft",
                 "reviewer_name": "$reviewer_name_Draft",
