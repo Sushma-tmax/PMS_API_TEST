@@ -34,12 +34,18 @@ const advancedResults = (model, populate) => async (req, res, next) => {
         // query = query.sort('-createdAt');
         query = query.collation({ locale: 'en', numericOrdering: true }).sort({ employee_code: 1 });    }
 
+        const total = await model.countDocuments(JSON.parse(queryStr));
+
     // Pagination
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 25;
+    let limit = parseInt(req.query.limit, 10) || 25;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    const total = await model.countDocuments();
+    if (total > 25) {
+        // If total exceeds 25, fetch all results by removing limit
+        limit = total;
+    }
+    // const total = await model.countDocuments();
 
     query = query.skip(startIndex).limit(limit);
 

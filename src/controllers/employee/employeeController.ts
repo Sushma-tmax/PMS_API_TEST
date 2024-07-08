@@ -199,6 +199,7 @@ const getAllPAEmployees = asyncHandler(async (req: Request, res: Response) => {
             })
             .populate('appraisal.other_recommendation')
             .populate('appraisal.training_recommendation')
+            .populate('employee.training_recommendation.name')
             .populate({
                 path: 'appraisal_template',
                 populate: {
