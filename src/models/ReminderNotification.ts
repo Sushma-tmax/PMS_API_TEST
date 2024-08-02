@@ -35,6 +35,22 @@ const ReminderNotificationSchema = new Schema({
   reminderLogs: {
     type:Array,
    },
+  allLogsMessage: {
+    type : Object,
+  },
+  status : [
+    {
+    status : [{
+      type: String,
+    }],  
+    current_date : {
+      type: String,
+    },
+    reminder_date : {
+      type: String,
+    },
+  }
+  ]
 },  {timestamps: true});
 
 export default model("ReminderNotification", ReminderNotificationSchema);

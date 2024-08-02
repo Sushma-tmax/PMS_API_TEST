@@ -536,26 +536,45 @@ const reminderNotificationStatus = asyncHandler(async (req: Request, res: Respon
 const reminderNotificationStatusUpdate = asyncHandler(async (req: Request, res: Response) => {
   // const { confirmEmployeeMaster } = req.body;
   const { reminderStatus, id } = req.body;
-  // const id = req.params.id 
-  console.log(id, "id")
-  console.log(req.body, "Request Body");
-  // console.log(confirmEmployeeMaster, "confirmEmployeeMaster1");
-  const employee = await launchcalendarvalidations.updateOne(
-    {
-      _id: req.params.id
+  // Log the ID to check if it's correctly received
+console.log("ID from body:", id);
+console.log("Request Body:", req.body);
 
-    },
-    {
-      $set: {
-        //reminderNotificationStatus: confirmEmployeeMaster,
-        reminderNotificationStatus: reminderStatus,
-      },
-    },
-    { upsert: true }
+if (!id) {
+  return res.status(StatusCodes.BAD_REQUEST).json({
+    error: "ID is required",
+  });
+}
+
+// Ensure the ID is a valid ObjectId
+if (!mongoose.Types.ObjectId.isValid(id)) {
+  return res.status(StatusCodes.BAD_REQUEST).json({
+    error: "Invalid ID format",
+  });
+}
+
+try {
+  const employee = await launchcalendarvalidations.updateOne(
+    { _id: id },
+    { $set: { reminderNotificationStatus: reminderStatus } },
+    { upsert: false } // Ensure upsert is false to avoid creating new documents
   );
+
+  if (employee.modifiedCount === 0) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      error: "Employee not found or no changes made",
+    });
+  }
+
   res.status(StatusCodes.OK).json({
     data: employee,
   });
+} catch (error) {
+  console.error("Update error:", error);
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+    error: "An error occurred during the update",
+  });
+}
   //   const employeeVal = await launchcalendarvalidations.findByIdAndUpdate(
   //     req.params.id,
   //     req.body,

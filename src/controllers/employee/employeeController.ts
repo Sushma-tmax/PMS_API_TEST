@@ -2805,7 +2805,7 @@ const totalAppraiserDetailsEmail = async () => {
 const totalReviewerDetailsEmail = async () => {
 
     //Find the reviewers of all live employees whose status is Pending with Reviewer 
-    const allReviewers = await Employee.distinct("appraiser_code", {
+    const allReviewers = await Employee.distinct("reviewer_code", {
         "employee_upload_flag": true,
         "appraisal.pa_status": /.*Pending with Reviewer.*/i
     })
@@ -2815,7 +2815,10 @@ const totalReviewerDetailsEmail = async () => {
     }, {
         "email": 1
     })
+
+    console.log(allReviewerEmails,'cehck')
     const reviewerEmails = allReviewerEmails.map(reviewer => reviewer.email);
+    console.log(reviewerEmails,'cehckallreviewer')
     return reviewerEmails;
     // return res.status(StatusCodes.OK).json(reviewerDetails);  
 };
@@ -3767,7 +3770,7 @@ const acceptEmployeeRoleExceptions = asyncHandler(async (req: Request, res: Resp
                 // "master_reviewer_name": "$reviewer_name",
                 // "master_normalizer_code": "$normalizer_code",
                 // "master_normalizer_name": "$normalizer_name",
-                "appraiser_code": "$appraiser_code_Draft",   
+                "appraiser_code": "$appraiser_code_Draft",
                 "appraiser_name": "$appraiser_name_Draft",
                 "reviewer_code": "$reviewer_code_Draft",
                 "reviewer_name": "$reviewer_name_Draft",
